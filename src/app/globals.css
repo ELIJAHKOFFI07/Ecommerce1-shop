@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+/* Palette par défaut : "Or & Noir", fond quasi-noir, accent doré. Ces
+   variables pilotent bg-gold / text-gold / bg-surface / border-border etc.
+   utilisés dans toute l'app — sans elles Tailwind v4 ignore silencieusement
+   ces classes (aucune erreur, juste pas de style appliqué). */
+:root {
+  --background: #0b0b0d;
+  --foreground: #ffffff;
+  --surface: #16161a;
+  --surface-2: #1f1f24;
+  --border: #3a3a40;
+  --muted: #9a9aa0;
+  --gold: #e6c15c;
+  --gold-dark: #b8933a;
+}
+
+/* Mode clair (data-theme="light" posé sur <html> par le sélecteur de thème). */
+:root[data-theme="light"] {
+  --background: #f7f5f0;
+  --foreground: #0b0b0d;
+  --surface: #ffffff;
+  --surface-2: #edeae2;
+  --border: #d8d4c8;
+  --muted: #6b6b6f;
+}
+
+/* Palettes de couleurs : seul l'accent change (comme côté mobile), les
+   surfaces restent cohérentes pour préserver le contraste. */
+:root[data-preset="emerald"]  { --gold: #3dd68c; --gold-dark: #1f9d63; }
+:root[data-preset="ocean"]    { --gold: #4fb8e8; --gold-dark: #2a7fb0; }
+:root[data-preset="ruby"]     { --gold: #e85c7b; --gold-dark: #b93a57; }
+:root[data-preset="amethyst"] { --gold: #a378e8; --gold-dark: #6d4cb0; }
+:root[data-preset="sahel"]    { --gold: #e8823d; --gold-dark: #b35a22; }
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
