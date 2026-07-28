@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { SetupNotice } from "@/components/play/SetupNotice";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-import { isSupabaseConfigured } from "@/lib/supabase/client";
+import { isBackendConfigured } from "@/lib/backend/client";
 
 const links = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
@@ -73,7 +73,7 @@ export default function AdminLayout({
             </Link>
           ))}
         </div>
-        {isSupabaseConfigured() ? children : <SetupNotice />}
+        {isBackendConfigured() ? children : <SetupNotice />}
       </main>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, History, Minus, Plus } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import { formatFcfa, type Product, type StockMovement } from "@/lib/types";
 
 const LOW_STOCK_THRESHOLD = 5;

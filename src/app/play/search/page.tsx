@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search as SearchIcon } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
 

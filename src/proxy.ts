@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { updateSession } from "@/lib/supabase/middleware";
+import { updateSession } from "@/lib/backend/middleware";
 
 // Next.js 16 : `middleware` est renommé `proxy` (runtime nodejs).
 export async function proxy(request: NextRequest) {

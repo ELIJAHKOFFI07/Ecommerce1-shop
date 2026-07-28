@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Bookmark, Plus, Trash2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import type { Wishlist } from "@/lib/types";
 
 export default function WishlistsPage() {

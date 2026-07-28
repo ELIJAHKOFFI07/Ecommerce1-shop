@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { TrendingDown } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import { formatFcfa, type PriceHistoryEntry } from "@/lib/types";
 
 /// Courbe d'évolution du prix ; masquée sous deux points d'historique.

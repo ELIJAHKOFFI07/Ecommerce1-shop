@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Copy, Gift, Trophy } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import type { Profile, ReferralLeaderboardEntry } from "@/lib/types";
 
 export default function ReferralPage() {
@@ -12,6 +12,9 @@ export default function ReferralPage() {
   const [myRank, setMyRank] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [sponsorCode, setSponsorCode] = useState("");
+  const [redeeming, setRedeeming] = useState(false);
+  const [redeemMessage, setRedeemMessage] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const supabase = createClient();
@@ -39,6 +42,28 @@ export default function ReferralPage() {
     await navigator.clipboard.writeText(profile.referral_code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  /// Rattache un parrain après coup. La RPC redeem_referral ignore
+  /// silencieusement un code inconnu, un auto-parrainage ou un second
+  /// rattachement — le message reste donc volontairement neutre.
+  const redeem = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const code = sponsorCode.trim();
+    if (!code) return;
+    setRedeeming(true);
+    setRedeemMessage(null);
+    const { error } = await createClient().rpc("redeem_referral", {
+      p_code: code,
+    });
+    setRedeeming(false);
+    if (error) {
+      setRedeemMessage(error.message);
+      return;
+    }
+    setSponsorCode("");
+    setRedeemMessage("Code enregistré. Vos points seront crédités si le code est valide.");
+    await load();
   };
 
   if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
@@ -77,6 +102,36 @@ export default function ReferralPage() {
             Se connecter
           </Link>
         </div>
+      )}
+
+      {profile && !profile.referred_by && (
+        <form
+          onSubmit={redeem}
+          className="mt-4 rounded-xl border border-border bg-surface p-6"
+        >
+          <h2 className="font-semibold">Vous avez été parrainé ?</h2>
+          <p className="mt-1 text-xs text-muted">
+            Saisissez le code de votre parrain pour gagner 100 points.
+          </p>
+          <div className="mt-3 flex gap-2">
+            <input
+              value={sponsorCode}
+              onChange={(e) => setSponsorCode(e.target.value.toUpperCase())}
+              placeholder="CODE PARRAIN"
+              className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm tracking-[0.15em]"
+            />
+            <button
+              type="submit"
+              disabled={redeeming || !sponsorCode.trim()}
+              className="rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
+            >
+              {redeeming ? "…" : "Valider"}
+            </button>
+          </div>
+          {redeemMessage && (
+            <p className="mt-3 text-sm text-muted">{redeemMessage}</p>
+          )}
+        </form>
       )}
 
       {myRank != null && (

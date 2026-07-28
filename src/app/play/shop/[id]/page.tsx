@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import { ShieldCheck } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import type { Product, Shop } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
 

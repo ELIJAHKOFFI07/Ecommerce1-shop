@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/backend/server";
 import { ORDER_STATUS_LABELS, formatFcfa, type Order } from "@/lib/types";
 
 export default async function AdminOrders() {

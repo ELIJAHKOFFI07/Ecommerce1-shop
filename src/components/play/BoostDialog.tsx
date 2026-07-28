@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { X, Zap } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import { BOOST_DURATIONS, formatFcfa, type Product } from "@/lib/types";
 
 export function BoostDialog({

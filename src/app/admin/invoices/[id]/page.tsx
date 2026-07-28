@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Printer } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import { formatFcfa, type Order } from "@/lib/types";
 
 export default function InvoiceDetailPage({

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/backend/server";
 import { formatFcfa, type Product } from "@/lib/types";
 import { AdminProductRow } from "./AdminProductRow";
 

@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ElijahShop — Web
 
-## Getting Started
+Marketplace sociale : vitrine publique + application et back-office.
 
-First, run the development server:
+- **Stack** : Next.js 16 (App Router), React 19, Tailwind 4, TypeScript strict
+- **Backend actif** : Supabase (Postgres + RLS + RPC + Auth + Storage)
+- **Backend futur** : Parse Server auto-hébergé — préparé mais pas encore actif
+  (voir `backend-parse-wip/README.md`)
+
+## Zones de l'application
+
+| Route | Rôle |
+| --- | --- |
+| `/` | Vitrine marketing (or/noir) |
+| `/play/*` | Application acheteur/vendeur |
+| `/admin/*` | Back-office (réservé aux comptes `is_admin`) |
+
+## Démarrage local
 
 ```bash
+npm install
+cp .env.example .env.local   # puis renseigner les clés Supabase
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrir http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Tant que les clés Supabase ne sont pas renseignées, `/play` et `/admin`
+affichent un écran d'attente (`SetupNotice`) au lieu de planter.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Variables d'environnement
 
-## Learn More
+Voir `.env.example`. Les deux clés indispensables :
 
-To learn more about Next.js, take a look at the following resources:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Changer de backend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Le basculement se fait en un seul endroit : `src/lib/backend/config.ts`,
+piloté par `NEXT_PUBLIC_BACKEND_PROVIDER` (`supabase` par défaut).
+Toutes les pages importent `@/lib/backend/client` ou `@/lib/backend/server`,
+jamais le SDK d'un backend directement.
 
-## Deploy on Vercel
+## Contrôles qualité
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npx tsc --noEmit
+npx eslint src
+npx next build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Les trois doivent passer sans erreur.
+
+## Déploiement
+
+Voir **`DEPLOIEMENT_VERCEL.md`**.

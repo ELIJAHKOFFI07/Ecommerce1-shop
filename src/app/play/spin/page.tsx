@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import {
   SPIN_SEGMENTS,
   canSpinToday,

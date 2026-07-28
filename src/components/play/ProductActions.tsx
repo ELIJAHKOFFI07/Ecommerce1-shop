@@ -1,8 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Bell, BellRing, BookmarkPlus, Eye, GitCompareArrows, Share2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import {
+  Bell,
+  BellRing,
+  BookmarkPlus,
+  Eye,
+  GitCompareArrows,
+  Handshake,
+  MessageCircle,
+  Share2,
+} from "lucide-react";
+import { createClient } from "@/lib/backend/client";
 import { getCompareIds, toggleCompareId } from "@/lib/compare";
 import { formatFcfa, type Product, type Wishlist } from "@/lib/types";
 
@@ -97,6 +106,47 @@ export function ProductActions({ product }: { product: Product }) {
     load();
   };
 
+  /// Bornes (50 % à 100 % du prix) et limite de 3 offres par produit
+  /// revalidées par la RPC make_offer.
+  const makeOffer = async () => {
+    if (!myId) {
+      window.location.href = "/play/login";
+      return;
+    }
+    const raw = window.prompt(
+      `Votre prix pour « ${product.title} » (entre ${formatFcfa(
+        Math.ceil(product.price * 0.5),
+      )} et ${formatFcfa(product.price)}) :`,
+    );
+    if (raw === null) return;
+    const value = Number(raw);
+    if (!Number.isFinite(value) || value <= 0) {
+      flash("Montant invalide.");
+      return;
+    }
+    const { error } = await createClient().rpc("make_offer", {
+      p_product_id: product.id,
+      p_amount: Math.trunc(value),
+    });
+    flash(error ? error.message : "Offre envoyée au vendeur !");
+  };
+
+  const contactSeller = async () => {
+    if (!myId) {
+      window.location.href = "/play/login";
+      return;
+    }
+    const { data, error } = await createClient().rpc("open_conversation", {
+      p_seller_id: product.seller_id,
+      p_product_id: product.id,
+    });
+    if (error) {
+      flash(error.message);
+      return;
+    }
+    window.location.href = `/play/messages/${data as string}`;
+  };
+
   const shareWhatsApp = () => {
     const text = encodeURIComponent(
       `${product.title} — ${formatFcfa(product.price)} sur ElijahShop 🛍️\n${window.location.href}`,
@@ -114,6 +164,23 @@ export function ProductActions({ product }: { product: Product }) {
       )}
 
       <div className="flex flex-wrap gap-2">
+        {myId !== product.seller_id && (
+          <>
+            <button
+              onClick={makeOffer}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-gold"
+            >
+              <Handshake className="h-4 w-4" /> Proposer un prix
+            </button>
+            <button
+              onClick={contactSeller}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-gold"
+            >
+              <MessageCircle className="h-4 w-4" /> Contacter le vendeur
+            </button>
+          </>
+        )}
+
         <button
           onClick={toggleAlert}
           className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${

@@ -7,8 +7,9 @@ export async function createClient() {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !anonKey) {
     throw new Error(
-      "Supabase non configuré : remplissez secrets.local.ps1 et lancez " +
-        "SETUP_SERVICES.ps1 (voir VARIABLES_A_REMPLIR.md), puis relancez le serveur.",
+      "Supabase non configuré : copiez .env.example en .env.local et " +
+        "renseignez NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY, " +
+        "puis relancez le serveur.",
     );
   }
   return createServerClient(url, anonKey, {

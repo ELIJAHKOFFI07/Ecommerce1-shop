@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { GitCompareArrows, Trash2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import { clearCompare, getCompareIds, toggleCompareId } from "@/lib/compare";
 import { formatFcfa, type Product } from "@/lib/types";
 

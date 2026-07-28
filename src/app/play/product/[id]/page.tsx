@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { MapPin, ShieldCheck, Store } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import type { Product, Review } from "@/lib/types";
 import { formatFcfa } from "@/lib/types";
 import { useCart } from "@/lib/cart";

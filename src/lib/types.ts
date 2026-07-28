@@ -9,6 +9,7 @@ export type Profile = {
   is_admin: boolean;
   is_seller: boolean;
   referral_code: string | null;
+  referred_by: string | null;
   loyalty_points: number;
   created_at: string;
 };
@@ -343,6 +344,94 @@ export type WalletOverviewRow = {
   balance: number;
   lifetime_credit: number;
   lifetime_withdrawn: number;
+};
+
+// ---- Portefeuille vendeur ----
+
+export type WalletTransactionKind =
+  | "sale_credit"
+  | "withdrawal"
+  | "refund"
+  | "referral_bonus";
+
+export type WalletTransaction = {
+  id: string;
+  wallet_user_id: string;
+  amount: number;
+  kind: WalletTransactionKind;
+  order_id: string | null;
+  note: string | null;
+  created_at: string;
+};
+
+export const WALLET_KIND_LABELS: Record<WalletTransactionKind, string> = {
+  sale_credit: "Vente créditée",
+  withdrawal: "Retrait",
+  refund: "Remboursement",
+  referral_bonus: "Bonus parrainage",
+};
+
+// ---- Offres (négociation de prix) ----
+
+export type OfferStatus =
+  | "pending"
+  | "accepted"
+  | "declined"
+  | "countered"
+  | "expired";
+
+export type Offer = {
+  id: string;
+  product_id: string;
+  buyer_id: string;
+  shop_id: string;
+  amount: number;
+  counter_amount: number | null;
+  status: OfferStatus;
+  created_at: string;
+  products?: Product;
+  profiles?: Profile;
+};
+
+export const OFFER_STATUS_LABELS: Record<OfferStatus, string> = {
+  pending: "En attente",
+  accepted: "Acceptée",
+  declined: "Refusée",
+  countered: "Contre-offre",
+  expired: "Expirée",
+};
+
+// ---- Messagerie ----
+
+export type Conversation = {
+  id: string;
+  buyer_id: string;
+  seller_id: string;
+  product_id: string | null;
+  last_message: string | null;
+  last_message_at: string | null;
+};
+
+export type Message = {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  content: string;
+  image_url: string | null;
+  read_at: string | null;
+  created_at: string;
+};
+
+// ---- Statistiques boutique (RPC shop_stats) ----
+
+export type ShopStats = {
+  total_sales: number;
+  delivered_orders: number;
+  pending_orders: number;
+  active_products: number;
+  average_rating: number;
+  rating_count: number;
+  followers_count: number;
 };
 
 export function relativeTime(date: string): string {

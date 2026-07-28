@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Star } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import {
   POINTS_FCFA_PER_POINT,
   POINTS_MIN_REDEEM,

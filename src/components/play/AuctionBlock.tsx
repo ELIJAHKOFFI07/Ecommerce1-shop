@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Gavel } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import {
   auctionRemainingLabel,
   formatFcfa,

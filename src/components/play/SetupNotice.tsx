@@ -14,12 +14,13 @@ export function SetupNotice() {
       </p>
       <ol className="mt-6 space-y-2 text-left text-sm text-muted">
         <li>
-          1. Remplissez <code className="text-gold">secrets.local.ps1</code> (voir{" "}
-          <code className="text-gold">VARIABLES_A_REMPLIR.md</code>).
+          1. Copiez <code className="text-gold">.env.example</code> en{" "}
+          <code className="text-gold">.env.local</code>.
         </li>
         <li>
-          2. Lancez <code className="text-gold">./SETUP_SERVICES.ps1</code> — il
-          génère <code className="text-gold">.env.local</code>.
+          2. Renseignez{" "}
+          <code className="text-gold">NEXT_PUBLIC_SUPABASE_URL</code> et{" "}
+          <code className="text-gold">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>.
         </li>
         <li>3. Relancez le serveur de développement.</li>
       </ol>

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { HelpCircle, Store, User } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import { relativeTime, type ProductQuestion } from "@/lib/types";
 
 export function ProductQna({

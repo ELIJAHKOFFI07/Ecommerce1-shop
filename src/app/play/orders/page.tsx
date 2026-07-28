@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import { ORDER_STATUS_LABELS, formatFcfa, type Order } from "@/lib/types";
 
 function OrdersInner() {

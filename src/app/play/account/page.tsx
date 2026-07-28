@@ -3,8 +3,19 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bookmark, Gift, LogOut, Package, Sparkles, Store } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import {
+  Bell,
+  Bookmark,
+  Gift,
+  Handshake,
+  LogOut,
+  MessageCircle,
+  Package,
+  Sparkles,
+  Store,
+  Wallet,
+} from "lucide-react";
+import { createClient } from "@/lib/backend/client";
 import { PointsCard } from "@/components/play/PointsCard";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import type { Profile } from "@/lib/types";
@@ -95,6 +106,18 @@ export default function AccountPage() {
 
       <div className="mt-4 space-y-2">
         <AccountLink href="/play/orders" icon={<Package />} label="Mes commandes" />
+        <AccountLink
+          href="/play/notifications"
+          icon={<Bell />}
+          label="Notifications"
+        />
+        <AccountLink
+          href="/play/messages"
+          icon={<MessageCircle />}
+          label="Messages"
+        />
+        <AccountLink href="/play/offers" icon={<Handshake />} label="Mes offres" />
+        <AccountLink href="/play/wallet" icon={<Wallet />} label="Portefeuille" />
         <AccountLink href="/play/sell" icon={<Store />} label="Ma boutique / Vendre" />
         <AccountLink href="/play/wishlists" icon={<Bookmark />} label="Mes listes" />
         <AccountLink

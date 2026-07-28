@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Zap } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import {
   ORDER_STATUS_LABELS,
   formatFcfa,
@@ -11,9 +11,19 @@ import {
   type Order,
   type Product,
   type Shop,
+  type ShopStats,
 } from "@/lib/types";
 import { BoostDialog } from "@/components/play/BoostDialog";
 import { StoriesManager } from "@/components/play/StoriesManager";
+
+function StatTile({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-surface p-3">
+      <p className="text-xs text-muted">{label}</p>
+      <p className="mt-1 font-bold text-gold">{value}</p>
+    </div>
+  );
+}
 
 const NEXT_STATUS: Record<string, string[]> = {
   pending: ["confirmed", "cancelled"],
@@ -35,6 +45,7 @@ export default function SellPage() {
     "products",
   );
   const [boosting, setBoosting] = useState<Product | null>(null);
+  const [stats, setStats] = useState<ShopStats | null>(null);
 
   const load = useCallback(async () => {
     const supabase = createClient();
@@ -56,20 +67,24 @@ export default function SellPage() {
       .order("position");
     setCategories((cats as Category[]) ?? []);
     if (shopData) {
-      const [{ data: prods }, { data: ords }] = await Promise.all([
-        supabase
-          .from("products")
-          .select("*, product_images(url, position)")
-          .eq("shop_id", (shopData as Shop).id)
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("orders")
-          .select("*, order_items(*)")
-          .eq("shop_id", (shopData as Shop).id)
-          .order("created_at", { ascending: false }),
-      ]);
+      const [{ data: prods }, { data: ords }, { data: shopStats }] =
+        await Promise.all([
+          supabase
+            .from("products")
+            .select("*, product_images(url, position)")
+            .eq("shop_id", (shopData as Shop).id)
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("orders")
+            .select("*, order_items(*)")
+            .eq("shop_id", (shopData as Shop).id)
+            .order("created_at", { ascending: false }),
+          // Agrégats calculés côté serveur (RPC shop_stats).
+          supabase.rpc("shop_stats", { p_shop_id: (shopData as Shop).id }),
+        ]);
       setProducts((prods as Product[]) ?? []);
       setOrders((ords as Order[]) ?? []);
+      setStats((shopStats as ShopStats | null) ?? null);
     }
   }, []);
 
@@ -140,6 +155,28 @@ export default function SellPage() {
           <p className="text-sm text-muted">{shop.city}</p>
         </div>
       </div>
+
+      {stats && (
+        <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <StatTile label="Ventes livrées" value={formatFcfa(stats.total_sales)} />
+          <StatTile
+            label="Commandes en cours"
+            value={String(stats.pending_orders)}
+          />
+          <StatTile
+            label="Produits actifs"
+            value={String(stats.active_products)}
+          />
+          <StatTile
+            label="Note moyenne"
+            value={
+              stats.rating_count > 0
+                ? `${stats.average_rating}/5 (${stats.rating_count})`
+                : "—"
+            }
+          />
+        </div>
+      )}
 
       <div className="mb-4 flex gap-2">
         {(

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/backend/client";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
 import { StoriesBar } from "@/components/play/StoriesBar";
