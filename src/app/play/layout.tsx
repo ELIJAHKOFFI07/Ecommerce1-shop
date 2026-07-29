@@ -14,7 +14,7 @@ export default function PlayLayout({
   // createClient() qui lève, et l'écran de configuration ne s'afficherait pas.
   if (!isBackendConfigured()) {
     return (
-      <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-4 md:pb-10">
+      <div className="mx-auto w-full max-w-6xl px-4 pb-10 pt-4">
         <SetupNotice />
       </div>
     );
@@ -24,9 +24,15 @@ export default function PlayLayout({
     <SessionProvider>
       <CartProvider>
         <PlayNav />
-        <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-4 md:pb-10">
-          <AnnouncementBanner />
-          {children}
+        {/* md:pl-56 : réserve la largeur de la barre latérale fixe, qui a
+            son propre espace de positionnement (fixed) et ne pousse pas le
+            flux normal. Le mx-auto max-w-6xl interne recentre le contenu
+            dans l'espace restant. */}
+        <div className="w-full md:pl-56">
+          <div className="mx-auto w-full max-w-6xl px-4 pb-10 pt-4">
+            <AnnouncementBanner />
+            {children}
+          </div>
         </div>
       </CartProvider>
     </SessionProvider>

@@ -9,6 +9,9 @@ import { useSession } from "@/lib/session";
 import { PRIMARY_LINKS, visibleLinks } from "@/lib/nav";
 import { NavDrawer } from "@/components/play/NavDrawer";
 
+/// Navigation principale : barre latérale gauche sur desktop (comme
+/// AdminLayout), barre horizontale + bouton menu sur mobile. Plus de barre
+/// fixée en bas — elle masquait le bas des pages et doublait le menu latéral.
 export function PlayNav() {
   const pathname = usePathname();
   const { count, hydrated } = useCart();
@@ -27,78 +30,77 @@ export function PlayNav() {
 
   return (
     <>
-      {/* Barre du haut */}
-      <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
+      {/* Barre latérale gauche (desktop) */}
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-56 shrink-0 flex-col border-r border-border bg-surface p-4 md:flex">
+        <Link href="/play" className="mb-8 block text-lg font-bold text-gold">
+          ElijahShop
+        </Link>
+        <nav className="flex-1 space-y-1">
+          {items.map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm ${
+                isActive(href) ? "bg-gold/10 text-gold" : "text-muted hover:bg-surface-2 hover:text-foreground"
+              }`}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              {label}
+              {href === "/play/cart" && hydrated && count > 0 && (
+                <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-gold px-1 text-[10px] font-bold text-black">
+                  {count}
+                </span>
+              )}
+            </Link>
+          ))}
+        </nav>
+        <button
+          onClick={() => setMenuOpen(true)}
+          className="flex items-center gap-3 rounded-lg border border-border px-3 py-2.5 text-sm hover:border-gold"
+        >
+          <Menu className="h-4 w-4" />
+          Menu
+        </button>
+      </aside>
+
+      {/* Barre du haut (mobile) */}
+      <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md md:hidden">
+        <div className="flex items-center justify-between gap-3 px-4 py-3">
           <Link href="/play" className="text-lg font-bold text-gold">
             ElijahShop
           </Link>
 
-          <nav className="hidden gap-6 text-sm md:flex">
+          <nav className="flex flex-1 justify-end gap-4 overflow-x-auto text-sm">
             {items.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-1.5 ${
-                  isActive(href) ? "text-gold" : "text-muted hover:text-foreground"
+                className={`flex shrink-0 items-center gap-1.5 ${
+                  isActive(href) ? "text-gold" : "text-muted"
                 }`}
+                aria-label={label}
               >
                 <span className="relative">
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-5 w-5" />
                   {href === "/play/cart" && hydrated && count > 0 && (
                     <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[10px] font-bold text-black">
                       {count}
                     </span>
                   )}
                 </span>
-                {label}
               </Link>
             ))}
           </nav>
 
-          {/* Accès à toutes les fonctionnalités de l'espace personnel, à
-              toutes les tailles d'écran : la barre du bas ne peut en afficher
-              que 5. */}
           <button
             onClick={() => setMenuOpen(true)}
-            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm hover:border-gold"
+            className="shrink-0 rounded-full border border-border p-2 hover:border-gold"
             aria-label="Ouvrir le menu"
           >
             <Menu className="h-4 w-4" />
-            <span className="hidden sm:inline">Menu</span>
           </button>
         </div>
       </header>
-
-      {/* Barre du bas (téléphone) */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border bg-background/95 backdrop-blur-md md:hidden">
-        {items.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className={`flex flex-1 flex-col items-center gap-1 py-2 text-[10px] ${
-              isActive(href) ? "text-gold" : "text-muted"
-            }`}
-          >
-            <span className="relative">
-              <Icon className="h-5 w-5" />
-              {href === "/play/cart" && hydrated && count > 0 && (
-                <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-black">
-                  {count}
-                </span>
-              )}
-            </span>
-            {label}
-          </Link>
-        ))}
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="flex flex-1 flex-col items-center gap-1 py-2 text-[10px] text-muted"
-        >
-          <Menu className="h-5 w-5" />
-          Menu
-        </button>
-      </nav>
 
       <NavDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
