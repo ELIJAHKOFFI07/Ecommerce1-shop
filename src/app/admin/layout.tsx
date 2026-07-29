@@ -10,6 +10,7 @@ import {
   Landmark,
   Receipt,
   Settings,
+  Shapes,
 } from "lucide-react";
 import { SetupNotice } from "@/components/play/SetupNotice";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
@@ -18,6 +19,7 @@ import { isBackendConfigured } from "@/lib/backend/client";
 const links = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/admin/products", label: "Produits", icon: Package },
+  { href: "/admin/categories", label: "Catégories", icon: Shapes },
   { href: "/admin/stock", label: "Stock", icon: Boxes },
   { href: "/admin/orders", label: "Commandes", icon: ShoppingBag },
   { href: "/admin/accounting", label: "Comptabilité", icon: Landmark },

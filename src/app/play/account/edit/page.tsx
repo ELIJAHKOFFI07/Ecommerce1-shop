@@ -16,6 +16,7 @@ export default function EditProfilePage() {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [city, setCity] = useState("");
   const [bio, setBio] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -32,6 +33,7 @@ export default function EditProfilePage() {
     setFullName(profile.full_name ?? "");
     setUsername(profile.username ?? "");
     setPhone(profile.phone ?? "");
+    setWhatsapp(profile.whatsapp ?? "");
     setCity(profile.city ?? "");
     setBio(profile.bio ?? "");
     setAvatarUrl(profile.avatar_url ?? null);
@@ -68,6 +70,7 @@ export default function EditProfilePage() {
           full_name: fullName.trim() || null,
           username: username.trim(),
           phone: phone.trim() || null,
+          whatsapp: whatsapp.trim() || null,
           city: city.trim() || null,
           bio: bio.trim() || null,
           avatar_url: nextAvatar,
@@ -193,6 +196,17 @@ export default function EditProfilePage() {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="07 00 00 00 00"
+            className={field}
+          />
+        </label>
+
+        <label className="block">
+          <span className="mb-1 block text-sm text-muted">WhatsApp</span>
+          <input
+            type="tel"
+            value={whatsapp}
+            onChange={(e) => setWhatsapp(e.target.value)}
+            placeholder="+225 07 00 00 00 00"
             className={field}
           />
         </label>

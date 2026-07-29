@@ -10,11 +10,13 @@ export type Profile = {
   is_seller: boolean;
   referral_code: string | null;
   referred_by: string | null;
+  whatsapp: string | null;
   loyalty_points: number;
   created_at: string;
 };
 
 export type Shop = {
+  whatsapp?: string | null;
   id: string;
   owner_id: string;
   name: string;
@@ -318,6 +320,9 @@ export type PlatformSettings = {
   min_withdrawal: number;
   support_phone: string | null;
   support_email: string | null;
+  /// Message à la une affiché en haut de /play (voir migration 007).
+  announcement: string | null;
+  announcement_active: boolean;
   updated_at: string;
 };
 

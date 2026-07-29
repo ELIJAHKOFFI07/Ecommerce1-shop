@@ -21,6 +21,7 @@ import { createClient } from "@/lib/backend/client";
 import { PointsCard } from "@/components/play/PointsCard";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import type { Profile } from "@/lib/types";
+import { ListSkeleton, Skeleton } from "@/components/Skeleton";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -62,6 +63,25 @@ export default function AccountPage() {
       .eq("id", userData.user.id)
       .maybeSingle();
     setProfile(data as Profile | null);
+  }
+
+  // Tant que l'état d'authentification n'est pas connu, on affiche les
+  // shimmers : sans ce garde, la page rendait l'en-tête de profil avec des
+  // valeurs par défaut (« Utilisateur », 0 point) avant de se corriger.
+  if (authed === null) {
+    return (
+      <div className="mx-auto max-w-lg space-y-4">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-16 w-16 shrink-0 rounded-full" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-4 w-52 max-w-full" />
+          </div>
+        </div>
+        <Skeleton className="h-14 w-full rounded-xl" />
+        <ListSkeleton count={6} />
+      </div>
+    );
   }
 
   if (authed === false) {

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/backend/client";
 import type { PlatformSettings } from "@/lib/types";
+import { HeaderSkeleton, Skeleton } from "@/components/Skeleton";
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<PlatformSettings | null>(null);
@@ -10,6 +11,8 @@ export default function AdminSettingsPage() {
   const [minWithdrawal, setMinWithdrawal] = useState("5000");
   const [supportPhone, setSupportPhone] = useState("");
   const [supportEmail, setSupportEmail] = useState("");
+  const [announcement, setAnnouncement] = useState("");
+  const [announcementActive, setAnnouncementActive] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -28,6 +31,8 @@ export default function AdminSettingsPage() {
         setMinWithdrawal(String(s.min_withdrawal));
         setSupportPhone(s.support_phone ?? "");
         setSupportEmail(s.support_email ?? "");
+        setAnnouncement(s.announcement ?? "");
+        setAnnouncementActive(s.announcement_active);
       }
       setLoading(false);
     })();
@@ -42,6 +47,8 @@ export default function AdminSettingsPage() {
       p_min_withdrawal: Number(minWithdrawal),
       p_support_phone: supportPhone || null,
       p_support_email: supportEmail || null,
+      p_announcement: announcement || null,
+      p_announcement_active: announcementActive,
     });
     setSaving(false);
     if (rpcError) {
@@ -52,7 +59,13 @@ export default function AdminSettingsPage() {
     setTimeout(() => setSaved(false), 2500);
   };
 
-  if (loading) return <p className="py-16 text-center text-muted">Chargement…</p>;
+  if (loading)
+    return (
+      <div className="max-w-lg space-y-4">
+        <HeaderSkeleton />
+        <Skeleton className="h-96 w-full rounded-2xl" />
+      </div>
+    );
 
   return (
     <div className="max-w-lg">
@@ -113,6 +126,29 @@ export default function AdminSettingsPage() {
             onChange={(e) => setSupportEmail(e.target.value)}
             placeholder="support@elijahshop.app"
             className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+          />
+        </div>
+
+        <div className="rounded-lg border border-border p-3">
+          <label className="flex items-center gap-2 text-sm font-medium">
+            <input
+              type="checkbox"
+              checked={announcementActive}
+              onChange={(e) => setAnnouncementActive(e.target.checked)}
+              className="h-4 w-4"
+            />
+            Afficher un message a la une
+          </label>
+          <p className="mt-1 text-xs text-muted">
+            Visible en haut de l&apos;application par les clients et les
+            vendeurs. Chacun peut le masquer une fois lu.
+          </p>
+          <textarea
+            value={announcement}
+            onChange={(e) => setAnnouncement(e.target.value)}
+            rows={3}
+            placeholder="Ex : Livraison offerte tout le week-end !"
+            className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
           />
         </div>
 

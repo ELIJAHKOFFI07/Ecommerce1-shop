@@ -4,6 +4,26 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/backend/client";
 import { ORDER_STATUS_LABELS, formatFcfa, type Order } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
+import { MessageCircle } from "lucide-react";
+
+/// Lien wa.me pré-rempli : le vendeur reçoit le détail de la commande
+/// directement, sans ressaisie. Le numéro est normalisé (wa.me n'accepte que
+/// des chiffres, indicatif compris).
+function whatsappLink(number: string, order: Order): string {
+  const digits = number.replace(/\D/g, "");
+  const items = (order.order_items ?? [])
+    .map((it) => `- ${it.quantity} x ${it.title}`)
+    .join("\n");
+  const text = [
+    `Bonjour, je viens de passer la commande #${order.id.slice(0, 8).toUpperCase()} sur ElijahShop.`,
+    items,
+    `Total : ${formatFcfa(order.total)}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+  return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
+}
 
 function OrdersInner() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -45,6 +65,18 @@ function OrdersInner() {
       }
     })();
   }, []);
+
+  // Tant que l'état d'authentification n'est pas connu, on affiche les
+  // shimmers : sans ce garde, la page rendait sa mise en page complète avec
+  // des données vides, qui disparaissaient dès l'arrivée des vraies.
+  if (authed === null) {
+    return (
+      <div className="space-y-6">
+        <HeaderSkeleton />
+        <ListSkeleton count={4} />
+      </div>
+    );
+  }
 
   if (authed === false) {
     return (
@@ -90,6 +122,18 @@ function OrdersInner() {
                   </p>
                 ))}
               </div>
+
+              {o.shops?.whatsapp && (
+                <a
+                  href={whatsappLink(o.shops.whatsapp, o)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:border-gold"
+                >
+                  <MessageCircle className="h-3.5 w-3.5 text-gold" />
+                  Prévenir le vendeur sur WhatsApp
+                </a>
+              )}
               {pickupCodes[o.id] && (
                 <div className="mt-3 rounded-lg border border-gold bg-gold/10 p-3 text-center">
                   <p className="text-xs font-semibold">Votre code de retrait</p>

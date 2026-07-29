@@ -8,6 +8,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [referral, setReferral] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +25,8 @@ export default function RegisterPage() {
       options: {
         data: {
           username,
+          // Lu par le trigger handle_new_user pour renseigner profiles.
+          ...(whatsapp.trim() ? { whatsapp: whatsapp.trim() } : {}),
           ...(referral.trim()
             ? { referral_code_used: referral.trim().toUpperCase() }
             : {}),
@@ -78,6 +81,13 @@ export default function RegisterPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Mot de passe (8 caractères min.)"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+        />
+        <input
+          type="tel"
+          value={whatsapp}
+          onChange={(e) => setWhatsapp(e.target.value)}
+          placeholder="Numéro WhatsApp (ex : +225 07 00 00 00 00)"
           className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
         />
         <input
