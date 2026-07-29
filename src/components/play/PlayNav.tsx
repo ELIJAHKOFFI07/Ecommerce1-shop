@@ -91,13 +91,6 @@ export function PlayNav() {
             {label}
           </Link>
         ))}
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="flex flex-1 flex-col items-center gap-1 py-2 text-[10px] text-muted"
-        >
-          <Menu className="h-5 w-5" />
-          Menu
-        </button>
       </nav>
 
       <NavDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />

@@ -55,7 +55,7 @@ export function NavDrawer({
         aria-label="Fermer le menu"
       />
 
-      <aside className="absolute inset-y-0 right-0 flex w-80 max-w-[85vw] flex-col overflow-y-auto border-l border-border bg-surface">
+      <aside className="absolute inset-y-0 left-0 flex w-80 max-w-[85vw] flex-col overflow-y-auto border-r border-border bg-surface">
         <div className="flex items-center justify-between border-b border-border p-4">
           <div className="min-w-0">
             {profile ? (
