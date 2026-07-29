@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Send } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Message } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 export default function ConversationPage({
   params,
@@ -89,7 +90,7 @@ export default function ConversationPage({
     setDraft("");
   };
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col">

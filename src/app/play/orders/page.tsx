@@ -155,7 +155,14 @@ function OrdersInner() {
 
 export default function OrdersPage() {
   return (
-    <Suspense fallback={<p className="py-12 text-center text-muted">…</p>}>
+    <Suspense
+      fallback={
+        <div className="space-y-6">
+          <HeaderSkeleton />
+          <ListSkeleton count={4} />
+        </div>
+      }
+    >
       <OrdersInner />
     </Suspense>
   );

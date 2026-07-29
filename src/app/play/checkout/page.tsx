@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/backend/client";
 import { useCart } from "@/lib/cart";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 import { formatFcfa } from "@/lib/types";
 
 type PayMethod = {
@@ -25,7 +26,7 @@ const METHODS: PayMethod[] = [
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { lines, subtotal, clear } = useCart();
+  const { lines, subtotal, clear, hydrated } = useCart();
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -40,6 +41,17 @@ export default function CheckoutPage() {
       .auth.getUser()
       .then(({ data }) => setAuthed(Boolean(data.user)));
   }, []);
+
+  // authed === null : état encore inconnu. Sans ce garde, le formulaire de
+  // commande complet s'affichait avant de basculer sur « Connexion requise ».
+  if (authed === null || !hydrated) {
+    return (
+      <div className="mx-auto max-w-lg space-y-6">
+        <HeaderSkeleton />
+        <ListSkeleton count={3} />
+      </div>
+    );
+  }
 
   if (authed === false) {
     return (

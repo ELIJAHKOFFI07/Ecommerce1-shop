@@ -4,6 +4,7 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, History, Minus, Plus } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { formatFcfa, type Product, type StockMovement } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 const LOW_STOCK_THRESHOLD = 5;
 
@@ -57,7 +58,7 @@ export default function AdminStockPage() {
     });
   }, [products, query, lowOnly]);
 
-  if (loading) return <p className="py-16 text-center text-muted">Chargement…</p>;
+  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
 
   return (
     <div>
@@ -233,7 +234,7 @@ function StockHistoryDialog({
           </button>
         </div>
         {loading ? (
-          <p className="py-8 text-center text-muted">Chargement…</p>
+          <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>
         ) : movements.length === 0 ? (
           <p className="py-8 text-center text-muted">Aucun mouvement enregistré.</p>
         ) : (

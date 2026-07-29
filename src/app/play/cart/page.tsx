@@ -4,9 +4,22 @@ import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart, keyOf } from "@/lib/cart";
 import { formatFcfa } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 export default function CartPage() {
-  const { lines, updateQuantity, remove, subtotal, count } = useCart();
+  const { lines, updateQuantity, remove, subtotal, count, hydrated } =
+    useCart();
+
+  // Le panier n'est lisible qu'après lecture de localStorage : sans ce
+  // garde, « Votre panier est vide » s'affichait puis disparaissait.
+  if (!hydrated) {
+    return (
+      <div className="space-y-6">
+        <HeaderSkeleton />
+        <ListSkeleton count={3} />
+      </div>
+    );
+  }
 
   if (lines.length === 0) {
     return (

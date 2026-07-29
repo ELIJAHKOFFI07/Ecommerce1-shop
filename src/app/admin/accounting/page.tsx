@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/backend/client";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 import {
   formatFcfa,
   type PlatformSettings,
@@ -91,7 +92,7 @@ export default function AccountingPage() {
       </div>
 
       {loading ? (
-        <p className="py-16 text-center text-muted">Chargement…</p>
+        <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

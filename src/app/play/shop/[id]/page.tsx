@@ -5,6 +5,7 @@ import { ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Product, Shop } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
+import { HeaderSkeleton, ProductGridSkeleton } from "@/components/Skeleton";
 
 export default function ShopPage({
   params,
@@ -36,7 +37,7 @@ export default function ShopPage({
     })();
   }, [id]);
 
-  if (loading) return <p className="py-16 text-center text-muted">Chargement…</p>;
+  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ProductGridSkeleton /></div>;
   if (!shop)
     return <p className="py-16 text-center text-muted">Boutique introuvable.</p>;
 

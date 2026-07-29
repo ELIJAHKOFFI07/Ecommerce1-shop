@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 import {
   SPIN_SEGMENTS,
   canSpinToday,
@@ -74,7 +75,7 @@ export default function SpinPage() {
   const canSpin = canSpinToday(lastSpinAt);
 
   if (loading) {
-    return <p className="py-20 text-center text-muted">Chargement…</p>;
+    return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
   }
 
   if (authed === false) {

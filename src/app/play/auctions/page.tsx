@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Gavel, Timer } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 import {
   auctionRemainingLabel,
   formatFcfa,
@@ -32,7 +33,13 @@ export default function AuctionsPage() {
     load();
   }, [load]);
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading)
+    return (
+      <div className="space-y-6">
+        <HeaderSkeleton />
+        <ListSkeleton count={4} />
+      </div>
+    );
 
   return (
     <div className="mx-auto max-w-2xl">

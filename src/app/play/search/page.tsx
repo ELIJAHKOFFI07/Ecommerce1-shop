@@ -6,6 +6,7 @@ import { Search as SearchIcon } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
+import { ProductGridSkeleton } from "@/components/Skeleton";
 
 type Sort = "recent" | "price_asc" | "price_desc" | "popular";
 
@@ -18,7 +19,9 @@ function SearchInner() {
   const [sort, setSort] = useState<Sort>("recent");
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
+  // true dès le départ : la recherche part au montage. À false, le premier
+  // rendu affichait « Aucun résultat » avant même la première requête.
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     createClient()
@@ -117,7 +120,7 @@ function SearchInner() {
       </div>
 
       {loading ? (
-        <p className="py-12 text-center text-muted">Recherche…</p>
+        <ProductGridSkeleton />
       ) : products.length === 0 ? (
         <p className="py-12 text-center text-muted">Aucun résultat.</p>
       ) : (
@@ -133,7 +136,7 @@ function SearchInner() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<p className="py-12 text-center text-muted">…</p>}>
+    <Suspense fallback={<ProductGridSkeleton />}>
       <SearchInner />
     </Suspense>
   );

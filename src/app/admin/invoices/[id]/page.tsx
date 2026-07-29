@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Printer } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { formatFcfa, type Order } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 export default function InvoiceDetailPage({
   params,
@@ -29,7 +30,7 @@ export default function InvoiceDetailPage({
     })();
   }, [id]);
 
-  if (loading) return <p className="py-16 text-center text-muted">Chargement…</p>;
+  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
   if (!order) return <p className="py-16 text-center text-muted">Commande introuvable.</p>;
 
   const address = order.address_snapshot as Record<string, string>;

@@ -6,6 +6,7 @@ import { GitCompareArrows, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { clearCompare, getCompareIds, toggleCompareId } from "@/lib/compare";
 import { formatFcfa, type Product } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 const CONDITION_LABELS: Record<string, string> = {
   neuf: "Neuf",
@@ -48,7 +49,7 @@ export default function ComparePage() {
     load();
   };
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
 
   if (products.length < 2) {
     return (

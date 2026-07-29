@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Receipt } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { ORDER_STATUS_LABELS, formatFcfa, type Order } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 export default function InvoicesPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -33,7 +34,7 @@ export default function InvoicesPage() {
       o.shops?.name?.toLowerCase().includes(query.toLowerCase()),
   );
 
-  if (loading) return <p className="py-16 text-center text-muted">Chargement…</p>;
+  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
 
   return (
     <div>

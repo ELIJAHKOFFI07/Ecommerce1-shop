@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Product, Wishlist } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
+import { HeaderSkeleton, ProductGridSkeleton } from "@/components/Skeleton";
 
 export default function WishlistDetailPage({
   params,
@@ -40,7 +41,7 @@ export default function WishlistDetailPage({
     })();
   }, [id]);
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ProductGridSkeleton /></div>;
 
   return (
     <div>

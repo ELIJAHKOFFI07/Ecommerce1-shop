@@ -3,20 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Bell,
-  Bookmark,
-  Gift,
-  Handshake,
-  LogOut,
-  MessageCircle,
-  Package,
-  Sparkles,
-  Store,
-  UserPen,
-  Wallet,
-} from "lucide-react";
+import { LogOut, UserPen } from "lucide-react";
 import { ROLE_LABELS, roleOf } from "@/lib/roles";
+import { SECTIONS, visibleLinks } from "@/lib/nav";
 import { createClient } from "@/lib/backend/client";
 import { PointsCard } from "@/components/play/PointsCard";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
@@ -148,32 +137,32 @@ export default function AccountPage() {
         <ThemeSwitcher />
       </div>
 
-      <div className="mt-4 space-y-2">
-        <AccountLink href="/play/orders" icon={<Package />} label="Mes commandes" />
-        <AccountLink
-          href="/play/notifications"
-          icon={<Bell />}
-          label="Notifications"
-        />
-        <AccountLink
-          href="/play/messages"
-          icon={<MessageCircle />}
-          label="Messages"
-        />
-        <AccountLink href="/play/offers" icon={<Handshake />} label="Mes offres" />
-        <AccountLink href="/play/wallet" icon={<Wallet />} label="Portefeuille" />
-        <AccountLink href="/play/sell" icon={<Store />} label="Ma boutique / Vendre" />
-        <AccountLink href="/play/wishlists" icon={<Bookmark />} label="Mes listes" />
-        <AccountLink
-          href="/play/spin"
-          icon={<Sparkles />}
-          label="Roue de la chance"
-        />
-        <AccountLink href="/play/referral" icon={<Gift />} label="Parrainage" />
-        {profile?.is_admin && (
-          <AccountLink href="/admin" icon={<Store />} label="Back-office admin" />
-        )}
-      </div>
+      {/* Même source que le menu de navigation (src/lib/nav.ts) : une entrée
+          ajoutée là apparaît automatiquement aux deux endroits. */}
+      {SECTIONS.map((section) => {
+        const links = visibleLinks(section.links, {
+          canSell: Boolean(profile?.is_seller || profile?.is_admin),
+          isAdmin: profile?.is_admin ?? false,
+        }).filter((l) => l.href !== "/play/account/edit");
+        if (links.length === 0) return null;
+        return (
+          <div key={section.title} className="mt-6">
+            <p className="mb-2 text-xs uppercase tracking-wide text-muted">
+              {section.title}
+            </p>
+            <div className="space-y-2">
+              {links.map(({ href, label, icon: Icon }) => (
+                <AccountLink
+                  key={`${section.title}-${href}`}
+                  href={href}
+                  icon={<Icon />}
+                  label={label}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
 
       <button
         onClick={signOut}

@@ -29,6 +29,8 @@ type CartContextValue = {
   clear: () => void;
   subtotal: number;
   count: number;
+  /// false tant que le panier n'a pas été relu depuis localStorage.
+  hydrated: boolean;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -41,6 +43,11 @@ function keyOf(productId: string, variantId: string | null) {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
+  /// Le panier vit dans localStorage, illisible pendant le rendu serveur :
+  /// le premier rendu est donc toujours « panier vide ». Ce drapeau permet
+  /// aux écrans d'afficher un shimmer plutôt que ce faux état vide, qui
+  /// s'affichait puis disparaissait dès la lecture du stockage.
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -53,11 +60,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
         // panier corrompu : on repart à zéro plutôt que de planter.
       }
     }
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
+    // Ne jamais écrire avant l'hydratation : cet effet s'exécute au montage
+    // avec le panier vide et écraserait le panier réellement stocké.
+    if (!hydrated) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
-  }, [lines]);
+  }, [lines, hydrated]);
 
   const value = useMemo<CartContextValue>(() => {
     const cap = (qty: number, stock: number) =>
@@ -115,8 +126,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clear: () => setLines([]),
       subtotal: lines.reduce((s, l) => s + l.unitPrice * l.quantity, 0),
       count: lines.reduce((s, l) => s + l.quantity, 0),
+      hydrated,
     };
-  }, [lines]);
+  }, [lines, hydrated]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

@@ -12,6 +12,7 @@ import { AuctionBlock } from "@/components/play/AuctionBlock";
 import { PriceHistory } from "@/components/play/PriceHistory";
 import { ProductActions } from "@/components/play/ProductActions";
 import { ProductQna } from "@/components/play/ProductQna";
+import { HeaderSkeleton, ProductGridSkeleton } from "@/components/Skeleton";
 
 export default function ProductPage({
   params,
@@ -50,7 +51,7 @@ export default function ProductPage({
     })();
   }, [id]);
 
-  if (loading) return <p className="py-16 text-center text-muted">Chargement…</p>;
+  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ProductGridSkeleton /></div>;
   if (!product)
     return <p className="py-16 text-center text-muted">Produit introuvable.</p>;
 

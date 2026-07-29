@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Copy, Gift, Trophy } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Profile, ReferralLeaderboardEntry } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 export default function ReferralPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -66,7 +67,7 @@ export default function ReferralPage() {
     await load();
   };
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
 
   return (
     <div className="mx-auto max-w-2xl">
