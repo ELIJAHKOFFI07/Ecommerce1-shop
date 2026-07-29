@@ -14,8 +14,12 @@ create table if not exists public.spin_rewards (
   coupon_code text,
   created_at timestamptz not null default now()
 );
+-- Note : pas d'index sur (created_at::date) — le cast timestamptz -> date
+-- dépend du fuseau de la session, il est STABLE et non IMMUTABLE, donc
+-- interdit dans une expression d'index. L'index (user_id, created_at)
+-- couvre la recherche « a-t-il déjà joué aujourd'hui ? » de spin_wheel.
 create index if not exists idx_spin_rewards_user_day
-  on public.spin_rewards (user_id, (created_at::date));
+  on public.spin_rewards (user_id, created_at desc);
 
 alter table public.spin_rewards enable row level security;
 create policy "spin_rewards_own_read" on public.spin_rewards for select
@@ -114,8 +118,10 @@ create table if not exists public.product_boosts (
   ends_at timestamptz not null,
   created_at timestamptz not null default now()
 );
+-- Note : pas de prédicat `where ends_at > now()` — now() n'est pas IMMUTABLE
+-- et un index partiel l'exige. L'index simple sert les mêmes requêtes.
 create index if not exists idx_product_boosts_active
-  on public.product_boosts (ends_at) where ends_at > now();
+  on public.product_boosts (ends_at);
 
 alter table public.product_boosts enable row level security;
 create policy "product_boosts_read" on public.product_boosts for select using (true);

@@ -62,8 +62,11 @@ create table if not exists public.shop_stories (
   created_at timestamptz not null default now(),
   expires_at timestamptz not null default (now() + interval '24 hours')
 );
+-- Note : pas de prédicat `where expires_at > now()` — now() n'est pas
+-- IMMUTABLE et un index partiel l'exige. L'index simple sert les mêmes
+-- requêtes (stories actives = expires_at > now()).
 create index if not exists idx_shop_stories_active
-  on public.shop_stories (expires_at) where expires_at > now();
+  on public.shop_stories (expires_at);
 
 create table if not exists public.shop_story_views (
   story_id uuid not null references public.shop_stories(id) on delete cascade,

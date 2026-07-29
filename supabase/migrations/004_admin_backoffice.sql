@@ -118,10 +118,10 @@ returns table (
 )
 language sql stable security definer set search_path = public as $$
   select s.id, s.name,
-         count(o.id)::bigint,
-         coalesce(sum(o.total), 0)::bigint,
-         coalesce(sum(o.total * (select commission_percent from platform_settings) / 100), 0)::bigint,
-         coalesce(sum(o.total - o.total * (select commission_percent from platform_settings) / 100), 0)::bigint
+         count(o.id)::bigint as orders_count,
+         coalesce(sum(o.total), 0)::bigint as gmv,
+         coalesce(sum(o.total * (select commission_percent from platform_settings) / 100), 0)::bigint as commission,
+         coalesce(sum(o.total - o.total * (select commission_percent from platform_settings) / 100), 0)::bigint as payout
   from public.shops s
   join public.orders o on o.shop_id = s.id
     and o.status = 'delivered'

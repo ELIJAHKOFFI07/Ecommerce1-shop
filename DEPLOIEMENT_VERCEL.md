@@ -22,17 +22,30 @@ Conséquence : sans ré-application, il manque les enchères, la roue, les
 stories, les listes de souhaits, `platform_settings`, `stock_movements` et
 toute la comptabilité admin.
 
-Dans **Supabase → SQL Editor**, exécuter dans cet ordre :
+**Méthode simple (recommandée)** — un seul fichier :
 
-1. `supabase/schema.sql`
-2. `supabase/migrations/001_growth_features.sql`
-3. `supabase/migrations/002_growth_features_2.sql`
-4. `supabase/migrations/003_growth_features_3.sql`
-5. `supabase/migrations/004_admin_backoffice.sql`
-6. `supabase/seed.sql` (catégories / zones / coupons de démo)
+1. Ouvrir **Supabase → SQL Editor → New query**
+2. Coller **tout** le contenu de **`supabase/SETUP_COMPLET.sql`**
+3. **Run**
 
-Les scripts sont idempotents (`create table if not exists`,
-`create or replace function`) : les relancer ne détruit aucune donnée.
+Ce fichier regroupe, dans le bon ordre, `schema.sql`, les 4 migrations et
+`seed.sql` (catégories, zones de livraison, coupons de démo).
+
+Il est **ré-exécutable sans perte de données** : tables en
+`create table if not exists`, fonctions en `create or replace`, et chaque
+`create policy` est précédé d'un `drop policy if exists` (PostgreSQL ne
+supporte pas `create policy if not exists`, sans quoi une seconde exécution
+échouerait).
+
+> `SETUP_COMPLET.sql` est **généré** à partir des fichiers sources. Pour
+> modifier le schéma, éditer `schema.sql` / `migrations/*.sql`, jamais le
+> fichier généré.
+
+**Vérification** — après exécution, cette requête doit renvoyer `42` :
+
+```sql
+select count(*) from information_schema.tables where table_schema = 'public';
+```
 
 Pour créer un compte administrateur, après s'être inscrit dans l'app :
 
