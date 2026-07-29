@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { relativeTime, type Conversation, type Profile } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 type Row = Conversation & { otherName: string };
 
@@ -62,7 +63,7 @@ export default function MessagesPage() {
     load();
   }, [load]);
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>);
 
   if (!connected) {
     return (

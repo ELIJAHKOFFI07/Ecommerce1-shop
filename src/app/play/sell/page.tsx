@@ -17,6 +17,7 @@ import {
 } from "@/lib/types";
 import { BoostDialog } from "@/components/play/BoostDialog";
 import { EditProductDialog } from "@/components/play/EditProductDialog";
+import { ImagePicker } from "@/components/play/ImagePicker";
 import { StoriesManager } from "@/components/play/StoriesManager";
 
 function StatTile({ label, value }: { label: string; value: string }) {
@@ -527,13 +528,7 @@ function NewProductForm({
         placeholder="Ville"
         className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
       />
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-        className="w-full text-sm text-muted"
-      />
+      <ImagePicker files={files} onChange={setFiles} />
       {error && <p className="text-sm text-red-400">{error}</p>}
       <button
         disabled={loading}

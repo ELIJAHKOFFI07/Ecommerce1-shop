@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Bookmark, Plus, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Wishlist } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 export default function WishlistsPage() {
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
@@ -49,7 +50,7 @@ export default function WishlistsPage() {
     load();
   };
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><ListSkeleton count={4} /></div>);
 
   if (authed === false) {
     return (

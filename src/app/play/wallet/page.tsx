@@ -11,6 +11,7 @@ import {
   type PlatformSettings,
   type WalletTransaction,
 } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton, Skeleton } from "@/components/Skeleton";
 
 export default function WalletPage() {
   const [connected, setConnected] = useState(true);
@@ -88,7 +89,7 @@ export default function WalletPage() {
     await load();
   };
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><Skeleton className="h-28 w-full rounded-xl" /><Skeleton className="h-56 w-full rounded-xl" /><ListSkeleton count={4} /></div>);
 
   if (!connected) {
     return (

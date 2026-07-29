@@ -7,6 +7,7 @@ import { createClient } from "@/lib/backend/client";
 import type { Product, Review } from "@/lib/types";
 import { formatFcfa } from "@/lib/types";
 import { useCart } from "@/lib/cart";
+import { useSession } from "@/lib/session";
 import { AuctionBlock } from "@/components/play/AuctionBlock";
 import { PriceHistory } from "@/components/play/PriceHistory";
 import { ProductActions } from "@/components/play/ProductActions";
@@ -19,6 +20,7 @@ export default function ProductPage({
 }) {
   const { id } = use(params);
   const { add } = useCart();
+  const { profile } = useSession();
   const [product, setProduct] = useState<Product | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +58,7 @@ export default function ProductPage({
   const variant = product.product_variants?.find((v) => v.id === variantId);
   const price = variant?.price ?? product.price;
   const stock = variant?.stock ?? product.stock;
+  const isMine = profile != null && profile.id === product.seller_id;
   const avg =
     reviews.length === 0
       ? 0
@@ -152,20 +155,38 @@ export default function ProductPage({
           </div>
         )}
 
-        <button
-          disabled={
-            stock <= 0 ||
-            (Boolean(product.product_variants?.length) && !variantId)
-          }
-          onClick={() => {
-            add(product, variantId);
-            setAdded(true);
-            setTimeout(() => setAdded(false), 1500);
-          }}
-          className="mt-6 w-full rounded-full bg-gold py-3 font-semibold text-black transition-transform hover:scale-[1.02] disabled:opacity-40"
-        >
-          {added ? "Ajouté ✓" : "Ajouter au panier"}
-        </button>
+        {isMine ? (
+          // Un vendeur ne commande pas sa propre marchandise. La règle est
+          // aussi appliquée par place_order (migration 006) : le panier vit
+          // dans le navigateur et l'appel RPC peut être rejoué à la main.
+          <div className="mt-6 rounded-xl border border-border bg-surface p-4 text-center">
+            <p className="text-sm font-medium">C&apos;est votre produit.</p>
+            <p className="mt-1 text-xs text-muted">
+              Vous ne pouvez pas commander votre propre marchandise.
+            </p>
+            <Link
+              href="/play/sell"
+              className="mt-3 inline-block rounded-full border border-border px-5 py-2 text-sm hover:border-gold"
+            >
+              Gérer mes produits
+            </Link>
+          </div>
+        ) : (
+          <button
+            disabled={
+              stock <= 0 ||
+              (Boolean(product.product_variants?.length) && !variantId)
+            }
+            onClick={() => {
+              add(product, variantId);
+              setAdded(true);
+              setTimeout(() => setAdded(false), 1500);
+            }}
+            className="mt-6 w-full rounded-full bg-gold py-3 font-semibold text-black transition-transform hover:scale-[1.02] disabled:opacity-40"
+          >
+            {added ? "Ajouté ✓" : "Ajouter au panier"}
+          </button>
+        )}
 
         <ProductActions product={product} />
         <AuctionBlock product={product} />

@@ -13,8 +13,10 @@ import {
   Package,
   Sparkles,
   Store,
+  UserPen,
   Wallet,
 } from "lucide-react";
+import { ROLE_LABELS, roleOf } from "@/lib/roles";
 import { createClient } from "@/lib/backend/client";
 import { PointsCard } from "@/components/play/PointsCard";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
@@ -79,19 +81,41 @@ export default function AccountPage() {
   return (
     <div className="mx-auto max-w-lg">
       <div className="flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gold/15 text-2xl font-bold text-gold">
-          {(profile?.full_name ?? profile?.username ?? "?")[0]?.toUpperCase()}
+        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-gold/15">
+          {profile?.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={profile.avatar_url}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center text-2xl font-bold text-gold">
+              {(profile?.full_name ?? profile?.username ?? "?")[0]?.toUpperCase()}
+            </span>
+          )}
         </div>
-        <div>
-          <p className="text-lg font-bold">
+        <div className="min-w-0">
+          <p className="truncate text-lg font-bold">
             {profile?.full_name ?? profile?.username ?? "Utilisateur"}
           </p>
-          <p className="text-sm text-muted">{email}</p>
+          <p className="truncate text-sm text-muted">{email}</p>
           <p className="mt-1 text-sm text-gold">
-            {profile?.loyalty_points ?? 0} points de fidélité
+            {ROLE_LABELS[roleOf(profile) ?? "user"]} ·{" "}
+            {profile?.loyalty_points ?? 0} points
           </p>
         </div>
       </div>
+
+      <Link
+        href="/play/account/edit"
+        className="mt-4 flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-gold/50"
+      >
+        <span className="text-gold">
+          <UserPen />
+        </span>
+        Modifier mon profil
+      </Link>
 
       <div className="mt-6">
         <PointsCard

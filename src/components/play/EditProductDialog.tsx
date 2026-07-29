@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/backend/client";
 import { uploadImage } from "@/lib/storage";
+import { ImagePicker } from "@/components/play/ImagePicker";
 import type { Category, Product, ProductImage } from "@/lib/types";
 
 /// Édition d'un produit par son vendeur.
@@ -218,12 +219,10 @@ export function EditProductDialog({
               ))}
             </div>
           )}
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => setNewFiles(Array.from(e.target.files ?? []))}
-            className="w-full text-sm text-muted"
+          <ImagePicker
+            files={newFiles}
+            onChange={setNewFiles}
+            label="Ajouter d'autres photos"
           />
         </div>
 

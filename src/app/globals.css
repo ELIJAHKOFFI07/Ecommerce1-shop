@@ -15,14 +15,20 @@
   --gold-dark: #b8933a;
 }
 
-/* Mode clair (data-theme="light" posé sur <html> par le sélecteur de thème). */
+/* Mode clair (data-theme="light" posé sur <html> par le sélecteur de thème).
+   L'accent est assombri : #e6c15c sur fond blanc donne un contraste d'environ
+   1,7:1, largement sous le seuil lisible (4,5:1). Les classes text-gold,
+   border-gold et bg-gold partagent la même variable, donc l'accent doit
+   rester lisible en texte ET utilisable en fond avec du texte foncé. */
 :root[data-theme="light"] {
   --background: #f7f5f0;
   --foreground: #0b0b0d;
   --surface: #ffffff;
-  --surface-2: #edeae2;
-  --border: #d8d4c8;
-  --muted: #6b6b6f;
+  --surface-2: #eeebe3;
+  --border: #cfcabb;
+  --muted: #5c5c62;
+  --gold: #8a6a12;
+  --gold-dark: #6b510b;
 }
 
 /* Palettes de couleurs : seul l'accent change (comme côté mobile), les
@@ -32,6 +38,14 @@
 :root[data-preset="ruby"]     { --gold: #e85c7b; --gold-dark: #b93a57; }
 :root[data-preset="amethyst"] { --gold: #a378e8; --gold-dark: #6d4cb0; }
 :root[data-preset="sahel"]    { --gold: #e8823d; --gold-dark: #b35a22; }
+
+/* Variantes claires des presets : les accents vifs ci-dessus sont conçus pour
+   un fond quasi-noir et deviennent illisibles sur fond clair. */
+:root[data-theme="light"][data-preset="emerald"]  { --gold: #10794a; --gold-dark: #0b5836; }
+:root[data-theme="light"][data-preset="ocean"]    { --gold: #16688f; --gold-dark: #0f4d6b; }
+:root[data-theme="light"][data-preset="ruby"]     { --gold: #b32744; --gold-dark: #8a1c33; }
+:root[data-theme="light"][data-preset="amethyst"] { --gold: #6b3fb0; --gold-dark: #4f2d84; }
+:root[data-theme="light"][data-preset="sahel"]    { --gold: #a8501a; --gold-dark: #7d3b12; }
 
 @theme inline {
   --color-background: var(--background);
@@ -59,6 +73,31 @@ html,
 body {
   max-width: 100%;
   overflow-x: hidden;
+}
+
+/* Shimmer des blocs de chargement (voir components/Skeleton.tsx). */
+@keyframes shimmer {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* Respecte le réglage système « réduire les animations ». */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer {
+    animation: none;
+    opacity: 0.7;
+  }
 }
 
 /* Les médias ne dépassent jamais leur conteneur. */

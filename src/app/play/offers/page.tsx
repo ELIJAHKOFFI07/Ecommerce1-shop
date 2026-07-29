@@ -10,6 +10,7 @@ import {
   relativeTime,
   type Offer,
 } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton, Skeleton } from "@/components/Skeleton";
 
 export default function OffersPage() {
   const [connected, setConnected] = useState(true);
@@ -100,7 +101,7 @@ export default function OffersPage() {
     await load();
   };
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><Skeleton className="h-10 w-full rounded-lg" /><ListSkeleton count={4} /></div>);
 
   if (!connected) {
     return (

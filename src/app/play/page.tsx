@@ -3,15 +3,19 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/backend/client";
+import { useSession } from "@/lib/session";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
 import { StoriesBar } from "@/components/play/StoriesBar";
+import { ProductGridSkeleton } from "@/components/Skeleton";
 
 export default function PlayHome() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasShop, setHasShop] = useState(false);
+  const { canSell, profile } = useSession();
 
   useEffect(() => {
     const supabase = createClient();
@@ -32,6 +36,27 @@ export default function PlayHome() {
     })();
   }, []);
 
+  // Le hero ne propose « Ouvrir ma boutique » qu'aux vendeurs qui n'en ont
+  // pas encore ; sinon il renvoie vers la gestion de la boutique.
+  useEffect(() => {
+    if (!profile) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await createClient()
+        .from("shops")
+        .select("id")
+        .eq("owner_id", profile.id)
+        .maybeSingle();
+      if (!cancelled) setHasShop(data != null);
+    })();
+    // Réinitialise au changement de compte (ou à la déconnexion) pour ne pas
+    // garder l'état de la session précédente.
+    return () => {
+      cancelled = true;
+      setHasShop(false);
+    };
+  }, [profile]);
+
   return (
     <div>
       <section className="mb-6">
@@ -46,20 +71,27 @@ export default function PlayHome() {
         <span className="text-sm text-gold">Faites la meilleure offre →</span>
       </Link>
 
-      <section className="mb-8 overflow-hidden rounded-2xl border border-gold/40 bg-gradient-to-br from-[#1f1a0c] to-[#3a2f14] p-8">
+      {/* Dégradé exprimé à partir de l'accent du thème : la version codée en
+          dur restait sombre en mode clair et rendait le texte illisible. */}
+      <section className="mb-8 overflow-hidden rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/15 to-gold/[0.03] p-6 md:p-8">
         <h1 className="text-2xl font-bold md:text-3xl">
-          Achetez & vendez, en toute confiance ✦
+          {hasShop
+            ? "Votre boutique vous attend ✦"
+            : "Achetez & vendez, en toute confiance ✦"}
         </h1>
         <p className="mt-2 max-w-lg text-muted">
-          Des milliers de produits, des vendeurs vérifiés, la négociation et le
-          paiement Mobile Money.
+          {hasShop
+            ? "Gérez vos produits, suivez vos commandes et vos ventes."
+            : "Des milliers de produits, des vendeurs vérifiés, la négociation et le paiement Mobile Money."}
         </p>
-        <Link
-          href="/play/sell"
-          className="mt-4 inline-block rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-black"
-        >
-          Ouvrir ma boutique
-        </Link>
+        {canSell && (
+          <Link
+            href="/play/sell"
+            className="mt-4 inline-block rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-black"
+          >
+            {hasShop ? "Gérer ma boutique" : "Ouvrir ma boutique"}
+          </Link>
+        )}
       </section>
 
       {categories.length > 0 && (
@@ -93,14 +125,7 @@ export default function PlayHome() {
           </p>
         )}
         {loading ? (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-[3/4] animate-pulse rounded-xl bg-surface-2"
-              />
-            ))}
-          </div>
+          <ProductGridSkeleton />
         ) : products.length === 0 ? (
           <p className="py-12 text-center text-muted">
             Aucun produit pour le moment.

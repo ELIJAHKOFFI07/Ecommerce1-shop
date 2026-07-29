@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Bell, CheckCheck } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { relativeTime, type AppNotification } from "@/lib/types";
+import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 
 /// Icône par type de notification émis par les RPC serveur
 /// (order, offer, auction, message, price_drop).
@@ -90,7 +91,7 @@ export default function NotificationsPage() {
     );
   };
 
-  if (loading) return <p className="py-20 text-center text-muted">Chargement…</p>;
+  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><ListSkeleton count={6} /></div>);
 
   if (!connected) {
     return (
