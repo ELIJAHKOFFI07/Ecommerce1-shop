@@ -50,3 +50,21 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/* Garde-fou : aucun élément ne doit provoquer de défilement horizontal de la
+   page entière. Les tableaux et carrousels larges défilent dans leur propre
+   conteneur `overflow-x-auto` ; ceci empêche qu'un débordement isolé décale
+   toute la mise en page (constaté sur mobile et sur desktop). */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Les médias ne dépassent jamais leur conteneur. */
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}

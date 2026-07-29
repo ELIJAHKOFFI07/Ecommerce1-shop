@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
+import { uploadImage } from "@/lib/storage";
 import { storyRemainingLabel, type ShopStory } from "@/lib/types";
 
 export function StoriesManager({ shopId }: { shopId: string }) {
@@ -33,15 +34,14 @@ export function StoriesManager({ shopId }: { shopId: string }) {
       const supabase = createClient();
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) throw new Error("Non connecté");
-      // Le chemin doit commencer par l'uid (policy Storage).
-      const path = `${userData.user.id}/${Date.now()}_${file.name}`;
-      const { error: upErr } = await supabase.storage
-        .from("shop-images")
-        .upload(path, file);
-      if (upErr) throw new Error(upErr.message);
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("shop-images").getPublicUrl(path);
+      // uploadImage préfixe le chemin par l'uid (exigé par la policy Storage)
+      // et assainit le nom du fichier, que Supabase refuse s'il contient des
+      // accents, espaces ou parenthèses.
+      const publicUrl = await uploadImage(
+        "shop-images",
+        userData.user.id,
+        file,
+      );
 
       const { error: insErr } = await supabase.from("shop_stories").insert({
         shop_id: shopId,

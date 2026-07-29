@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Zap } from "lucide-react";
+import { Pencil, Store, Zap } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
+import { useSession } from "@/lib/session";
+import { uploadImage } from "@/lib/storage";
 import {
   ORDER_STATUS_LABELS,
   formatFcfa,
@@ -14,6 +16,7 @@ import {
   type ShopStats,
 } from "@/lib/types";
 import { BoostDialog } from "@/components/play/BoostDialog";
+import { EditProductDialog } from "@/components/play/EditProductDialog";
 import { StoriesManager } from "@/components/play/StoriesManager";
 
 function StatTile({ label, value }: { label: string; value: string }) {
@@ -45,7 +48,9 @@ export default function SellPage() {
     "products",
   );
   const [boosting, setBoosting] = useState<Product | null>(null);
+  const [editing, setEditing] = useState<Product | null>(null);
   const [stats, setStats] = useState<ShopStats | null>(null);
+  const { canSell, loading: sessionLoading } = useSession();
 
   const load = useCallback(async () => {
     const supabase = createClient();
@@ -109,8 +114,32 @@ export default function SellPage() {
     );
   }
 
-  if (authed === null) {
+  if (authed === null || sessionLoading) {
     return <p className="py-16 text-center text-muted">Chargement…</p>;
+  }
+
+  // Seuls les comptes vendeur (ou admin) peuvent vendre. Le statut est
+  // accordé par un administrateur — voir migration 005. La base applique la
+  // même règle via les policies shops_insert / products_insert : masquer
+  // l'écran ne suffirait pas.
+  if (!canSell) {
+    return (
+      <div className="mx-auto max-w-md py-16 text-center">
+        <Store className="mx-auto h-10 w-10 text-gold" />
+        <h1 className="mt-4 text-xl font-bold">Compte vendeur requis</h1>
+        <p className="mt-2 text-sm text-muted">
+          Votre compte est un compte client : vous pouvez acheter, mais pas
+          encore vendre. Contactez l&apos;administrateur de la plateforme pour
+          demander l&apos;activation du statut vendeur.
+        </p>
+        <Link
+          href="/play"
+          className="mt-6 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+        >
+          Retour à la boutique
+        </Link>
+      </div>
+    );
   }
 
   if (!shop) {
@@ -219,18 +248,26 @@ export default function SellPage() {
                     />
                   )}
                 </div>
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <p className="line-clamp-1 text-sm font-medium">{p.title}</p>
                   <p className="text-xs text-muted">
                     {formatFcfa(p.price)} · stock {p.stock} · {p.status}
                   </p>
                 </div>
-                <button
-                  onClick={() => setBoosting(p)}
-                  className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs hover:border-gold"
-                >
-                  <Zap className="h-3.5 w-3.5 text-gold" /> Booster
-                </button>
+                <div className="flex shrink-0 flex-wrap justify-end gap-2">
+                  <button
+                    onClick={() => setEditing(p)}
+                    className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs hover:border-gold"
+                  >
+                    <Pencil className="h-3.5 w-3.5 text-gold" /> Modifier
+                  </button>
+                  <button
+                    onClick={() => setBoosting(p)}
+                    className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs hover:border-gold"
+                  >
+                    <Zap className="h-3.5 w-3.5 text-gold" /> Booster
+                  </button>
+                </div>
               </div>
             ))
           )}
@@ -241,6 +278,18 @@ export default function SellPage() {
 
       {boosting && (
         <BoostDialog product={boosting} onClose={() => setBoosting(null)} />
+      )}
+
+      {editing && (
+        <EditProductDialog
+          product={editing}
+          categories={categories}
+          onClose={() => setEditing(null)}
+          onSaved={() => {
+            setEditing(null);
+            load();
+          }}
+        />
       )}
 
       {tab === "orders" && (
@@ -400,18 +449,12 @@ function NewProductForm({
       if (prodErr) throw prodErr;
 
       for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const path = `${uid}/${Date.now()}_${file.name}`;
-        const { error: upErr } = await supabase.storage
-          .from("product-images")
-          .upload(path, file);
-        if (upErr) throw upErr;
-        const { data: pub } = supabase.storage
-          .from("product-images")
-          .getPublicUrl(path);
+        // uploadImage assainit le nom du fichier : accents, espaces et
+        // parenthèses sont rejetés par Supabase Storage.
+        const url = await uploadImage("product-images", uid, files[i]);
         await supabase
           .from("product_images")
-          .insert({ product_id: product.id, url: pub.publicUrl, position: i });
+          .insert({ product_id: product.id, url, position: i });
       }
       onCreated();
     } catch (err) {

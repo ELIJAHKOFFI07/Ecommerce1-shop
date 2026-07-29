@@ -4,18 +4,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Search, ShoppingCart, User, Store } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { useSession } from "@/lib/session";
 
-const items = [
-  { href: "/play", label: "Accueil", icon: Home },
-  { href: "/play/search", label: "Recherche", icon: Search },
-  { href: "/play/sell", label: "Vendre", icon: Store },
-  { href: "/play/cart", label: "Panier", icon: ShoppingCart },
-  { href: "/play/account", label: "Compte", icon: User },
+const ALL_ITEMS = [
+  { href: "/play", label: "Accueil", icon: Home, sellerOnly: false },
+  { href: "/play/search", label: "Recherche", icon: Search, sellerOnly: false },
+  { href: "/play/sell", label: "Vendre", icon: Store, sellerOnly: true },
+  { href: "/play/cart", label: "Panier", icon: ShoppingCart, sellerOnly: false },
+  { href: "/play/account", label: "Compte", icon: User, sellerOnly: false },
 ];
 
 export function PlayNav() {
   const pathname = usePathname();
   const { count } = useCart();
+  const { canSell } = useSession();
+
+  // « Vendre » n'apparaît que pour les comptes vendeur/admin. L'accès direct à
+  // /play/sell reste bloqué côté page et par les policies RLS.
+  const items = ALL_ITEMS.filter((item) => !item.sellerOnly || canSell);
 
   return (
     <>

@@ -61,7 +61,10 @@ export default function AdminLayout({
           ← Retour à l&apos;app
         </Link>
       </aside>
-      <main className="flex-1 p-6">
+      {/* min-w-0 : sans lui, ce flex item garde `min-width: auto` et s'élargit
+          au contenu (tableaux), ce qui fait déborder toute la page au lieu de
+          laisser défiler les conteneurs `overflow-x-auto` internes. */}
+      <main className="min-w-0 flex-1 p-4 md:p-6">
         <div className="mb-6 flex gap-2 overflow-x-auto md:hidden">
           {links.map(({ href, label }) => (
             <Link

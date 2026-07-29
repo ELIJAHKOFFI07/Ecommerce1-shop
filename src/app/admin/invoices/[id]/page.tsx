@@ -86,7 +86,8 @@ export default function InvoiceDetailPage({
           </div>
         </div>
 
-        <table className="mt-8 w-full text-left">
+        <div className="mt-8 overflow-x-auto">
+        <table className="w-full min-w-[420px] text-left">
           <thead>
             <tr className="border-b border-border">
               <th className="pb-2">Article</th>
@@ -111,6 +112,7 @@ export default function InvoiceDetailPage({
             ))}
           </tbody>
         </table>
+        </div>
 
         <div className="ml-auto mt-4 w-56 space-y-1">
           <div className="flex justify-between">

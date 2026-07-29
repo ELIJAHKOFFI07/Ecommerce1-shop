@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/backend/server";
 import type { Profile } from "@/lib/types";
+import { ROLE_LABELS, roleOf } from "@/lib/roles";
 import { AdminUserRow } from "./AdminUserRow";
 
 export default async function AdminUsers() {
@@ -21,8 +22,8 @@ export default async function AdminUsers() {
               <th className="p-3">Utilisateur</th>
               <th className="p-3">Ville</th>
               <th className="p-3">Points</th>
-              <th className="p-3">Rôles</th>
-              <th className="p-3">Actions</th>
+              <th className="p-3">Rôle</th>
+              <th className="p-3">Changer le rôle</th>
             </tr>
           </thead>
           <tbody>
@@ -37,19 +38,20 @@ export default async function AdminUsers() {
                 <td className="p-3 text-muted">{u.city ?? "—"}</td>
                 <td className="p-3">{u.loyalty_points}</td>
                 <td className="p-3">
-                  {u.is_admin && (
-                    <span className="mr-1 rounded bg-gold/15 px-1.5 py-0.5 text-xs text-gold">
-                      admin
-                    </span>
-                  )}
-                  {u.is_seller && (
-                    <span className="rounded bg-surface-2 px-1.5 py-0.5 text-xs text-muted">
-                      vendeur
-                    </span>
-                  )}
+                  <span
+                    className={`whitespace-nowrap rounded px-1.5 py-0.5 text-xs ${
+                      u.is_admin
+                        ? "bg-gold/15 text-gold"
+                        : u.is_seller
+                          ? "bg-surface-2 text-foreground"
+                          : "bg-surface-2 text-muted"
+                    }`}
+                  >
+                    {ROLE_LABELS[roleOf(u) ?? "user"]}
+                  </span>
                 </td>
                 <td className="p-3">
-                  <AdminUserRow id={u.id} isAdmin={u.is_admin} />
+                  <AdminUserRow id={u.id} role={roleOf(u) ?? "user"} />
                 </td>
               </tr>
             ))}
