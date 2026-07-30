@@ -13,7 +13,12 @@ function LoginInner() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // Une erreur renvoyée par /auth/callback (consentement refusé, échange de
+  // code impossible) arrive dans l'URL : sans cela l'utilisateur reviendrait
+  // sur le formulaire sans savoir ce qui a échoué.
+  const [error, setError] = useState<string | null>(
+    () => params.get("error"),
+  );
 
   // Un visiteur arrêté au paiement revient à sa commande après connexion,
   // au lieu d'être renvoyé sur son compte et de devoir refaire le chemin.

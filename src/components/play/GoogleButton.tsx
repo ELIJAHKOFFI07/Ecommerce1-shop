@@ -21,9 +21,21 @@ export function GoogleButton({
   async function signIn() {
     setLoading(true);
     setError(null);
+    // On passe par /auth/callback : le flux PKCE renvoie un `code` qui doit
+    // être échangé contre une session côté serveur, sinon les cookies ne
+    // sont pas posés à temps pour le premier rendu.
+    //
+    // `location.origin` suit le domaine courant (local, préproduction ou
+    // production) — mais Supabase n'honore cette adresse que si elle figure
+    // dans sa liste de redirections autorisées, sinon il retombe sur la
+    // « Site URL » du projet. C'est la cause classique d'un retour sur
+    // localhost depuis un site en ligne.
+    const callback = new URL("/auth/callback", location.origin);
+    callback.searchParams.set("next", redirectTo);
+
     const { error: oauthError } = await createClient().auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${location.origin}${redirectTo}` },
+      options: { redirectTo: callback.toString() },
     });
     if (oauthError) {
       setLoading(false);
