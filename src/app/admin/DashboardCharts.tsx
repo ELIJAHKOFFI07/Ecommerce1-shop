@@ -7,9 +7,9 @@ import {
   DonutChart,
   Sparkline,
   type Point,
-  type Slice,
 } from "@/components/charts/Charts";
-import { formatFcfa, ORDER_STATUS_LABELS, type Order } from "@/lib/types";
+import { formatFcfa } from "@/lib/types";
+import type { Slice } from "@/lib/stats";
 
 export type DashboardData = {
   stats: {
@@ -152,29 +152,3 @@ function SmallTile({
   );
 }
 
-/// Regroupe les commandes par statut, en conservant l'ordre du cycle de vie
-/// plutôt qu'un tri par volume : la couleur suit le statut, pas son rang.
-export function statusDistribution(orders: Pick<Order, "status">[]): Slice[] {
-  const order: Order["status"][] = [
-    "pending",
-    "confirmed",
-    "preparing",
-    "shipped",
-    "delivered",
-    "cancelled",
-  ];
-  const counts = new Map<string, number>();
-  let others = 0;
-  for (const o of orders) {
-    if (order.includes(o.status)) {
-      counts.set(o.status, (counts.get(o.status) ?? 0) + 1);
-    } else {
-      others += 1;
-    }
-  }
-  const slices = order
-    .filter((s) => (counts.get(s) ?? 0) > 0)
-    .map((s) => ({ label: ORDER_STATUS_LABELS[s], value: counts.get(s)! }));
-  if (others > 0) slices.push({ label: "Autres", value: others });
-  return slices;
-}

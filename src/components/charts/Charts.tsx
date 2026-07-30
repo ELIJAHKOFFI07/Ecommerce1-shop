@@ -23,7 +23,8 @@ export const VIZ_SLOTS = [
   "var(--viz-6)",
 ] as const;
 
-export type Slice = { label: string; value: number };
+export type { Slice } from "@/lib/stats";
+import type { Slice } from "@/lib/stats";
 
 function useNumberFormat() {
   return useMemo(

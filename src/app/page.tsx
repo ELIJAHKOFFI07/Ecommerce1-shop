@@ -12,8 +12,12 @@ import { createClient } from "@/lib/backend/server";
 import { isBackendConfigured } from "@/lib/backend/client";
 import { formatFcfa, type Category, type Product } from "@/lib/types";
 import { LandingHeader } from "@/components/marketing/LandingHeader";
+import { HeroCarousel } from "@/components/marketing/HeroCarousel";
+import { ScrollCarousel } from "@/components/marketing/ScrollCarousel";
+import { CountUp } from "@/components/marketing/CountUp";
 import { Reveal } from "@/components/marketing/Reveal";
 import { Marquee } from "@/components/marketing/Marquee";
+import { Testimonial } from "@/components/marketing/Testimonial";
 import { ProductCard } from "@/components/play/ProductCard";
 
 const FloatingBag = dynamic(
@@ -29,24 +33,35 @@ export default async function Home() {
   let products: Product[] = [];
   let categories: Category[] = [];
   let connected = false;
+  let counts = { products: 0, shops: 0 };
 
   // La vitrine doit rester consultable même sans backend configuré : on
   // affiche alors la page sans catalogue plutôt qu'un écran d'erreur.
   if (isBackendConfigured()) {
     const supabase = await createClient();
-    const [productRes, categoryRes, userRes] = await Promise.all([
-      supabase
-        .from("products")
-        .select("*, product_images(url, position), shops(*)")
-        .eq("status", "active")
-        .order("created_at", { ascending: false })
-        .limit(8),
-      supabase.from("categories").select("*").order("position"),
-      supabase.auth.getUser(),
-    ]);
+    const [productRes, categoryRes, userRes, productCount, shopCount] =
+      await Promise.all([
+        supabase
+          .from("products")
+          .select("*, product_images(url, position), shops(*)")
+          .eq("status", "active")
+          .order("created_at", { ascending: false })
+          .limit(12),
+        supabase.from("categories").select("*").order("position"),
+        supabase.auth.getUser(),
+        supabase
+          .from("products")
+          .select("id", { count: "exact", head: true })
+          .eq("status", "active"),
+        supabase.from("shops").select("id", { count: "exact", head: true }),
+      ]);
     products = (productRes.data as Product[]) ?? [];
     categories = (categoryRes.data as Category[]) ?? [];
     connected = Boolean(userRes.data.user);
+    counts = {
+      products: productCount.count ?? 0,
+      shops: shopCount.count ?? 0,
+    };
   }
 
   const cheapest = products.length
@@ -61,7 +76,7 @@ export default async function Home() {
       {/* Hero                                                              */}
       {/* ---------------------------------------------------------------- */}
       <section className="relative overflow-hidden">
-        {/* Halos décoratifs : masqués aux lecteurs d'écran et non cliquables. */}
+        {/* Halos décoratifs : masqués aux lecteurs d'écran, non cliquables. */}
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
           <div className="animate-drift absolute -left-32 -top-40 h-[26rem] w-[26rem] rounded-full bg-gold/20 blur-[110px]" />
           <div
@@ -70,7 +85,7 @@ export default async function Home() {
           />
         </div>
 
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20">
           <div className="animate-rise">
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-xs font-medium text-gold">
               <Flame className="h-3.5 w-3.5" />
@@ -117,41 +132,51 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="animate-fade h-64 md:h-[26rem]">
+          <div className="animate-fade h-56 md:h-[24rem]">
             <FloatingBag />
           </div>
         </div>
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Catégories                                                        */}
+      {/* Carrousel de mise en avant                                        */}
       {/* ---------------------------------------------------------------- */}
-      {categories.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pb-2 sm:px-6">
-          <div className="stagger flex gap-3 overflow-x-auto pb-3">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/play/search?category=${cat.id}`}
-                className="lift press group flex shrink-0 flex-col items-center gap-2 rounded-2xl border border-border bg-surface px-5 py-4 hover:border-gold/50"
-              >
-                <span className="text-2xl transition-transform duration-300 group-hover:scale-110">
-                  {cat.icon}
-                </span>
-                <span className="whitespace-nowrap text-xs text-muted transition-colors group-hover:text-foreground">
-                  {cat.name}
-                </span>
-              </Link>
-            ))}
-          </div>
+      {products.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pb-4 sm:px-6">
+          <HeroCarousel products={products} />
         </section>
       )}
 
       {/* ---------------------------------------------------------------- */}
-      {/* Catalogue — le cœur de la page pour un visiteur                   */}
+      {/* Catégories                                                        */}
       {/* ---------------------------------------------------------------- */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+      {categories.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+          <h2 className="mb-4 text-lg font-semibold">Parcourir par catégorie</h2>
+          <ScrollCarousel itemClassName="w-28">
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/play/search?category=${cat.id}`}
+                className="lift press group flex h-full flex-col items-center gap-2 rounded-2xl border border-border bg-surface px-3 py-4 hover:border-gold/50"
+              >
+                <span className="text-3xl transition-transform duration-300 group-hover:scale-110">
+                  {cat.icon}
+                </span>
+                <span className="text-center text-xs leading-tight text-muted transition-colors group-hover:text-foreground">
+                  {cat.name}
+                </span>
+              </Link>
+            ))}
+          </ScrollCarousel>
+        </section>
+      )}
+
+      {/* ---------------------------------------------------------------- */}
+      {/* Catalogue                                                         */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-2xl font-bold sm:text-3xl">Nouveautés</h2>
             <p className="mt-1 text-sm text-muted">
@@ -180,23 +205,44 @@ export default async function Home() {
             </Link>
           </div>
         ) : (
-          <div className="stagger grid grid-cols-2 gap-4 md:grid-cols-4">
-            {products.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
+          <>
+            {/* Carrousel sur mobile : douze cartes en grille imposeraient un
+                défilement vertical interminable sur un téléphone. */}
+            <div className="sm:hidden">
+              <ScrollCarousel itemClassName="w-40">
+                {products.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </ScrollCarousel>
+            </div>
+            <div className="stagger hidden gap-4 sm:grid sm:grid-cols-3 lg:grid-cols-4">
+              {products.slice(0, 8).map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </>
         )}
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      {/* Chiffres                                                          */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="border-y border-border bg-surface/40 py-12">
+        <div className="mx-auto grid max-w-4xl grid-cols-3 gap-6 px-4 text-center sm:px-6">
+          <Stat value={counts.products} label="produits en ligne" />
+          <Stat value={counts.shops} label="boutiques" />
+          <Stat value={categories.length} label="catégories" />
+        </div>
       </section>
 
       <Marquee
         items={[
-          "Mode",
-          "Téléphones",
-          "Électronique",
-          "Maison",
-          "Beauté",
-          "Chaussures",
-          "Sport",
+          "Livraison rapide",
+          "Vendeurs vérifiés",
+          "Mobile Money",
+          "Négociez le prix",
+          "Enchères",
+          "Points de fidélité",
         ]}
       />
 
@@ -234,9 +280,46 @@ export default async function Home() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
+      {/* Avis                                                              */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
+        <Reveal>
+          <h2 className="mb-10 text-center text-3xl font-bold sm:text-4xl">
+            Ils vendent déjà avec nous
+          </h2>
+        </Reveal>
+        <div className="stagger grid gap-6 md:grid-cols-3">
+          {/* Contenu d'exemple à remplacer par de vrais témoignages avant
+              la mise en ligne. `progress` ne pilote qu'une barre décorative,
+              elle n'affiche aucun chiffre. */}
+          <Testimonial
+            quote="J'ai vendu mes trois premiers articles la semaine de mon inscription."
+            author="Aminata"
+            role="Mode, Cocody"
+            progress={92}
+          />
+          <Testimonial
+            quote="Le code de retrait rassure mes clients, plus aucune commande perdue."
+            author="Yao"
+            role="Électronique, Plateau"
+            progress={78}
+          />
+          <Testimonial
+            quote="La négociation directe m'évite de baisser mes prix affichés."
+            author="Fatou"
+            role="Beauté, Yopougon"
+            progress={85}
+          />
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
       {/* Appel final                                                       */}
       {/* ---------------------------------------------------------------- */}
-      <section className="border-t border-border">
+      <section className="relative overflow-hidden border-t border-border">
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+          <div className="animate-drift absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/15 blur-[120px]" />
+        </div>
         <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
           <Reveal>
             <h2 className="text-3xl font-bold sm:text-4xl">
@@ -282,6 +365,17 @@ export default async function Home() {
           </span>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function Stat({ value, label }: { value: number; label: string }) {
+  return (
+    <div>
+      <p className="text-3xl font-bold text-gold sm:text-4xl">
+        <CountUp to={value} />
+      </p>
+      <p className="mt-1 text-xs text-muted sm:text-sm">{label}</p>
     </div>
   );
 }

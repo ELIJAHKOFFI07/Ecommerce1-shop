@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/backend/server";
 import type { Order, RevenueDay, ShopRevenue } from "@/lib/types";
-import { DashboardCharts, statusDistribution } from "./DashboardCharts";
+import { statusDistribution } from "@/lib/stats";
+import { DashboardCharts } from "./DashboardCharts";
 import type { DashboardData } from "./DashboardCharts";
 
 function isoDate(d: Date): string {
