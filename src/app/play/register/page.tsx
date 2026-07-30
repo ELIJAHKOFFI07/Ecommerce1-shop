@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/backend/client";
+import { GoogleButton } from "@/components/play/GoogleButton";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -56,8 +57,25 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto max-w-sm py-10">
-      <h1 className="mb-6 text-2xl font-bold">Créer un compte</h1>
+    <div className="animate-rise mx-auto max-w-sm py-10">
+      <h1 className="text-2xl font-bold">Créer un compte</h1>
+      <p className="mt-1 text-sm text-muted">
+        Gratuit, et vous gagnez 100 points avec un code de parrainage.
+      </p>
+
+      {/* Google en premier : le parcours en un clic évite de remplir cinq
+          champs, et le compte est créé automatiquement à la première
+          connexion. */}
+      <div className="mt-6">
+        <GoogleButton label="S'inscrire avec Google" />
+      </div>
+
+      <div className="my-5 flex items-center gap-3 text-xs text-muted">
+        <span className="h-px flex-1 bg-border" />
+        ou avec un e-mail
+        <span className="h-px flex-1 bg-border" />
+      </div>
+
       <form onSubmit={submit} className="space-y-4">
         <input
           required
@@ -99,7 +117,7 @@ export default function RegisterPage() {
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={loading}
-          className="w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+          className="press sheen w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
         >
           {loading ? "Création…" : "Créer mon compte"}
         </button>

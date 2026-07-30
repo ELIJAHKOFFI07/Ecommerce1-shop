@@ -11,6 +11,8 @@ export type Profile = {
   referral_code: string | null;
   referred_by: string | null;
   whatsapp: string | null;
+  /// Imposé par un admin après réinitialisation (migration 008).
+  must_change_password: boolean;
   loyalty_points: number;
   created_at: string;
 };

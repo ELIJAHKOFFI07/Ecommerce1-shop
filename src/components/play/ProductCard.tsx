@@ -14,7 +14,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/play/product/${product.id}`}
-      className="group overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-gold/50"
+      className="lift press group block overflow-hidden rounded-xl border border-border bg-surface hover:border-gold/50"
     >
       <div className="relative aspect-square overflow-hidden bg-surface-2">
         {cover ? (
@@ -22,6 +22,7 @@ export function ProductCard({ product }: { product: Product }) {
           <img
             src={cover}
             alt={product.title}
+            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -29,6 +30,18 @@ export function ProductCard({ product }: { product: Product }) {
             Pas d&apos;image
           </div>
         )}
+        {/* Voile qui apparaît au survol : renforce l'affordance de clic sur
+            une carte dont toute la surface est cliquable. */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-2 text-center text-[11px] font-medium text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+        >
+          Voir le produit
+        </span>
         {hasDiscount && (
           <span className="absolute left-2 top-2 rounded-md bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
             -{discount}%
@@ -36,7 +49,9 @@ export function ProductCard({ product }: { product: Product }) {
         )}
       </div>
       <div className="p-3">
-        <p className="line-clamp-2 text-sm font-medium">{product.title}</p>
+        <p className="line-clamp-2 text-sm font-medium transition-colors group-hover:text-gold">
+          {product.title}
+        </p>
         <div className="mt-1 flex items-baseline gap-2">
           <span className="font-bold text-gold">{formatFcfa(product.price)}</span>
           {hasDiscount && (

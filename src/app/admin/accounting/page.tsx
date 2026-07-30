@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/backend/client";
 import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
+import { AreaChart, BarList, ChartCard } from "@/components/charts/Charts";
 import {
   formatFcfa,
   type PlatformSettings,
@@ -107,6 +108,60 @@ export default function AccountingPage() {
               value={formatFcfa(totals.orders ? Math.round(totals.gmv / totals.orders) : 0)}
             />
           </div>
+
+          {/* Les tableaux qui suivent portent chaque valeur : les graphiques
+              donnent la forme, jamais l'accès exclusif au chiffre. */}
+          {revenue.length > 0 && (
+            <div className="mt-6 grid gap-4 lg:grid-cols-2">
+              <ChartCard
+                title="Chiffre d'affaires par jour"
+                subtitle="Commandes livrées sur la période"
+              >
+                <AreaChart
+                  data={revenue.map((r) => ({
+                    label: new Date(r.day).toLocaleDateString("fr-FR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                    }),
+                    value: Number(r.gmv),
+                  }))}
+                  formatValue={formatFcfa}
+                />
+              </ChartCard>
+
+              <ChartCard
+                title="Commission par jour"
+                subtitle="Revenu encaissé par la plateforme"
+              >
+                <AreaChart
+                  data={revenue.map((r) => ({
+                    label: new Date(r.day).toLocaleDateString("fr-FR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                    }),
+                    value: Number(r.commission),
+                  }))}
+                  formatValue={formatFcfa}
+                />
+              </ChartCard>
+            </div>
+          )}
+
+          {shopRevenue.length > 0 && (
+            <div className="mt-4">
+              <ChartCard
+                title="Répartition par boutique"
+                subtitle="Six premières boutiques par chiffre d'affaires"
+              >
+                <BarList
+                  data={shopRevenue
+                    .slice(0, 6)
+                    .map((s) => ({ label: s.shop_name, value: Number(s.gmv) }))}
+                  formatValue={formatFcfa}
+                />
+              </ChartCard>
+            </div>
+          )}
 
           <h2 className="mb-3 mt-8 text-lg font-semibold">Revenu par jour</h2>
           {revenue.length === 0 ? (

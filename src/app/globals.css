@@ -47,6 +47,44 @@
 :root[data-theme="light"][data-preset="amethyst"] { --gold: #6b3fb0; --gold-dark: #4f2d84; }
 :root[data-theme="light"][data-preset="sahel"]    { --gold: #a8501a; --gold-dark: #7d3b12; }
 
+/* ---------------------------------------------------------------------------
+   Palette des graphiques (back-office).
+
+   Huit teintes catégorielles dans un ORDRE FIXE : l'ordre est le mécanisme de
+   sécurité daltonisme, pas un choix esthétique. Une série garde sa couleur
+   quel que soit son rang — filtrer une série ne repeint jamais les autres.
+
+   Validée contre les surfaces réelles de l'app (#ffffff en clair, #16161a en
+   sombre) : bandes de luminosité, plancher de chroma, séparation sous
+   simulation daltonienne (ΔE ≥ 8) et contraste. En mode clair, trois teintes
+   passent sous 3:1 — d'où l'obligation d'étiquettes visibles et d'une vue
+   tableau sur chaque graphique.
+
+   Les pas sombres ne sont PAS un simple éclaircissement des pas clairs :
+   ce sont les mêmes teintes re-calées pour la surface sombre.
+   --------------------------------------------------------------------------- */
+:root {
+  --viz-1: #3987e5; /* bleu */
+  --viz-2: #d95926; /* orange */
+  --viz-3: #199e70; /* aqua */
+  --viz-4: #c98500; /* jaune */
+  --viz-5: #d55181; /* magenta */
+  --viz-6: #008300; /* vert */
+  --viz-grid: #2c2c2a;
+  --viz-axis: #383835;
+}
+
+:root[data-theme="light"] {
+  --viz-1: #2a78d6;
+  --viz-2: #eb6834;
+  --viz-3: #1baf7a;
+  --viz-4: #eda100;
+  --viz-5: #e87ba4;
+  --viz-6: #008300;
+  --viz-grid: #e1e0d9;
+  --viz-axis: #c3c2b7;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -92,12 +130,197 @@ body {
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
-/* Respecte le réglage système « réduire les animations ». */
+/* Respecte le réglage système « réduire les animations » : rien ne bouge, et
+   surtout rien ne reste invisible — les animations d'entrée partent d'une
+   opacité nulle, il faut donc les neutraliser et non seulement les arrêter. */
 @media (prefers-reduced-motion: reduce) {
   .animate-shimmer {
     animation: none;
     opacity: 0.7;
   }
+
+  .animate-rise,
+  .animate-fade,
+  .animate-float,
+  .animate-drift,
+  .stagger > * {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .press,
+  .lift,
+  .underline-grow::after {
+    transition: none;
+  }
+  .press:active,
+  .lift:hover,
+  .lift:active {
+    transform: none;
+  }
+  .sheen:hover::after {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Animations et micro-interactions.
+
+   Toutes sont neutralisées par prefers-reduced-motion en fin de fichier :
+   le mouvement est un confort, jamais une condition pour comprendre l'écran.
+   --------------------------------------------------------------------------- */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Halo lent en arrière-plan du hero. */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, -4%, 0) scale(1.08);
+  }
+}
+
+/* Reflet qui traverse un bouton au survol. */
+@keyframes sheen {
+  from {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+.animate-rise {
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade {
+  animation: fade 0.8s ease both;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-drift {
+  animation: drift 18s ease-in-out infinite;
+}
+
+/* Retards en cascade : les éléments d'une même rangée entrent l'un après
+   l'autre plutôt que d'un bloc. */
+.stagger > * {
+  animation: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger > *:nth-child(3) { animation-delay: 0.12s; }
+.stagger > *:nth-child(4) { animation-delay: 0.16s; }
+.stagger > *:nth-child(5) { animation-delay: 0.2s; }
+.stagger > *:nth-child(6) { animation-delay: 0.24s; }
+.stagger > *:nth-child(7) { animation-delay: 0.28s; }
+.stagger > *:nth-child(8) { animation-delay: 0.32s; }
+
+/* Retour tactile au clic, sur tout élément interactif qui l'adopte. */
+.press {
+  transition:
+    transform 0.16s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+/* Bouton principal : reflet au survol. */
+.sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+  transform: translateX(-120%) skewX(-18deg);
+  pointer-events: none;
+}
+.sheen:hover::after {
+  animation: sheen 0.75s ease;
+}
+
+/* Carte qui se soulève au survol. */
+.lift {
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.45);
+}
+.lift:active {
+  transform: translateY(-1px) scale(0.995);
+}
+
+/* Soulignement qui se déploie depuis la gauche. */
+.underline-grow {
+  position: relative;
+}
+.underline-grow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1.5px;
+  width: 100%;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.underline-grow:hover::after {
+  transform: scaleX(1);
 }
 
 /* Les médias ne dépassent jamais leur conteneur. */

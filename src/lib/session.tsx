@@ -52,6 +52,18 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     refresh();
+
+    // Sans cet abonnement, le profil n'était chargé qu'au montage du layout.
+    // Or la connexion redirige côté client sans remonter le layout : le
+    // profil restait null après un login, donc « Vendre » et le lien
+    // back-office n'apparaissaient qu'après un rechargement complet.
+    const supabase = createClient();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      refresh();
+    });
+    return () => subscription.unsubscribe();
   }, [refresh]);
 
   const value = useMemo<SessionContextValue>(() => {

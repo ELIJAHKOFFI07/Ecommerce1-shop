@@ -1,254 +1,307 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ArrowRight, ShieldCheck, MessageCircle, Truck, Gift } from "lucide-react";
+import {
+  ArrowRight,
+  BadgeCheck,
+  Flame,
+  Handshake,
+  Smartphone,
+  Truck,
+} from "lucide-react";
+import { createClient } from "@/lib/backend/server";
+import { isBackendConfigured } from "@/lib/backend/client";
+import { formatFcfa, type Category, type Product } from "@/lib/types";
+import { LandingHeader } from "@/components/marketing/LandingHeader";
 import { Reveal } from "@/components/marketing/Reveal";
 import { Marquee } from "@/components/marketing/Marquee";
-import { GhostCard } from "@/components/marketing/GhostCard";
-import { Testimonial } from "@/components/marketing/Testimonial";
+import { ProductCard } from "@/components/play/ProductCard";
 
 const FloatingBag = dynamic(
   () => import("@/components/three/FloatingBag").then((m) => m.FloatingBag),
 );
 
-export default function Home() {
-  return (
-    <main className="min-h-screen">
-      {/* NAV */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <span className="text-xl font-bold tracking-tight text-gold">
-            ElijahShop
-          </span>
-          <nav className="hidden gap-8 text-sm text-muted md:flex">
-            <a href="#features" className="hover:text-foreground">Fonctionnalités</a>
-            <a href="#how" className="hover:text-foreground">Comment ça marche</a>
-            <a href="#avis" className="hover:text-foreground">Avis</a>
-          </nav>
-          <Link
-            href="/play"
-            className="rounded-full bg-gold px-5 py-2 text-sm font-semibold text-black transition-transform hover:scale-105"
-          >
-            Ouvrir l&apos;app
-          </Link>
-        </div>
-      </header>
+/// Page d'accueil publique.
+///
+/// Le visiteur voit le catalogue et peut ouvrir une fiche produit sans
+/// compte : la lecture est publique côté base (policy `products_read`).
+/// L'obligation de se connecter n'intervient qu'au moment de commander.
+export default async function Home() {
+  let products: Product[] = [];
+  let categories: Category[] = [];
+  let connected = false;
 
-      {/* HERO */}
-      <section className="relative mx-auto grid max-w-7xl items-center gap-8 px-6 py-20 md:grid-cols-2 md:py-28">
-        <div>
-          <h1 className="text-5xl font-bold leading-[1.05] md:text-7xl">
-            <Reveal type="line">Achetez.</Reveal>{" "}
-            <Reveal type="line" delay={0.1}>
-              <span className="text-gradient-gold">Vendez.</span>
-            </Reveal>{" "}
-            <Reveal type="line" delay={0.2}>Brillez.</Reveal>
-          </h1>
-          <Reveal type="fade" delay={0.4} className="mt-6 max-w-md text-lg text-muted">
-            <p>
-              La marketplace sociale de Côte d&apos;Ivoire. Postez vos produits,
-              négociez en direct, payez en Mobile Money. Le tout dans une app
-              taillée pour les vendeurs.
+  // La vitrine doit rester consultable même sans backend configuré : on
+  // affiche alors la page sans catalogue plutôt qu'un écran d'erreur.
+  if (isBackendConfigured()) {
+    const supabase = await createClient();
+    const [productRes, categoryRes, userRes] = await Promise.all([
+      supabase
+        .from("products")
+        .select("*, product_images(url, position), shops(*)")
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(8),
+      supabase.from("categories").select("*").order("position"),
+      supabase.auth.getUser(),
+    ]);
+    products = (productRes.data as Product[]) ?? [];
+    categories = (categoryRes.data as Category[]) ?? [];
+    connected = Boolean(userRes.data.user);
+  }
+
+  const cheapest = products.length
+    ? Math.min(...products.map((p) => p.price))
+    : 0;
+
+  return (
+    <div className="min-h-screen">
+      <LandingHeader connected={connected} />
+
+      {/* ---------------------------------------------------------------- */}
+      {/* Hero                                                              */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="relative overflow-hidden">
+        {/* Halos décoratifs : masqués aux lecteurs d'écran et non cliquables. */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+          <div className="animate-drift absolute -left-32 -top-40 h-[26rem] w-[26rem] rounded-full bg-gold/20 blur-[110px]" />
+          <div
+            className="animate-drift absolute -right-24 top-10 h-[22rem] w-[22rem] rounded-full bg-gold/10 blur-[100px]"
+            style={{ animationDelay: "-6s" }}
+          />
+        </div>
+
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
+          <div className="animate-rise">
+            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-xs font-medium text-gold">
+              <Flame className="h-3.5 w-3.5" />
+              La marketplace sociale de Côte d&apos;Ivoire
+            </span>
+
+            <h1 className="mt-6 text-4xl font-bold leading-[1.08] sm:text-5xl lg:text-6xl">
+              <Reveal type="line">Achetez.</Reveal>{" "}
+              <Reveal type="line" delay={0.08}>
+                Vendez.
+              </Reveal>
+              <br />
+              <Reveal type="line" delay={0.16}>
+                <span className="bg-gradient-to-r from-gold to-gold-dark bg-clip-text text-transparent">
+                  Brillez.
+                </span>
+              </Reveal>
+            </h1>
+
+            <p className="mt-5 max-w-md text-base text-muted sm:text-lg">
+              Des milliers de produits près de chez vous, des vendeurs
+              vérifiés, la négociation directe et le paiement Mobile Money.
             </p>
-          </Reveal>
-          <Reveal type="fade" delay={0.6}>
-            <div className="mt-8 flex flex-wrap gap-4">
+
+            <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/play"
-                className="group flex items-center gap-2 rounded-full bg-gold px-7 py-3 font-semibold text-black transition-transform hover:scale-105"
+                className="press sheen inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3 font-semibold text-black"
               >
-                Commencer gratuitement
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                Explorer la boutique
+                <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/play/search"
-                className="rounded-full border border-border px-7 py-3 font-semibold text-foreground transition-colors hover:border-gold"
+                href="/play/register"
+                className="press inline-flex items-center gap-2 rounded-full border border-border px-7 py-3 font-semibold transition-colors hover:border-gold hover:text-gold"
               >
-                Explorer les produits
+                Créer un compte
               </Link>
             </div>
-          </Reveal>
-        </div>
-        <div className="h-80 md:h-[460px]">
-          <FloatingBag />
-        </div>
-      </section>
 
-      <Marquee
-        items={[
-          "Boutiques vérifiées",
-          "Chat temps réel",
-          "Paiement Mobile Money",
-          "Négociation d'offres",
-          "Livraison suivie",
-          "Points de fidélité",
-        ]}
-      />
+            <p className="mt-4 text-xs text-muted">
+              Parcourez librement — un compte n&apos;est nécessaire que pour
+              commander.
+            </p>
+          </div>
 
-      {/* FEATURES */}
-      <section id="features" className="mx-auto max-w-7xl px-6 py-24">
-        <Reveal type="rotation">
-          <h2 className="mb-4 text-4xl font-bold md:text-5xl">
-            Tout pour vendre <span className="text-gold">plus vite</span>
-          </h2>
-        </Reveal>
-        <p className="mb-14 max-w-xl text-muted">
-          Une plateforme pensée pour le commerce social ivoirien, de la mise en
-          ligne à la livraison.
-        </p>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <FeatureCard
-            icon={<ShieldCheck className="h-7 w-7" />}
-            title="Boutiques vérifiées"
-            body="Un badge de confiance pour les vendeurs sérieux : identité vérifiée, avis clients, taux de réponse."
-          />
-          <FeatureCard
-            icon={<MessageCircle className="h-7 w-7" />}
-            title="Chat & négociation"
-            body="Discutez en temps réel, faites une offre, recevez une contre-offre. Le meilleur prix se trouve ici."
-          />
-          <FeatureCard
-            icon={<Truck className="h-7 w-7" />}
-            title="Livraison suivie"
-            body="Zones de livraison, express ou retrait boutique, et un suivi étape par étape jusqu'à réception."
-          />
-          <FeatureCard
-            icon={<Gift className="h-7 w-7" />}
-            title="Récompenses"
-            body="Points de fidélité, codes promo et bonus de parrainage récompensent chaque achat."
-          />
-        </div>
-      </section>
-
-      {/* HOW */}
-      <section id="how" className="border-y border-border bg-surface/40 py-24">
-        <div className="mx-auto max-w-7xl px-6">
-          <Reveal type="rotation">
-            <h2 className="mb-14 text-4xl font-bold md:text-5xl">
-              Comment ça marche
-            </h2>
-          </Reveal>
-          <div className="grid gap-6 md:grid-cols-3">
-            <GhostCard number="01" title="Créez votre boutique">
-              Inscrivez-vous, ouvrez votre boutique gratuitement et publiez vos
-              premiers produits en quelques minutes.
-            </GhostCard>
-            <GhostCard number="02" title="Vendez & négociez" delay={0.15}>
-              Recevez des commandes et des offres, discutez avec vos acheteurs et
-              gérez vos statuts de livraison.
-            </GhostCard>
-            <GhostCard number="03" title="Encaissez" delay={0.3}>
-              Le montant de vos ventes est crédité sur votre portefeuille,
-              retirable en Mobile Money.
-            </GhostCard>
+          <div className="animate-fade h-64 md:h-[26rem]">
+            <FloatingBag />
           </div>
         </div>
       </section>
 
-      {/* STATS */}
-      <section className="mx-auto max-w-7xl px-6 py-24">
-        <div className="grid gap-8 text-center md:grid-cols-3">
-          <Stat value="12+" label="Catégories" />
-          <Stat value="5%" label="Commission seulement" />
-          <Stat value="24/7" label="Chat & support" />
-        </div>
-      </section>
+      {/* ---------------------------------------------------------------- */}
+      {/* Catégories                                                        */}
+      {/* ---------------------------------------------------------------- */}
+      {categories.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pb-2 sm:px-6">
+          <div className="stagger flex gap-3 overflow-x-auto pb-3">
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/play/search?category=${cat.id}`}
+                className="lift press group flex shrink-0 flex-col items-center gap-2 rounded-2xl border border-border bg-surface px-5 py-4 hover:border-gold/50"
+              >
+                <span className="text-2xl transition-transform duration-300 group-hover:scale-110">
+                  {cat.icon}
+                </span>
+                <span className="whitespace-nowrap text-xs text-muted transition-colors group-hover:text-foreground">
+                  {cat.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* AVIS */}
-      <section id="avis" className="mx-auto max-w-7xl px-6 py-24">
-        <Reveal type="rotation">
-          <h2 className="mb-14 text-4xl font-bold md:text-5xl">
-            Ils <span className="text-gold">brillent</span> déjà
-          </h2>
-        </Reveal>
-        <div className="grid gap-6 md:grid-cols-3">
-          <Testimonial
-            quote="J'ai doublé mes ventes en un mois. La négociation d'offres change tout."
-            author="Aïcha K."
-            role="Boutique mode, Cocody"
-            progress={92}
-          />
-          <Testimonial
-            quote="Le chat en temps réel me permet de conclure une vente en quelques minutes."
-            author="Konan Y."
-            role="Électronique, Yopougon"
-            progress={85}
-          />
-          <Testimonial
-            quote="Le suivi de livraison rassure mes clients. Zéro litige depuis."
-            author="Fatou D."
-            role="Cosmétiques, Plateau"
-            progress={97}
-          />
+      {/* ---------------------------------------------------------------- */}
+      {/* Catalogue — le cœur de la page pour un visiteur                   */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="text-2xl font-bold sm:text-3xl">Nouveautés</h2>
+            <p className="mt-1 text-sm text-muted">
+              {products.length > 0
+                ? `Les dernières trouvailles, à partir de ${formatFcfa(cheapest)}.`
+                : "Le catalogue se remplit, revenez très vite."}
+            </p>
+          </div>
+          <Link
+            href="/play"
+            className="press underline-grow inline-flex items-center gap-1.5 text-sm font-medium text-gold"
+          >
+            Tout voir
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
+
+        {products.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-border py-16 text-center">
+            <p className="text-muted">Aucun produit publié pour le moment.</p>
+            <Link
+              href="/play/register"
+              className="press mt-4 inline-block rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-black"
+            >
+              Devenir vendeur
+            </Link>
+          </div>
+        ) : (
+          <div className="stagger grid grid-cols-2 gap-4 md:grid-cols-4">
+            {products.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
       </section>
 
       <Marquee
-        reverse
         items={[
-          "Rejoignez ElijahShop",
-          "Ouvrez votre boutique",
-          "Vendez sans commission cachée",
-          "Brillez",
+          "Mode",
+          "Téléphones",
+          "Électronique",
+          "Maison",
+          "Beauté",
+          "Chaussures",
+          "Sport",
         ]}
       />
 
-      {/* CTA */}
-      <section className="mx-auto max-w-4xl px-6 py-28 text-center">
-        <Reveal type="rotation">
-          <h2 className="text-4xl font-bold md:text-6xl">
-            Prêt à <span className="text-gradient-gold">briller</span> ?
+      {/* ---------------------------------------------------------------- */}
+      {/* Arguments                                                         */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+        <Reveal>
+          <h2 className="mb-10 text-center text-3xl font-bold sm:text-4xl">
+            Pourquoi ElijahShop ?
           </h2>
         </Reveal>
-        <p className="mx-auto mt-6 max-w-lg text-muted">
-          Créez votre compte en 30 secondes et lancez votre boutique dès
-          aujourd&apos;hui.
-        </p>
-        <Link
-          href="/play"
-          className="mt-8 inline-flex items-center gap-2 rounded-full bg-gold px-8 py-4 text-lg font-semibold text-black transition-transform hover:scale-105"
-        >
-          Démarrer maintenant <ArrowRight className="h-5 w-5" />
-        </Link>
+        <div className="stagger grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <Feature
+            icon={<BadgeCheck className="h-5 w-5" />}
+            title="Vendeurs vérifiés"
+            text="Chaque boutique est validée avant publication."
+          />
+          <Feature
+            icon={<Handshake className="h-5 w-5" />}
+            title="Négociez le prix"
+            text="Proposez votre offre directement au vendeur."
+          />
+          <Feature
+            icon={<Smartphone className="h-5 w-5" />}
+            title="Mobile Money"
+            text="Orange, MTN, Moov et Wave — ou à la livraison."
+          />
+          <Feature
+            icon={<Truck className="h-5 w-5" />}
+            title="Livraison suivie"
+            text="Code de retrait à 6 chiffres pour chaque colis."
+          />
+        </div>
       </section>
 
-      <footer className="border-t border-border py-10 text-center text-sm text-muted">
-        <p>© {new Date().getFullYear()} ElijahShop — Fait avec ✦ en Côte d&apos;Ivoire.</p>
+      {/* ---------------------------------------------------------------- */}
+      {/* Appel final                                                       */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="border-t border-border">
+        <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
+          <Reveal>
+            <h2 className="text-3xl font-bold sm:text-4xl">
+              Prêt à ouvrir votre boutique ?
+            </h2>
+            <p className="mx-auto mt-3 max-w-lg text-muted">
+              Créez votre compte en une minute, publiez vos produits et
+              encaissez vos ventes en Mobile Money.
+            </p>
+            <Link
+              href="/play/register"
+              className="press sheen mt-7 inline-flex items-center gap-2 rounded-full bg-gold px-8 py-3.5 font-semibold text-black"
+            >
+              Commencer gratuitement
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
+      <footer className="border-t border-border py-8">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 text-sm text-muted sm:px-6">
+          <span className="font-semibold text-gold">ElijahShop</span>
+          <nav className="flex flex-wrap gap-5">
+            <Link href="/play" className="underline-grow hover:text-foreground">
+              Boutique
+            </Link>
+            <Link
+              href="/play/search"
+              className="underline-grow hover:text-foreground"
+            >
+              Rechercher
+            </Link>
+            <Link
+              href="/play/login"
+              className="underline-grow hover:text-foreground"
+            >
+              Se connecter
+            </Link>
+          </nav>
+          <span className="text-xs">
+            © {new Date().getFullYear()} ElijahShop
+          </span>
+        </div>
       </footer>
-    </main>
+    </div>
   );
 }
 
-function FeatureCard({
+function Feature({
   icon,
   title,
-  body,
+  text,
 }: {
   icon: React.ReactNode;
   title: string;
-  body: string;
+  text: string;
 }) {
   return (
-    <Reveal type="fade">
-      <div className="h-full rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-gold/50">
-        <div className="mb-4 inline-flex rounded-xl bg-gold/10 p-3 text-gold">
-          {icon}
-        </div>
-        <h3 className="mb-2 text-lg font-semibold">{title}</h3>
-        <p className="text-sm text-muted">{body}</p>
-      </div>
-    </Reveal>
-  );
-}
-
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <Reveal type="fade">
-      <div>
-        <p className="text-5xl font-bold text-gradient-gold md:text-6xl">
-          {value}
-        </p>
-        <p className="mt-2 text-muted">{label}</p>
-      </div>
-    </Reveal>
+    <div className="lift rounded-2xl border border-border bg-surface p-5">
+      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gold/15 text-gold">
+        {icon}
+      </span>
+      <h3 className="mt-3 font-semibold">{title}</h3>
+      <p className="mt-1 text-sm text-muted">{text}</p>
+    </div>
   );
 }

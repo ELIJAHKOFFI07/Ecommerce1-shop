@@ -1,18 +1,75 @@
 import { createClient } from "@/lib/backend/server";
-import { formatFcfa } from "@/lib/types";
+import type { Order, RevenueDay, ShopRevenue } from "@/lib/types";
+import { DashboardCharts, statusDistribution } from "./DashboardCharts";
+import type { DashboardData } from "./DashboardCharts";
+
+function isoDate(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
 
 export default async function AdminDashboard() {
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("admin_stats");
 
-  const stats = (data ?? {}) as {
-    users?: number;
-    shops?: number;
-    products?: number;
-    orders?: number;
-    gmv?: number;
-    open_reports?: number;
+  const to = new Date();
+  const from = new Date();
+  from.setDate(from.getDate() - 29);
+
+  const [statsRes, revenueRes, shopRes, ordersRes] = await Promise.all([
+    supabase.rpc("admin_stats"),
+    supabase.rpc("admin_revenue_report", {
+      p_from: isoDate(from),
+      p_to: isoDate(to),
+    }),
+    supabase.rpc("admin_shop_revenue", {
+      p_from: isoDate(from),
+      p_to: isoDate(to),
+    }),
+    supabase.from("orders").select("status").limit(1000),
+  ]);
+
+  const stats = (statsRes.data ?? {}) as DashboardData["stats"];
+  const days = (revenueRes.data as RevenueDay[]) ?? [];
+  const shops = (shopRes.data as ShopRevenue[]) ?? [];
+  const orders = (ordersRes.data as Pick<Order, "status">[]) ?? [];
+
+  // Série continue sur 30 jours : sans les jours vides, la courbe
+  // écraserait les creux et laisserait croire à une activité continue.
+  const byDay = new Map(days.map((d) => [d.day.slice(0, 10), d]));
+  const revenueByDay: DashboardData["revenueByDay"] = [];
+  const ordersByDay: number[] = [];
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(from);
+    d.setDate(from.getDate() + i);
+    const key = isoDate(d);
+    const row = byDay.get(key);
+    revenueByDay.push({
+      label: d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }),
+      value: Number(row?.gmv ?? 0),
+    });
+    ordersByDay.push(Number(row?.orders_count ?? 0));
+  }
+
+  const data: DashboardData = {
+    stats: {
+      users: stats.users ?? 0,
+      shops: stats.shops ?? 0,
+      products: stats.products ?? 0,
+      orders: stats.orders ?? 0,
+      gmv: stats.gmv ?? 0,
+      open_reports: stats.open_reports ?? 0,
+    },
+    revenueByDay,
+    ordersByDay,
+    statusSlices: statusDistribution(orders),
+    // Au-delà de six entrées, un classement se lit mieux en tableau : la
+    // vue tableau de la carte porte la liste complète.
+    topShops: shops
+      .slice(0, 6)
+      .map((s) => ({ label: s.shop_name, value: Number(s.gmv) })),
+    commissionTotal: days.reduce((sum, d) => sum + Number(d.commission ?? 0), 0),
   };
+
+  const error = statsRes.error;
 
   return (
     <div>
@@ -22,26 +79,7 @@ export default async function AdminDashboard() {
           {error.message}
         </p>
       )}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <StatCard label="Utilisateurs" value={String(stats.users ?? 0)} />
-        <StatCard label="Boutiques" value={String(stats.shops ?? 0)} />
-        <StatCard label="Produits actifs" value={String(stats.products ?? 0)} />
-        <StatCard label="Commandes" value={String(stats.orders ?? 0)} />
-        <StatCard label="Volume d'affaires" value={formatFcfa(stats.gmv ?? 0)} />
-        <StatCard
-          label="Signalements ouverts"
-          value={String(stats.open_reports ?? 0)}
-        />
-      </div>
-    </div>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-border bg-surface p-6">
-      <p className="text-sm text-muted">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-gold">{value}</p>
+      <DashboardCharts data={data} />
     </div>
   );
 }

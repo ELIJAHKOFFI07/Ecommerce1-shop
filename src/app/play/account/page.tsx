@@ -186,7 +186,7 @@ function AccountLink({
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-gold/50"
+      className="lift press flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-gold/50"
     >
       <span className="text-gold">{icon}</span>
       {label}

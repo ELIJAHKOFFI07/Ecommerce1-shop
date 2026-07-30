@@ -65,7 +65,7 @@ export default function PlayHome() {
 
       <Link
         href="/play/auctions"
-        className="mb-6 flex items-center justify-between rounded-xl border border-gold/40 bg-gold/[0.06] p-4 hover:border-gold"
+        className="lift press mb-6 flex items-center justify-between rounded-xl border border-gold/40 bg-gold/[0.06] p-4 hover:border-gold"
       >
         <span className="font-semibold">🔨 Enchères en cours</span>
         <span className="text-sm text-gold">Faites la meilleure offre →</span>
@@ -73,7 +73,7 @@ export default function PlayHome() {
 
       {/* Dégradé exprimé à partir de l'accent du thème : la version codée en
           dur restait sombre en mode clair et rendait le texte illisible. */}
-      <section className="mb-8 overflow-hidden rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/15 to-gold/[0.03] p-6 md:p-8">
+      <section className="animate-rise mb-8 overflow-hidden rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/15 to-gold/[0.03] p-6 md:p-8">
         <h1 className="text-2xl font-bold md:text-3xl">
           {hasShop
             ? "Votre boutique vous attend ✦"
@@ -87,7 +87,7 @@ export default function PlayHome() {
         {canSell && (
           <Link
             href="/play/sell"
-            className="mt-4 inline-block rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-black"
+            className="press sheen mt-4 inline-block rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-black"
           >
             {hasShop ? "Gérer ma boutique" : "Ouvrir ma boutique"}
           </Link>
@@ -131,7 +131,7 @@ export default function PlayHome() {
             Aucun produit pour le moment.
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="stagger grid grid-cols-2 gap-4 md:grid-cols-4">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

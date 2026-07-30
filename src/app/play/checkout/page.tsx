@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { LockKeyhole } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { useCart } from "@/lib/cart";
 import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
@@ -53,15 +54,31 @@ export default function CheckoutPage() {
     );
   }
 
+  // Seule étape où la connexion devient obligatoire : le visiteur a pu
+  // parcourir le catalogue et remplir son panier librement. Le panier vit
+  // dans le navigateur, il est donc intact au retour.
   if (authed === false) {
     return (
-      <div className="py-16 text-center">
-        <p className="text-lg font-medium">Connexion requise</p>
+      <div className="animate-rise mx-auto max-w-sm py-16 text-center">
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gold/15">
+          <LockKeyhole className="h-6 w-6 text-gold" />
+        </span>
+        <h1 className="mt-4 text-xl font-bold">Plus qu&apos;une étape</h1>
+        <p className="mt-2 text-sm text-muted">
+          Connectez-vous pour finaliser votre commande. Votre panier est
+          conservé.
+        </p>
         <Link
-          href="/play/login"
-          className="mt-4 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+          href="/play/login?next=/play/checkout"
+          className="press sheen mt-6 inline-block w-full rounded-full bg-gold px-6 py-3 font-semibold text-black"
         >
           Se connecter
+        </Link>
+        <Link
+          href="/play/register"
+          className="press mt-3 inline-block w-full rounded-full border border-border px-6 py-3 font-semibold transition-colors hover:border-gold hover:text-gold"
+        >
+          Créer un compte
         </Link>
       </div>
     );
