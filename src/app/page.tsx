@@ -1,30 +1,45 @@
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import {
   ArrowRight,
   BadgeCheck,
+  CheckCircle2,
   Flame,
   Handshake,
+  Gavel,
+  Gift,
+  ShieldCheck,
+  ShoppingBag,
   Smartphone,
+  Store,
   Truck,
+  Wallet,
 } from "lucide-react";
 import { createClient } from "@/lib/backend/server";
 import { isBackendConfigured } from "@/lib/backend/client";
 import { formatFcfa, type Category, type Product } from "@/lib/types";
 import { LandingHeader } from "@/components/marketing/LandingHeader";
+import { LandingFooter } from "@/components/marketing/LandingFooter";
 import { HeroCarousel } from "@/components/marketing/HeroCarousel";
 import { ScrollCarousel } from "@/components/marketing/ScrollCarousel";
+import { BenefitsTable } from "@/components/marketing/BenefitsTable";
 import { CountUp } from "@/components/marketing/CountUp";
 import { Reveal } from "@/components/marketing/Reveal";
-import { Marquee } from "@/components/marketing/Marquee";
-import { Testimonial } from "@/components/marketing/Testimonial";
 import { ProductCard } from "@/components/play/ProductCard";
-
-const FloatingBag = dynamic(
-  () => import("@/components/three/FloatingBag").then((m) => m.FloatingBag),
-);
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  IconBadge,
+} from "@/components/ui/Card";
+import { Pill, Section, SectionHeading } from "@/components/ui/Section";
 
 /// Page d'accueil publique.
+///
+/// Structure reprise du projet Turbodeal : bande d'accroche pleine largeur,
+/// rubriques en cartes à filet coloré, tableau des avantages, catalogue,
+/// citation d'appel puis pied de page en colonnes. Les sections alternent
+/// fond de page et surface pour se détacher sans multiplier les traits.
 ///
 /// Le visiteur voit le catalogue et peut ouvrir une fiche produit sans
 /// compte : la lecture est publique côté base (policy `products_read`).
@@ -69,90 +84,130 @@ export default async function Home() {
     : 0;
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <LandingHeader connected={connected} />
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Hero                                                              */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="relative overflow-hidden">
-        {/* Halos décoratifs : masqués aux lecteurs d'écran, non cliquables. */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-          <div className="animate-drift absolute -left-32 -top-40 h-[26rem] w-[26rem] rounded-full bg-gold/20 blur-[110px]" />
+      {/* ================================================================ */}
+      {/* Bande d'accroche                                                  */}
+      {/* ================================================================ */}
+      <section className="relative overflow-hidden border-b border-border bg-surface py-20 md:py-28">
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.14] via-transparent to-gold/[0.06]" />
+          <div className="animate-drift absolute -left-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-gold/20 blur-[130px]" />
           <div
-            className="animate-drift absolute -right-24 top-10 h-[22rem] w-[22rem] rounded-full bg-gold/10 blur-[100px]"
-            style={{ animationDelay: "-6s" }}
+            className="animate-drift absolute -right-32 bottom-0 h-[24rem] w-[24rem] rounded-full bg-gold/10 blur-[110px]"
+            style={{ animationDelay: "-7s" }}
           />
         </div>
 
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20">
-          <div className="animate-rise">
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-xs font-medium text-gold">
-              <Flame className="h-3.5 w-3.5" />
-              La marketplace sociale de Côte d&apos;Ivoire
-            </span>
+        <div className="relative mx-auto flex w-full max-w-4xl flex-col items-center px-4 text-center sm:px-6">
+          <Pill>
+            <Flame className="h-3.5 w-3.5" />
+            La marketplace sociale de Côte d&apos;Ivoire
+          </Pill>
 
-            <h1 className="mt-6 text-4xl font-bold leading-[1.08] sm:text-5xl lg:text-6xl">
-              <Reveal type="line">Achetez.</Reveal>{" "}
-              <Reveal type="line" delay={0.08}>
-                Vendez.
-              </Reveal>
-              <br />
-              <Reveal type="line" delay={0.16}>
-                <span className="bg-gradient-to-r from-gold to-gold-dark bg-clip-text text-transparent">
-                  Brillez.
-                </span>
-              </Reveal>
-            </h1>
+          <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+            <Reveal type="line">Achetez. Vendez.</Reveal>
+            <br />
+            <Reveal type="line" delay={0.1}>
+              <span className="bg-gradient-to-r from-gold to-gold-dark bg-clip-text text-transparent">
+                Brillez.
+              </span>
+            </Reveal>
+          </h1>
 
-            <p className="mt-5 max-w-md text-base text-muted sm:text-lg">
-              Des milliers de produits près de chez vous, des vendeurs
-              vérifiés, la négociation directe et le paiement Mobile Money.
-            </p>
+          <p className="mt-6 max-w-2xl text-base text-muted sm:text-lg">
+            Des milliers de produits près de chez vous, des vendeurs vérifiés,
+            la négociation directe et le paiement Mobile Money. Parcourez
+            librement — un compte n&apos;est nécessaire que pour commander.
+          </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/play"
-                className="press sheen inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3 font-semibold text-black"
-              >
-                Explorer la boutique
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/play/register"
-                className="press inline-flex items-center gap-2 rounded-full border border-border px-7 py-3 font-semibold transition-colors hover:border-gold hover:text-gold"
-              >
-                Créer un compte
-              </Link>
-            </div>
-
-            <p className="mt-4 text-xs text-muted">
-              Parcourez librement — un compte n&apos;est nécessaire que pour
-              commander.
-            </p>
-          </div>
-
-          <div className="animate-fade h-56 md:h-[24rem]">
-            <FloatingBag />
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/play"
+              className="press sheen inline-flex items-center justify-center gap-2 rounded-full bg-gold px-8 py-3.5 text-base font-semibold text-black"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Explorer la boutique
+            </Link>
+            <Link
+              href="/play/register"
+              className="press inline-flex items-center justify-center gap-2 rounded-full border border-border bg-background px-8 py-3.5 text-base font-semibold transition-colors hover:border-gold hover:text-gold"
+            >
+              Créer un compte
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Carrousel de mise en avant                                        */}
-      {/* ---------------------------------------------------------------- */}
+      {/* ================================================================ */}
+      {/* Mise en avant                                                     */}
+      {/* ================================================================ */}
       {products.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pb-4 sm:px-6">
+        <Section tone="fade" className="!py-12">
           <HeroCarousel products={products} />
-        </section>
+        </Section>
       )}
 
-      {/* ---------------------------------------------------------------- */}
+      {/* ================================================================ */}
+      {/* Trois façons d'utiliser la plateforme                             */}
+      {/* ================================================================ */}
+      <Section tone="fade">
+        <SectionHeading
+          title="Trois façons d'en profiter"
+          subtitle="Que vous veniez acheter, négocier ou vendre, tout se passe au même endroit."
+        />
+
+        <div className="stagger grid gap-6 md:grid-cols-3">
+          <PillarCard
+            accent="var(--pillar-buy)"
+            icon={<ShoppingBag className="h-7 w-7" />}
+            title="Acheter"
+            tagline="Le catalogue à portée de main"
+            text="Parcourez librement, comparez, puis commandez en Mobile Money ou à la livraison."
+            points={[
+              ["Sans compte :", "consultez tout le catalogue avant de vous inscrire."],
+              ["Paiement souple :", "Orange, MTN, Moov, Wave ou à la réception."],
+              ["Suivi :", "code de retrait à 6 chiffres pour chaque colis."],
+            ]}
+          />
+
+          <PillarCard
+            accent="var(--pillar-deal)"
+            icon={<Handshake className="h-7 w-7" />}
+            title="Négocier"
+            tagline="Le juste prix, directement"
+            text="Proposez votre prix au vendeur, discutez en direct et remportez des enchères."
+            points={[
+              ["Offres :", "proposez entre 50 % et 100 % du prix affiché."],
+              ["Messagerie :", "échangez avec le vendeur avant d'acheter."],
+              ["Enchères :", "surenchère minimale et prolongation anti-sniping."],
+            ]}
+          />
+
+          <PillarCard
+            accent="var(--pillar-sell)"
+            icon={<Store className="h-7 w-7" />}
+            title="Vendre"
+            tagline="Votre boutique en une minute"
+            text="Publiez vos produits, suivez vos commandes et encaissez vos ventes."
+            points={[
+              ["Boutique :", "photos, stock, variantes et mise en avant."],
+              ["Portefeuille :", "ventes créditées, retrait en Mobile Money."],
+              ["Visibilité :", "stories, boost produit et fil de nouveautés."],
+            ]}
+          />
+        </div>
+      </Section>
+
+      {/* ================================================================ */}
       {/* Catégories                                                        */}
-      {/* ---------------------------------------------------------------- */}
+      {/* ================================================================ */}
       {categories.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-          <h2 className="mb-4 text-lg font-semibold">Parcourir par catégorie</h2>
+        <Section tone="raised" className="!py-12">
+          <h2 className="mb-5 text-lg font-semibold">
+            Parcourir par catégorie
+          </h2>
           <ScrollCarousel itemClassName="w-28">
             {categories.map((cat) => (
               <Link
@@ -169,17 +224,19 @@ export default async function Home() {
               </Link>
             ))}
           </ScrollCarousel>
-        </section>
+        </Section>
       )}
 
-      {/* ---------------------------------------------------------------- */}
+      {/* ================================================================ */}
       {/* Catalogue                                                         */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+      {/* ================================================================ */}
+      <Section>
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-bold sm:text-3xl">Nouveautés</h2>
-            <p className="mt-1 text-sm text-muted">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Nos produits disponibles
+            </h2>
+            <p className="mt-2 text-sm text-muted">
               {products.length > 0
                 ? `Les dernières trouvailles, à partir de ${formatFcfa(cheapest)}.`
                 : "Le catalogue se remplit, revenez très vite."}
@@ -187,7 +244,7 @@ export default async function Home() {
           </div>
           <Link
             href="/play"
-            className="press underline-grow inline-flex items-center gap-1.5 text-sm font-medium text-gold"
+            className="press underline-grow inline-flex items-center gap-1.5 text-sm font-semibold text-gold"
           >
             Tout voir
             <ArrowRight className="h-4 w-4" />
@@ -196,7 +253,7 @@ export default async function Home() {
 
         {products.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border py-16 text-center">
-            <p className="text-muted">Aucun produit publié pour le moment.</p>
+            <p className="text-muted">Aucun produit disponible pour le moment.</p>
             <Link
               href="/play/register"
               className="press mt-4 inline-block rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-black"
@@ -215,116 +272,84 @@ export default async function Home() {
                 ))}
               </ScrollCarousel>
             </div>
-            <div className="stagger hidden gap-4 sm:grid sm:grid-cols-3 lg:grid-cols-4">
+            <div className="stagger hidden gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-4">
               {products.slice(0, 8).map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
             </div>
           </>
         )}
-      </section>
+      </Section>
 
-      {/* ---------------------------------------------------------------- */}
+      {/* ================================================================ */}
+      {/* Avantages en bref                                                 */}
+      {/* ================================================================ */}
+      <Section tone="raised">
+        <BenefitsTable
+          title="Les avantages en bref"
+          subtitle="Ce que la plateforme change concrètement pour vous"
+          benefits={[
+            {
+              icon: <BadgeCheck className="h-5 w-5" />,
+              title: "Confiance",
+              text: "Boutiques validées avant publication, avis vérifiés issus de commandes réelles, et signalement en un clic.",
+            },
+            {
+              icon: <Truck className="h-5 w-5" />,
+              title: "Livraison",
+              text: "Suivi de chaque étape et code de retrait à 6 chiffres connu du seul acheteur : aucune commande ne se perd.",
+            },
+            {
+              icon: <Smartphone className="h-5 w-5" />,
+              title: "Paiement",
+              text: "Orange Money, MTN, Moov et Wave, ou paiement à la livraison si vous préférez régler en main propre.",
+            },
+            {
+              icon: <Wallet className="h-5 w-5" />,
+              title: "Encaissement",
+              text: "Vos ventes livrées sont créditées automatiquement, commission déduite, avec retrait en Mobile Money.",
+            },
+            {
+              icon: <Gavel className="h-5 w-5" />,
+              title: "Enchères",
+              text: "Durée limitée, surenchère minimale et prolongation automatique si une offre tombe dans les dernières minutes.",
+            },
+            {
+              icon: <Gift className="h-5 w-5" />,
+              title: "Fidélité",
+              text: "Points sur chaque commande livrée, roue de la chance quotidienne et bonus de parrainage convertibles en bons d'achat.",
+            },
+          ]}
+        />
+      </Section>
+
+      {/* ================================================================ */}
       {/* Chiffres                                                          */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="border-y border-border bg-surface/40 py-12">
-        <div className="mx-auto grid max-w-4xl grid-cols-3 gap-6 px-4 text-center sm:px-6">
-          <Stat value={counts.products} label="produits en ligne" />
-          <Stat value={counts.shops} label="boutiques" />
-          <Stat value={categories.length} label="catégories" />
+      {/* ================================================================ */}
+      <Section className="!py-12">
+        <div className="mx-auto grid max-w-3xl grid-cols-3 gap-6 text-center">
+          <StatBlock value={counts.products} label="produits en ligne" />
+          <StatBlock value={counts.shops} label="boutiques" />
+          <StatBlock value={categories.length} label="catégories" />
         </div>
-      </section>
+      </Section>
 
-      <Marquee
-        items={[
-          "Livraison rapide",
-          "Vendeurs vérifiés",
-          "Mobile Money",
-          "Négociez le prix",
-          "Enchères",
-          "Points de fidélité",
-        ]}
-      />
+      {/* ================================================================ */}
+      {/* Citation + appel                                                  */}
+      {/* ================================================================ */}
+      <Section tone="raised">
+        <div className="mx-auto max-w-2xl space-y-8 text-center">
+          <ShieldCheck className="mx-auto h-8 w-8 text-gold" />
+          <blockquote className="text-lg font-medium italic text-muted sm:text-xl">
+            « Une marketplace n&apos;a de valeur que si l&apos;acheteur et le
+            vendeur s&apos;y sentent également protégés. C&apos;est la règle
+            que nous appliquons à chaque commande. »
+          </blockquote>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Arguments                                                         */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <Reveal>
-          <h2 className="mb-10 text-center text-3xl font-bold sm:text-4xl">
-            Pourquoi DreamTeamShop ?
-          </h2>
-        </Reveal>
-        <div className="stagger grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <Feature
-            icon={<BadgeCheck className="h-5 w-5" />}
-            title="Vendeurs vérifiés"
-            text="Chaque boutique est validée avant publication."
-          />
-          <Feature
-            icon={<Handshake className="h-5 w-5" />}
-            title="Négociez le prix"
-            text="Proposez votre offre directement au vendeur."
-          />
-          <Feature
-            icon={<Smartphone className="h-5 w-5" />}
-            title="Mobile Money"
-            text="Orange, MTN, Moov et Wave — ou à la livraison."
-          />
-          <Feature
-            icon={<Truck className="h-5 w-5" />}
-            title="Livraison suivie"
-            text="Code de retrait à 6 chiffres pour chaque colis."
-          />
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Avis                                                              */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
-        <Reveal>
-          <h2 className="mb-10 text-center text-3xl font-bold sm:text-4xl">
-            Ils vendent déjà avec nous
-          </h2>
-        </Reveal>
-        <div className="stagger grid gap-6 md:grid-cols-3">
-          {/* Contenu d'exemple à remplacer par de vrais témoignages avant
-              la mise en ligne. `progress` ne pilote qu'une barre décorative,
-              elle n'affiche aucun chiffre. */}
-          <Testimonial
-            quote="J'ai vendu mes trois premiers articles la semaine de mon inscription."
-            author="Aminata"
-            role="Mode, Cocody"
-            progress={92}
-          />
-          <Testimonial
-            quote="Le code de retrait rassure mes clients, plus aucune commande perdue."
-            author="Yao"
-            role="Électronique, Plateau"
-            progress={78}
-          />
-          <Testimonial
-            quote="La négociation directe m'évite de baisser mes prix affichés."
-            author="Fatou"
-            role="Beauté, Yopougon"
-            progress={85}
-          />
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Appel final                                                       */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="relative overflow-hidden border-t border-border">
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-          <div className="animate-drift absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/15 blur-[120px]" />
-        </div>
-        <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <Reveal>
-            <h2 className="text-3xl font-bold sm:text-4xl">
+          <div className="pt-2">
+            <h3 className="text-2xl font-bold sm:text-3xl">
               Prêt à ouvrir votre boutique ?
-            </h2>
+            </h3>
             <p className="mx-auto mt-3 max-w-lg text-muted">
               Créez votre compte en une minute, publiez vos produits et
               encaissez vos ventes en Mobile Money.
@@ -336,66 +361,75 @@ export default async function Home() {
               Commencer gratuitement
               <ArrowRight className="h-4 w-4" />
             </Link>
-          </Reveal>
+          </div>
         </div>
-      </section>
+      </Section>
 
-      <footer className="border-t border-border py-8">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 text-sm text-muted sm:px-6">
-          <span className="font-semibold text-gold">DreamTeamShop</span>
-          <nav className="flex flex-wrap gap-5">
-            <Link href="/play" className="underline-grow hover:text-foreground">
-              Boutique
-            </Link>
-            <Link
-              href="/play/search"
-              className="underline-grow hover:text-foreground"
-            >
-              Rechercher
-            </Link>
-            <Link
-              href="/play/login"
-              className="underline-grow hover:text-foreground"
-            >
-              Se connecter
-            </Link>
-          </nav>
-          <span className="text-xs">
-            © {new Date().getFullYear()} DreamTeamShop
-          </span>
-        </div>
-      </footer>
+      <LandingFooter />
     </div>
   );
 }
 
-function Stat({ value, label }: { value: number; label: string }) {
+/// Carte de rubrique : filet coloré en haut, pastille d'icône, accroche
+/// puis liste à puces cochées. Le motif vient de Turbodeal, où il sert à
+/// présenter trois offres côte à côte de façon comparable.
+function PillarCard({
+  accent,
+  icon,
+  title,
+  tagline,
+  text,
+  points,
+}: {
+  accent: string;
+  icon: React.ReactNode;
+  title: string;
+  tagline: string;
+  text: string;
+  points: [string, string][];
+}) {
+  return (
+    <Card accent={accent} hover className="h-full">
+      <CardHeader>
+        <IconBadge color={accent}>{icon}</IconBadge>
+        <CardTitle className="text-2xl">{title}</CardTitle>
+        <p
+          className="mt-1 text-xs font-semibold uppercase tracking-wider"
+          style={{ color: accent }}
+        >
+          {tagline}
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted">{text}</p>
+        <ul className="space-y-3">
+          {points.map(([lead, rest]) => (
+            <li key={lead} className="flex items-start gap-2">
+              <CheckCircle2
+                className="mt-0.5 h-5 w-5 shrink-0"
+                style={{ color: accent }}
+              />
+              <span className="text-sm text-muted">
+                <strong className="font-semibold text-foreground">
+                  {lead}
+                </strong>{" "}
+                {rest}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  );
+}
+
+function StatBlock({ value, label }: { value: number; label: string }) {
   return (
     <div>
       <p className="text-3xl font-bold text-gold sm:text-4xl">
         <CountUp to={value} />
       </p>
       <p className="mt-1 text-xs text-muted sm:text-sm">{label}</p>
-    </div>
-  );
-}
-
-function Feature({
-  icon,
-  title,
-  text,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="lift rounded-2xl border border-border bg-surface p-5">
-      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gold/15 text-gold">
-        {icon}
-      </span>
-      <h3 className="mt-3 font-semibold">{title}</h3>
-      <p className="mt-1 text-sm text-muted">{text}</p>
     </div>
   );
 }

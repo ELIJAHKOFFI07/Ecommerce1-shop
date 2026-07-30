@@ -74,7 +74,22 @@
   --viz-axis: #383835;
 }
 
+/* Accents des rubriques de la page d'accueil.
+   Distincts de la palette --viz-* : celle-ci est validée pour des marques de
+   graphique (aplats larges), pas pour du petit texte. Sur fond clair,
+   --viz-4 ne fait que 2,17:1 — illisible en légende. Ces trois teintes-ci
+   sont mesurées à au moins 4,9:1 sur la surface de carte des deux thèmes. */
+:root {
+  --pillar-buy: #199e70;  /* 5,30:1 sur #16161a */
+  --pillar-deal: #3987e5; /* 4,96:1 */
+  --pillar-sell: #c98500; /* 5,88:1 */
+}
+
 :root[data-theme="light"] {
+  --pillar-buy: #0f7a55;  /* 5,34:1 sur #ffffff */
+  --pillar-deal: #1f5fae; /* 6,35:1 */
+  --pillar-sell: #8a6a12; /* 5,06:1 */
+
   --viz-1: #2a78d6;
   --viz-2: #eb6834;
   --viz-3: #1baf7a;
