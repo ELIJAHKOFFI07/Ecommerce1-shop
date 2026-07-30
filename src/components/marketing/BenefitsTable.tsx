@@ -25,7 +25,7 @@ export function BenefitsTable({
   return (
     <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-border bg-surface">
       <div className="border-b border-border bg-surface-2/60 p-8 text-center">
-        <h3 className="text-xl font-bold sm:text-2xl">{title}</h3>
+        <h3 className="text-xl font-bold sm:text-2xl lg:text-3xl">{title}</h3>
         {subtitle && <p className="mt-2 text-sm text-muted">{subtitle}</p>}
       </div>
 
@@ -33,13 +33,13 @@ export function BenefitsTable({
         {benefits.map((b) => (
           <div
             key={b.title}
-            className="grid grid-cols-1 gap-2 p-6 transition-colors hover:bg-surface-2/40 sm:grid-cols-3 sm:gap-6"
+            className="grid grid-cols-1 gap-2 p-6 transition-colors hover:bg-surface-2/40 sm:grid-cols-3 sm:gap-6 lg:p-8"
           >
-            <div className="flex items-center gap-3 font-semibold text-gold">
+            <div className="flex items-center gap-3 font-semibold text-gold lg:text-lg">
               <span className="shrink-0">{b.icon}</span>
               {b.title}
             </div>
-            <p className="text-sm text-muted sm:col-span-2">{b.text}</p>
+            <p className="text-sm text-muted sm:col-span-2 lg:text-base">{b.text}</p>
           </div>
         ))}
       </div>

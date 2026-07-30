@@ -122,7 +122,7 @@ export function AdminNav() {
   return (
     <>
       {/* Barre latérale (desktop) */}
-      <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-surface p-4 md:flex">
+      <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-surface p-4 md:flex lg:w-72 lg:p-5">
         {content}
       </aside>
 

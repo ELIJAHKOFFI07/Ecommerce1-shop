@@ -90,7 +90,7 @@ export default async function Home() {
       {/* ================================================================ */}
       {/* Bande d'accroche                                                  */}
       {/* ================================================================ */}
-      <section className="relative overflow-hidden border-b border-border bg-surface py-20 md:py-28">
+      <section className="relative overflow-hidden border-b border-border bg-surface py-20 md:py-28 lg:py-36">
         <div aria-hidden className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.14] via-transparent to-gold/[0.06]" />
           <div className="animate-drift absolute -left-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-gold/20 blur-[130px]" />
@@ -100,13 +100,13 @@ export default async function Home() {
           />
         </div>
 
-        <div className="relative mx-auto flex w-full max-w-4xl flex-col items-center px-4 text-center sm:px-6">
+        <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center px-4 text-center sm:px-6">
           <Pill>
             <Flame className="h-3.5 w-3.5" />
             La marketplace sociale de Côte d&apos;Ivoire
           </Pill>
 
-          <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+          <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             <Reveal type="line">Achetez. Vendez.</Reveal>
             <br />
             <Reveal type="line" delay={0.1}>
@@ -116,7 +116,7 @@ export default async function Home() {
             </Reveal>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-base text-muted sm:text-lg">
+          <p className="mt-6 max-w-2xl text-base text-muted sm:text-lg lg:text-xl">
             Des milliers de produits près de chez vous, des vendeurs vérifiés,
             la négociation directe et le paiement Mobile Money. Parcourez
             librement — un compte n&apos;est nécessaire que pour commander.
@@ -233,10 +233,10 @@ export default async function Home() {
       <Section>
         <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
               Nos produits disponibles
             </h2>
-            <p className="mt-2 text-sm text-muted">
+            <p className="mt-2 text-sm text-muted lg:text-base">
               {products.length > 0
                 ? `Les dernières trouvailles, à partir de ${formatFcfa(cheapest)}.`
                 : "Le catalogue se remplit, revenez très vite."}
@@ -401,7 +401,7 @@ function PillarCard({
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted">{text}</p>
+        <p className="text-sm text-muted lg:text-base">{text}</p>
         <ul className="space-y-3">
           {points.map(([lead, rest]) => (
             <li key={lead} className="flex items-start gap-2">
@@ -409,7 +409,7 @@ function PillarCard({
                 className="mt-0.5 h-5 w-5 shrink-0"
                 style={{ color: accent }}
               />
-              <span className="text-sm text-muted">
+              <span className="text-sm text-muted lg:text-[0.95rem]">
                 <strong className="font-semibold text-foreground">
                   {lead}
                 </strong>{" "}

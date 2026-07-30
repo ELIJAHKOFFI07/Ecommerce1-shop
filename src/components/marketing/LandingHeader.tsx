@@ -9,10 +9,10 @@ import { LogIn, Search, ShoppingBag, Sparkles } from "lucide-react";
 export function LandingHeader({ connected }: { connected: boolean }) {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:py-4 2xl:max-w-[1440px]">
         <Link
           href="/"
-          className="press flex shrink-0 items-center gap-2 text-lg font-bold text-gold"
+          className="press flex shrink-0 items-center gap-2 text-lg font-bold text-gold lg:text-xl"
         >
           <Sparkles className="h-5 w-5" />
           DreamTeamShop

@@ -45,7 +45,7 @@ export function CardHeader({
   children: ReactNode;
   className?: string;
 }) {
-  return <div className={`p-6 pb-3 ${className}`}>{children}</div>;
+  return <div className={`p-6 pb-3 lg:p-7 lg:pb-4 ${className}`}>{children}</div>;
 }
 
 export function CardTitle({
@@ -56,7 +56,7 @@ export function CardTitle({
   className?: string;
 }) {
   return (
-    <h3 className={`text-xl font-bold ${className}`}>{children}</h3>
+    <h3 className={`text-xl font-bold lg:text-2xl ${className}`}>{children}</h3>
   );
 }
 
@@ -67,7 +67,7 @@ export function CardContent({
   children: ReactNode;
   className?: string;
 }) {
-  return <div className={`p-6 pt-0 ${className}`}>{children}</div>;
+  return <div className={`p-6 pt-0 lg:p-7 lg:pt-0 ${className}`}>{children}</div>;
 }
 
 export function CardFooter({
@@ -90,7 +90,7 @@ export function IconBadge({
 }) {
   return (
     <span
-      className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full"
+      className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full lg:h-16 lg:w-16"
       style={{ backgroundColor: `${color}1f`, color }}
     >
       {children}

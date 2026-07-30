@@ -87,7 +87,7 @@ export default function PlayHome() {
   const firstName = profile?.full_name?.split(" ")[0] ?? profile?.username;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 lg:space-y-16">
       <section>
         <StoriesBar />
       </section>
@@ -140,7 +140,7 @@ export default function PlayHome() {
       {/* Raccourcis                                                        */}
       {/* ---------------------------------------------------------------- */}
       <section>
-        <h2 className="mb-4 text-lg font-semibold">Raccourcis</h2>
+        <h2 className="mb-4 text-lg font-semibold lg:mb-6 lg:text-2xl">Raccourcis</h2>
         <div className="stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
           <ShortcutCard
             href="/play/auctions"
@@ -189,7 +189,7 @@ export default function PlayHome() {
       {flash.length > 0 && (
         <section>
           <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="flex items-center gap-2 text-lg font-semibold">
+            <h2 className="flex items-center gap-2 text-lg font-semibold lg:text-2xl">
               <Zap className="h-5 w-5 text-gold" />
               Ventes flash
             </h2>
@@ -213,7 +213,7 @@ export default function PlayHome() {
       {/* ---------------------------------------------------------------- */}
       {categories.length > 0 && (
         <section>
-          <h2 className="mb-4 text-lg font-semibold">Catégories</h2>
+          <h2 className="mb-4 text-lg font-semibold lg:mb-6 lg:text-2xl">Catégories</h2>
           <ScrollCarousel itemClassName="w-28">
             {categories.map((cat) => (
               <Link

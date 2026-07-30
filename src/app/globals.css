@@ -122,6 +122,37 @@ body {
   color: var(--foreground);
 }
 
+/* ---------------------------------------------------------------------------
+   Échelle typographique par taille d'écran.
+
+   Tailwind exprime tailles de texte ET espacements en `rem` : augmenter la
+   base du document fait grossir l'ensemble de façon proportionnelle, sans
+   toucher à chaque composant. Une interface calibrée pour le téléphone
+   paraît tassée sur un écran de bureau, où la distance de lecture est plus
+   grande.
+
+   Les valeurs en pixels explicites (halos `blur-[110px]`, largeurs
+   `max-w-[1440px]`) ne suivent pas — c'est voulu : ce sont des dimensions
+   physiques, pas typographiques.
+   --------------------------------------------------------------------------- */
+@media (min-width: 1024px) {
+  html {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1280px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 19px;
+  }
+}
+
 /* Garde-fou : aucun élément ne doit provoquer de défilement horizontal de la
    page entière. Les tableaux et carrousels larges défilent dans leur propre
    conteneur `overflow-x-auto` ; ceci empêche qu'un débordement isolé décale

@@ -26,8 +26,13 @@ export function Section({
   };
 
   return (
-    <section id={id} className={`py-16 md:py-20 ${tones[tone]} ${className}`}>
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">{children}</div>
+    <section
+      id={id}
+      className={`py-14 md:py-20 lg:py-24 ${tones[tone]} ${className}`}
+    >
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 2xl:max-w-[1440px]">
+        {children}
+      </div>
     </section>
   );
 }
@@ -43,14 +48,14 @@ export function SectionHeading({
 }) {
   return (
     <div
-      className={`mb-10 ${align === "center" ? "text-center" : ""}`}
+      className={`mb-10 lg:mb-14 ${align === "center" ? "text-center" : ""}`}
     >
-      <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
+      <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
         {title}
       </h2>
       {subtitle && (
         <p
-          className={`mt-3 text-muted ${
+          className={`mt-3 text-muted lg:mt-4 lg:text-lg ${
             align === "center" ? "mx-auto max-w-2xl" : "max-w-2xl"
           }`}
         >

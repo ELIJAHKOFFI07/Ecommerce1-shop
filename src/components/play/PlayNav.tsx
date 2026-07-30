@@ -29,7 +29,7 @@ export function PlayNav() {
     <>
       {/* Barre du haut */}
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 md:px-6 lg:py-4 2xl:max-w-[1440px]">
           {/* Accès à toutes les fonctionnalités de l'espace personnel, à
               toutes les tailles d'écran : la barre du bas ne peut en afficher
               que 5. */}
@@ -42,11 +42,11 @@ export function PlayNav() {
             <span className="hidden sm:inline">Menu</span>
           </button>
 
-          <Link href="/play" className="text-lg font-bold text-gold">
+          <Link href="/play" className="text-lg font-bold text-gold lg:text-xl">
             DreamTeamShop
           </Link>
 
-          <nav className="ml-auto hidden gap-6 text-sm md:flex">
+          <nav className="ml-auto hidden gap-6 text-sm md:flex lg:gap-8 lg:text-base">
             {items.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
