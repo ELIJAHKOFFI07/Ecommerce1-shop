@@ -200,7 +200,7 @@ export default function PlayHome() {
               Tout voir
             </Link>
           </div>
-          <div className="stagger grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="stagger grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {flash.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -259,7 +259,7 @@ export default function PlayHome() {
         ) : regular.length === 0 ? (
           <EmptyCatalogue canSell={canSell} hasShop={hasShop} />
         ) : (
-          <div className="stagger grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="stagger grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {regular.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

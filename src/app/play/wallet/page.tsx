@@ -89,7 +89,7 @@ export default function WalletPage() {
     await load();
   };
 
-  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><Skeleton className="h-28 w-full rounded-xl" /><Skeleton className="h-56 w-full rounded-xl" /><ListSkeleton count={4} /></div>);
+  if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><Skeleton className="h-28 w-full rounded-xl" /><Skeleton className="h-56 w-full rounded-xl" /><ListSkeleton count={4} /></div>);
 
   if (!connected) {
     return (
@@ -109,20 +109,24 @@ export default function WalletPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-4xl">
       <h1 className="text-2xl font-bold">Portefeuille</h1>
       <p className="mt-1 text-sm text-muted">
         Vos ventes livrées sont créditées ici, commission déduite.
       </p>
 
-      <div className="mt-6 rounded-xl border border-border bg-surface p-6 text-center">
+      {/* Deux colonnes dès `lg` : le solde et le formulaire restent visibles
+          pendant qu'on parcourt l'historique, au lieu de défiler hors écran. */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-[22rem_1fr] lg:items-start">
+      <div className="space-y-6 lg:sticky lg:top-20">
+      <div className="rounded-xl border border-border bg-surface p-6 text-center">
         <p className="text-sm text-muted">Solde disponible</p>
         <p className="mt-2 text-3xl font-bold text-gold">{formatFcfa(balance)}</p>
       </div>
 
       <form
         onSubmit={withdraw}
-        className="mt-6 rounded-xl border border-border bg-surface p-6"
+        className="rounded-xl border border-border bg-surface p-6"
       >
         <h2 className="font-semibold">Demander un retrait</h2>
         <p className="mt-1 text-xs text-muted">
@@ -155,8 +159,10 @@ export default function WalletPage() {
           {submitting ? "Envoi…" : "Demander le retrait"}
         </button>
       </form>
+      </div>
 
-      <h2 className="mt-10 text-lg font-semibold">Historique</h2>
+      <div>
+      <h2 className="text-lg font-semibold">Historique</h2>
       {transactions.length === 0 ? (
         <p className="py-10 text-center text-muted">
           Aucun mouvement pour le moment.
@@ -202,6 +208,8 @@ export default function WalletPage() {
           })}
         </ul>
       )}
+      </div>
+      </div>
     </div>
   );
 }

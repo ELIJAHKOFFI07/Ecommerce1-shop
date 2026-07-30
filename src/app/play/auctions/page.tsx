@@ -42,7 +42,7 @@ export default function AuctionsPage() {
     );
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-4xl">
       <h1 className="flex items-center gap-2 text-2xl font-bold">
         <Gavel className="h-6 w-6 text-gold" /> Enchères en cours
       </h1>

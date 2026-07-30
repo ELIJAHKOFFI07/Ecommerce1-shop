@@ -98,7 +98,7 @@ function OrdersInner() {
       {orders.length === 0 ? (
         <p className="py-12 text-center text-muted">Aucune commande.</p>
       ) : (
-        <div className="space-y-3">
+        <div className="grid gap-4 xl:grid-cols-2">
           {orders.map((o) => (
             <div
               key={o.id}

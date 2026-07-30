@@ -101,7 +101,7 @@ export default function OffersPage() {
     await load();
   };
 
-  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><Skeleton className="h-10 w-full rounded-lg" /><ListSkeleton count={4} /></div>);
+  if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><Skeleton className="h-10 w-full rounded-lg" /><ListSkeleton count={4} /></div>);
 
   if (!connected) {
     return (
@@ -123,7 +123,7 @@ export default function OffersPage() {
   const list = tab === "sent" ? sent : received;
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-4xl">
       <h1 className="text-2xl font-bold">Offres</h1>
       <p className="mt-1 text-sm text-muted">
         Proposez votre prix au vendeur, ou répondez aux offres reçues.
@@ -159,7 +159,7 @@ export default function OffersPage() {
             : "Aucune offre reçue."}
         </p>
       ) : (
-        <ul className="mt-4 space-y-2">
+        <ul className="mt-4 grid gap-3 xl:grid-cols-2">
           {list.map((offer) => (
             <li
               key={offer.id}

@@ -74,63 +74,104 @@ function SearchInner() {
         />
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
-        <button
-          onClick={() => setCategoryId(null)}
-          className={`rounded-full px-3 py-1 text-sm ${
-            categoryId === null ? "bg-gold text-black" : "bg-surface-2 text-muted"
-          }`}
-        >
-          Tout
-        </button>
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => setCategoryId(cat.id)}
-            className={`rounded-full px-3 py-1 text-sm ${
-              categoryId === cat.id
-                ? "bg-gold text-black"
-                : "bg-surface-2 text-muted"
-            }`}
-          >
-            {cat.icon} {cat.name}
-          </button>
-        ))}
-      </div>
+      {/* Sur grand écran, les filtres passent en colonne fixe : ils restent
+          accessibles pendant qu'on fait défiler les résultats, au lieu de
+          disparaître en haut de page. En dessous de `lg`, ils restent des
+          pastilles horizontales, plus adaptées au pouce. */}
+      <div className="grid gap-6 lg:grid-cols-[15rem_1fr] lg:items-start">
+        <aside className="space-y-5 lg:sticky lg:top-20">
+          <div>
+            <h2 className="mb-2 text-xs uppercase tracking-wide text-muted">
+              Catégories
+            </h2>
+            <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start">
+              <FilterChip
+                active={categoryId === null}
+                onClick={() => setCategoryId(null)}
+              >
+                Tout
+              </FilterChip>
+              {categories.map((cat) => (
+                <FilterChip
+                  key={cat.id}
+                  active={categoryId === cat.id}
+                  onClick={() => setCategoryId(cat.id)}
+                >
+                  {cat.icon} {cat.name}
+                </FilterChip>
+              ))}
+            </div>
+          </div>
 
-      <div className="mb-4 flex gap-2">
-        {(
-          [
-            ["recent", "Récents"],
-            ["price_asc", "Prix ↑"],
-            ["price_desc", "Prix ↓"],
-            ["popular", "Populaires"],
-          ] as [Sort, string][]
-        ).map(([value, label]) => (
-          <button
-            key={value}
-            onClick={() => setSort(value)}
-            className={`rounded-full px-3 py-1 text-sm ${
-              sort === value ? "bg-gold text-black" : "bg-surface-2 text-muted"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+          <div>
+            <h2 className="mb-2 text-xs uppercase tracking-wide text-muted">
+              Trier par
+            </h2>
+            <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start">
+              {(
+                [
+                  ["recent", "Récents"],
+                  ["price_asc", "Prix croissant"],
+                  ["price_desc", "Prix décroissant"],
+                  ["popular", "Populaires"],
+                ] as [Sort, string][]
+              ).map(([value, label]) => (
+                <FilterChip
+                  key={value}
+                  active={sort === value}
+                  onClick={() => setSort(value)}
+                >
+                  {label}
+                </FilterChip>
+              ))}
+            </div>
+          </div>
+        </aside>
 
-      {loading ? (
-        <ProductGridSkeleton />
-      ) : products.length === 0 ? (
-        <p className="py-12 text-center text-muted">Aucun résultat.</p>
-      ) : (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+        <div>
+          {!loading && products.length > 0 && (
+            <p className="mb-3 text-sm text-muted">
+              {products.length} résultat{products.length > 1 ? "s" : ""}
+            </p>
+          )}
+
+          {loading ? (
+            <ProductGridSkeleton />
+          ) : products.length === 0 ? (
+            <p className="py-12 text-center text-muted">Aucun résultat.</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+              {products.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
+  );
+}
+
+function FilterChip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`press rounded-full px-3 py-1.5 text-sm transition-colors lg:w-full lg:text-left ${
+        active
+          ? "bg-gold font-medium text-black"
+          : "bg-surface-2 text-muted hover:text-foreground"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 

@@ -15,7 +15,7 @@ export default function PlayLayout({
   // createClient() qui lève, et l'écran de configuration ne s'afficherait pas.
   if (!isBackendConfigured()) {
     return (
-      <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-4 md:pb-10">
+      <div className="mx-auto w-full max-w-7xl px-4 pb-24 pt-4 md:px-6 md:pb-10 2xl:max-w-[1440px]">
         <SetupNotice />
       </div>
     );
@@ -26,7 +26,7 @@ export default function PlayLayout({
       <CartProvider>
         <PasswordChangeGate />
         <PlayNav />
-        <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-4 md:pb-10">
+        <div className="mx-auto w-full max-w-7xl px-4 pb-24 pt-4 md:px-6 md:pb-10 2xl:max-w-[1440px]">
           <AnnouncementBanner />
           {children}
         </div>

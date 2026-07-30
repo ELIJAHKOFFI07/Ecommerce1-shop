@@ -39,6 +39,10 @@ export default function CartPage() {
   return (
     <div>
       <h1 className="mb-4 text-xl font-bold">Panier ({count})</h1>
+
+      {/* Deux colonnes dès `lg` : le récapitulatif reste sous les yeux au
+          lieu d'être relégué sous une longue liste d'articles. */}
+      <div className="grid gap-6 lg:grid-cols-[1fr_22rem] lg:items-start">
       <div className="space-y-3">
         {lines.map((line) => {
           const k = keyOf(line.productId, line.variantId);
@@ -84,17 +88,37 @@ export default function CartPage() {
         })}
       </div>
 
-      <div className="mt-6 rounded-xl border border-border bg-surface p-4">
-        <div className="flex items-center justify-between">
-          <span className="text-muted">Sous-total</span>
-          <span className="text-lg font-bold">{formatFcfa(subtotal)}</span>
+      <aside className="rounded-xl border border-border bg-surface p-5 lg:sticky lg:top-20">
+        <h2 className="mb-4 font-semibold">Récapitulatif</h2>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted">
+            Articles ({count})
+          </span>
+          <span>{formatFcfa(subtotal)}</span>
+        </div>
+        <div className="mt-2 flex items-center justify-between text-sm">
+          <span className="text-muted">Livraison</span>
+          <span className="text-muted">Calculée à l&apos;étape suivante</span>
+        </div>
+        <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
+          <span className="font-medium">Sous-total</span>
+          <span className="text-lg font-bold text-gold">
+            {formatFcfa(subtotal)}
+          </span>
         </div>
         <Link
           href="/play/checkout"
-          className="mt-4 block rounded-full bg-gold py-3 text-center font-semibold text-black"
+          className="press sheen mt-5 block rounded-full bg-gold py-3 text-center font-semibold text-black"
         >
           Passer la commande
         </Link>
+        <Link
+          href="/play"
+          className="press mt-3 block rounded-full border border-border py-2.5 text-center text-sm transition-colors hover:border-gold hover:text-gold"
+        >
+          Continuer mes achats
+        </Link>
+      </aside>
       </div>
     </div>
   );

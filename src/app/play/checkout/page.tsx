@@ -120,9 +120,14 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-5xl">
       <h1 className="mb-6 text-xl font-bold">Finaliser la commande</h1>
 
+      {/* Deux colonnes dès `lg` : le récapitulatif et le bouton de paiement
+          restent visibles pendant la saisie, plutôt qu'en bas d'un formulaire
+          qu'il faut parcourir entièrement pour valider. */}
+      <div className="grid gap-8 lg:grid-cols-[1fr_22rem] lg:items-start">
+      <div>
       <section className="mb-6">
         <h2 className="mb-2 font-semibold">Adresse de livraison</h2>
         <div className="space-y-3">
@@ -205,17 +210,38 @@ export default function CheckoutPage() {
           </p>
         )}
       </section>
+      </div>
 
-      <div className="rounded-xl border border-border bg-surface p-4">
+      <aside className="rounded-xl border border-border bg-surface p-5 lg:sticky lg:top-20">
+        <h2 className="mb-4 font-semibold">Récapitulatif</h2>
+
+        {/* Rappel des articles : sur une page à deux colonnes, le panier
+            n'est plus visible ailleurs. */}
+        <ul className="mb-4 space-y-2 border-b border-border pb-4">
+          {lines.map((line) => (
+            <li
+              key={`${line.productId}-${line.variantId ?? ""}`}
+              className="flex justify-between gap-3 text-sm"
+            >
+              <span className="min-w-0 truncate text-muted">
+                {line.quantity} × {line.title}
+              </span>
+              <span className="shrink-0">
+                {formatFcfa(line.unitPrice * line.quantity)}
+              </span>
+            </li>
+          ))}
+        </ul>
+
         <div className="flex justify-between">
           <span className="text-muted">Sous-total</span>
-          <span className="font-bold">{formatFcfa(subtotal)}</span>
+          <span className="font-bold text-gold">{formatFcfa(subtotal)}</span>
         </div>
         {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
         <button
           disabled={placing || !fullName || !phone || !city}
           onClick={placeOrder}
-          className="mt-4 w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+          className="press sheen mt-4 w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
         >
           {placing
             ? "Traitement…"
@@ -223,6 +249,7 @@ export default function CheckoutPage() {
               ? "Confirmer la commande"
               : `Payer ${formatFcfa(subtotal)}`}
         </button>
+      </aside>
       </div>
     </div>
   );

@@ -70,7 +70,7 @@ export default function ReferralPage() {
   if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-4xl">
       <h1 className="text-2xl font-bold">Parrainage</h1>
       <p className="mt-1 text-sm text-muted">
         Votre filleul gagne 100 points à l&apos;inscription, et vous 200 points dès

@@ -50,7 +50,7 @@ export default function WishlistsPage() {
     load();
   };
 
-  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><ListSkeleton count={4} /></div>);
+  if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><ListSkeleton count={4} /></div>);
 
   if (authed === false) {
     return (
@@ -67,7 +67,7 @@ export default function WishlistsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-4xl">
       <h1 className="text-2xl font-bold">Mes listes</h1>
       <p className="mt-1 text-sm text-muted">
         Organisez vos envies par thème (cadeaux, à surveiller…).

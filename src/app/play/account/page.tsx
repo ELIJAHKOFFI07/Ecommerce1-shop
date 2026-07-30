@@ -87,25 +87,31 @@ export default function AccountPage() {
     );
   }
 
+  const canSell = Boolean(profile?.is_seller || profile?.is_admin);
+
   return (
-    <div className="mx-auto max-w-lg">
-      <div className="flex items-center gap-4">
-        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-gold/15">
-          {profile?.avatar_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={profile.avatar_url}
-              alt=""
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <span className="flex h-full w-full items-center justify-center text-2xl font-bold text-gold">
-              {(profile?.full_name ?? profile?.username ?? "?")[0]?.toUpperCase()}
-            </span>
-          )}
-        </div>
-        <div className="min-w-0">
-          <p className="truncate text-lg font-bold">
+    // Deux colonnes dès `lg` : la carte d'identité reste visible pendant que
+    // l'on parcourt les rubriques. En colonne unique, la page n'occupait que
+    // 512 px au centre d'un écran de bureau.
+    <div className="grid gap-6 lg:grid-cols-[20rem_1fr] lg:items-start">
+      <aside className="space-y-4 lg:sticky lg:top-20">
+        <div className="rounded-2xl border border-border bg-surface p-5 text-center">
+          <div className="mx-auto h-20 w-20 overflow-hidden rounded-full bg-gold/15">
+            {profile?.avatar_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={profile.avatar_url}
+                alt=""
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="flex h-full w-full items-center justify-center text-3xl font-bold text-gold">
+                {(profile?.full_name ?? profile?.username ?? "?")[0]?.toUpperCase()}
+              </span>
+            )}
+          </div>
+
+          <p className="mt-3 truncate text-lg font-bold">
             {profile?.full_name ?? profile?.username ?? "Utilisateur"}
           </p>
           <p className="truncate text-sm text-muted">{email}</p>
@@ -113,63 +119,59 @@ export default function AccountPage() {
             {ROLE_LABELS[roleOf(profile) ?? "user"]} ·{" "}
             {profile?.loyalty_points ?? 0} points
           </p>
+
+          <Link
+            href="/play/account/edit"
+            className="press mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-semibold transition-colors hover:border-gold hover:text-gold"
+          >
+            <UserPen className="h-4 w-4" />
+            Modifier mon profil
+          </Link>
         </div>
-      </div>
 
-      <Link
-        href="/play/account/edit"
-        className="mt-4 flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-gold/50"
-      >
-        <span className="text-gold">
-          <UserPen />
-        </span>
-        Modifier mon profil
-      </Link>
-
-      <div className="mt-6">
         <PointsCard
           points={profile?.loyalty_points ?? 0}
           onRedeemed={refreshProfile}
         />
-      </div>
 
-      <div className="mt-4">
         <ThemeSwitcher />
-      </div>
+
+        <button
+          onClick={signOut}
+          className="press flex w-full items-center justify-center gap-2 rounded-full border border-border py-3 font-semibold transition-colors hover:border-red-500 hover:text-red-400"
+        >
+          <LogOut className="h-4 w-4" /> Se déconnecter
+        </button>
+      </aside>
 
       {/* Même source que le menu de navigation (src/lib/nav.ts) : une entrée
           ajoutée là apparaît automatiquement aux deux endroits. */}
-      {SECTIONS.map((section) => {
-        const links = visibleLinks(section.links, {
-          canSell: Boolean(profile?.is_seller || profile?.is_admin),
-          isAdmin: profile?.is_admin ?? false,
-        }).filter((l) => l.href !== "/play/account/edit");
-        if (links.length === 0) return null;
-        return (
-          <div key={section.title} className="mt-6">
-            <p className="mb-2 text-xs uppercase tracking-wide text-muted">
-              {section.title}
-            </p>
-            <div className="space-y-2">
-              {links.map(({ href, label, icon: Icon }) => (
-                <AccountLink
-                  key={`${section.title}-${href}`}
-                  href={href}
-                  icon={<Icon />}
-                  label={label}
-                />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-
-      <button
-        onClick={signOut}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-border py-3 font-semibold hover:border-red-500 hover:text-red-400"
-      >
-        <LogOut className="h-4 w-4" /> Se déconnecter
-      </button>
+      <div className="space-y-8">
+        {SECTIONS.map((section) => {
+          const links = visibleLinks(section.links, {
+            canSell,
+            isAdmin: profile?.is_admin ?? false,
+          }).filter((l) => l.href !== "/play/account/edit");
+          if (links.length === 0) return null;
+          return (
+            <section key={section.title}>
+              <h2 className="mb-3 text-xs uppercase tracking-wide text-muted">
+                {section.title}
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {links.map(({ href, label, icon: Icon }) => (
+                  <AccountLink
+                    key={`${section.title}-${href}`}
+                    href={href}
+                    icon={<Icon />}
+                    label={label}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
     </div>
   );
 }

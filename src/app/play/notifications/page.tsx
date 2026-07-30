@@ -91,7 +91,7 @@ export default function NotificationsPage() {
     );
   };
 
-  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><ListSkeleton count={6} /></div>);
+  if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><ListSkeleton count={6} /></div>);
 
   if (!connected) {
     return (
@@ -113,7 +113,7 @@ export default function NotificationsPage() {
   const unread = notifications.filter((n) => !n.read_at).length;
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-4xl">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Notifications</h1>
         {unread > 0 && (
@@ -131,7 +131,7 @@ export default function NotificationsPage() {
           Aucune notification pour le moment.
         </p>
       ) : (
-        <ul className="mt-6 space-y-2">
+        <ul className="mt-6 grid gap-3 xl:grid-cols-2">
           {notifications.map((n) => (
             <li
               key={n.id}
