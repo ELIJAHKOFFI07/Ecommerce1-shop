@@ -50,3 +50,4 @@ service-account*.json
 # Valeurs reelles des secrets : ne doit jamais entrer dans le depot.
 # Le mode d'emploi (sans valeurs) est dans guide_secrets.md, lui versionne.
 all_secrets.md
+SMTP_SETUP.md
