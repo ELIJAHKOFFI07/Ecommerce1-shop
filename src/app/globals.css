@@ -83,12 +83,16 @@
   --pillar-buy: #199e70;  /* 5,30:1 sur #16161a */
   --pillar-deal: #3987e5; /* 4,96:1 */
   --pillar-sell: #c98500; /* 5,88:1 */
+  --pillar-play: #9085e9; /* 5,77:1 */
+  --pillar-gift: #e0708f; /* 5,91:1 */
 }
 
 :root[data-theme="light"] {
   --pillar-buy: #0f7a55;  /* 5,34:1 sur #ffffff */
   --pillar-deal: #1f5fae; /* 6,35:1 */
   --pillar-sell: #8a6a12; /* 5,06:1 */
+  --pillar-play: #6b3fb0; /* 7,09:1 */
+  --pillar-gift: #b32744; /* 6,38:1 */
 
   --viz-1: #2a78d6;
   --viz-2: #eb6834;
