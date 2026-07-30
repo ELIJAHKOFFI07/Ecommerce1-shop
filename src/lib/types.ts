@@ -13,6 +13,8 @@ export type Profile = {
   whatsapp: string | null;
   /// Imposé par un admin après réinitialisation (migration 008).
   must_change_password: boolean;
+  /// Jeton Firebase du navigateur, pour les notifications push.
+  fcm_token: string | null;
   loyalty_points: number;
   created_at: string;
 };

@@ -8,6 +8,7 @@ import { createClient } from "@/lib/backend/client";
 import { useSession } from "@/lib/session";
 import { uploadImage } from "@/lib/storage";
 import { HeaderSkeleton, Skeleton } from "@/components/Skeleton";
+import { PushToggle } from "@/components/play/PushToggle";
 
 export default function EditProfilePage() {
   const router = useRouter();
@@ -231,6 +232,8 @@ export default function EditProfilePage() {
             className={field}
           />
         </label>
+
+        <PushToggle />
 
         {error && <p className="text-sm text-red-400">{error}</p>}
         {success && (

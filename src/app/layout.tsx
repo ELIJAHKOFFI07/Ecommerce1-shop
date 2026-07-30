@@ -13,6 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // Le manifeste permet l'ajout à l'écran d'accueil : c'est la seule voie
+  // vers les notifications push sur iPhone (iOS 16.4+).
+  manifest: "/manifest.json",
+  appleWebApp: { capable: true, title: "DreamTeamShop" },
+  icons: { icon: "/icon-192.png", apple: "/icon-192.png" },
   title: "DreamTeamShop — Achetez. Vendez. Brillez.",
   description:
     "La marketplace sociale de Côte d'Ivoire : postez vos produits, négociez en direct, payez en Mobile Money.",

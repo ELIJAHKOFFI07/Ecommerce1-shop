@@ -41,3 +41,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Compte de service Firebase : permet d'envoyer des notifications a tous les
+# utilisateurs. Ne doit jamais entrer dans le depot.
+*firebase-adminsdk*.json
+service-account*.json

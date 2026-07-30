@@ -28,6 +28,15 @@ Deno.serve(async (req) => {
     return new Response("Method not allowed", { status: 405 });
   }
 
+  // Déployée avec --no-verify-jwt, la fonction est joignable par n'importe
+  // qui : sans ce contrôle, un tiers pourrait poster un payload arbitraire
+  // et faire envoyer un e-mail à l'utilisateur de son choix, depuis votre
+  // domaine. Le déclencheur SQL envoie ce secret (migration 009).
+  const expectedSecret = Deno.env.get("WEBHOOK_SECRET");
+  if (!expectedSecret || req.headers.get("x-webhook-secret") !== expectedSecret) {
+    return new Response("Non autorisé", { status: 401 });
+  }
+
   const apiKey = Deno.env.get("RESEND_API_KEY");
   const from = Deno.env.get("NOTIFY_FROM");
   if (!apiKey || !from) {
