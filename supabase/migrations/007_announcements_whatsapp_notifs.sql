@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — numéro WhatsApp, message à la une, et accusé de
+-- DreamTeamShop — numéro WhatsApp, message à la une, et accusé de
 -- commande côté acheteur.
 -- ============================================================
 

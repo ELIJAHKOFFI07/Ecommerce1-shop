@@ -73,7 +73,7 @@ export function AdminNav() {
         href="/admin"
         className="mb-6 block text-lg font-bold text-gold"
       >
-        ElijahShop <span className="text-muted">admin</span>
+        DreamTeamShop <span className="text-muted">admin</span>
       </Link>
 
       <nav className="flex-1 space-y-5">
@@ -136,7 +136,7 @@ export function AdminNav() {
           <Menu className="h-4 w-4" />
         </button>
         <span className="font-bold text-gold">
-          ElijahShop <span className="text-muted">admin</span>
+          DreamTeamShop <span className="text-muted">admin</span>
         </span>
         <Link
           href="/play"

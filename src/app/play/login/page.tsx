@@ -48,7 +48,7 @@ function LoginInner() {
     <div className="animate-rise mx-auto max-w-sm py-10">
       <h1 className="text-2xl font-bold">Connexion</h1>
       <p className="mt-1 text-sm text-muted">
-        Content de vous revoir sur ElijahShop.
+        Content de vous revoir sur DreamTeamShop.
       </p>
 
       <form onSubmit={submit} className="mt-6 space-y-4">

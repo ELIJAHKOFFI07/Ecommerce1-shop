@@ -1,5 +1,5 @@
 /// Comparateur : ids persistés en localStorage (3 max), pas de backend.
-const KEY = "elijahshop_compare";
+const KEY = "dreamteamshop_compare";
 export const COMPARE_MAX = 3;
 
 export function getCompareIds(): string[] {

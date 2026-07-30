@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — un vendeur ne peut pas acheter sa propre marchandise.
+-- DreamTeamShop — un vendeur ne peut pas acheter sa propre marchandise.
 --
 -- Le contrôle est fait dans place_order, pas seulement dans l'interface :
 -- le panier vit côté navigateur et l'appel RPC peut être rejoué à la main.

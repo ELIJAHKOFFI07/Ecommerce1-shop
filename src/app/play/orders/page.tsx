@@ -16,7 +16,7 @@ function whatsappLink(number: string, order: Order): string {
     .map((it) => `- ${it.quantity} x ${it.title}`)
     .join("\n");
   const text = [
-    `Bonjour, je viens de passer la commande #${order.id.slice(0, 8).toUpperCase()} sur ElijahShop.`,
+    `Bonjour, je viens de passer la commande #${order.id.slice(0, 8).toUpperCase()} sur DreamTeamShop.`,
     items,
     `Total : ${formatFcfa(order.total)}`,
   ]

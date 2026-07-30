@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — croissance / engagement (vague 2)
+-- DreamTeamShop — croissance / engagement (vague 2)
 -- Listes de souhaits nommées, classement des parrainages, stories
 -- vendeur éphémères (24h).
 -- ============================================================

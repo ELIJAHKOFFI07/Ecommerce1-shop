@@ -62,5 +62,5 @@ export function generateTempPassword(): string {
   const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
   const bytes = crypto.getRandomValues(new Uint8Array(12));
   const body = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
-  return `Elj-${body}`;
+  return `DTS-${body}`;
 }

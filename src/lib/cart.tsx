@@ -34,7 +34,7 @@ type CartContextValue = {
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
-const STORAGE_KEY = "elijahshop_cart";
+const STORAGE_KEY = "dreamteamshop_cart";
 const MAX_PER_LINE = 20;
 
 function keyOf(productId: string, variantId: string | null) {

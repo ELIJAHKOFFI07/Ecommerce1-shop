@@ -24,5 +24,5 @@ on conflict do nothing;
 
 insert into public.coupons (code, type, value, min_order_amount, max_uses) values
   ('BIENVENUE10', 'percent', 10, 5000, 1000),
-  ('ELIJAH2000', 'fixed', 2000, 20000, 500)
+  ('DREAMTEAM2000', 'fixed', 2000, 20000, 500)
 on conflict (code) do nothing;

@@ -149,7 +149,7 @@ export function ProductActions({ product }: { product: Product }) {
 
   const shareWhatsApp = () => {
     const text = encodeURIComponent(
-      `${product.title} — ${formatFcfa(product.price)} sur ElijahShop 🛍️\n${window.location.href}`,
+      `${product.title} — ${formatFcfa(product.price)} sur DreamTeamShop 🛍️\n${window.location.href}`,
     );
     window.open(`https://wa.me/?text=${text}`, "_blank", "noopener");
   };

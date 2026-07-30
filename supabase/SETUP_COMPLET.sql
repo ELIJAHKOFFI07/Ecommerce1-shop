@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — installation complete de la base Supabase.
+-- DreamTeamShop — installation complete de la base Supabase.
 --
 -- Genere automatiquement a partir de supabase/schema.sql,
 -- supabase/migrations/*.sql et supabase/seed.sql.
@@ -18,7 +18,7 @@
 -- ============================================================
 
 -- ============================================================
--- ElijahShop — schéma Postgres (Supabase)
+-- DreamTeamShop — schéma Postgres (Supabase)
 -- Exécuté par SETUP_SERVICES.ps1 via `supabase db push` ou psql.
 -- Anti-triche : tout ce qui a de la valeur (stock, prix, totaux,
 -- portefeuille, points, statuts) est calculé par des fonctions
@@ -1109,7 +1109,7 @@ create policy "storage_own_delete" on storage.objects for delete
 -- ============================================================
 
 -- ============================================================
--- ElijahShop — fonctionnalités de croissance / engagement
+-- DreamTeamShop — fonctionnalités de croissance / engagement
 -- Appliqué après schema.sql. Même règle anti-triche : toute
 -- récompense (points, wallet, coupon) est calculée par des
 -- fonctions SECURITY DEFINER, jamais écrite directement par le client.
@@ -1336,7 +1336,7 @@ end $$;
 -- ============================================================
 
 -- ============================================================
--- ElijahShop — croissance / engagement (vague 2)
+-- DreamTeamShop — croissance / engagement (vague 2)
 -- Listes de souhaits nommées, classement des parrainages, stories
 -- vendeur éphémères (24h).
 -- ============================================================
@@ -1459,7 +1459,7 @@ end $$;
 -- ============================================================
 
 -- ============================================================
--- ElijahShop — croissance / engagement (vague 3)
+-- DreamTeamShop — croissance / engagement (vague 3)
 -- Enchères, historique des prix, conversion de points fidélité,
 -- code de retrait sécurisé. Toujours la même règle : la valeur
 -- (enchères, points, statuts) est validée par des fonctions
@@ -1722,7 +1722,7 @@ end $$;
 -- ============================================================
 
 -- ============================================================
--- ElijahShop — back-office : stock audité, comptabilité, factures,
+-- DreamTeamShop — back-office : stock audité, comptabilité, factures,
 -- paramètres plateforme. Toujours la même règle anti-triche : le
 -- stock et la commission ne sont jamais modifiés directement par le
 -- client, uniquement via des RPC SECURITY DEFINER réservées aux admins.
@@ -1985,7 +1985,7 @@ end $$;
 -- ============================================================
 
 -- ============================================================
--- ElijahShop — trois niveaux de comptes
+-- DreamTeamShop — trois niveaux de comptes
 --
 --   user    : consulte, met au panier, achète. Ne peut pas vendre.
 --   vendeur : tout ce qui précède + ouvre sa boutique et publie des produits.
@@ -2086,7 +2086,7 @@ create trigger on_seller_revoked
 -- ============================================================
 
 -- ============================================================
--- ElijahShop — un vendeur ne peut pas acheter sa propre marchandise.
+-- DreamTeamShop — un vendeur ne peut pas acheter sa propre marchandise.
 --
 -- Le contrôle est fait dans place_order, pas seulement dans l'interface :
 -- le panier vit côté navigateur et l'appel RPC peut être rejoué à la main.
@@ -2247,7 +2247,7 @@ end $$;
 -- ============================================================
 
 -- ============================================================
--- ElijahShop — numéro WhatsApp, message à la une, et accusé de
+-- DreamTeamShop — numéro WhatsApp, message à la une, et accusé de
 -- commande côté acheteur.
 -- ============================================================
 
@@ -2370,7 +2370,7 @@ create index if not exists idx_profiles_fcm_token
 -- ============================================================
 
 -- ============================================================
--- ElijahShop — gestion des comptes par l'administrateur.
+-- DreamTeamShop — gestion des comptes par l'administrateur.
 --
 -- L'admin peut réinitialiser un mot de passe : l'utilisateur reçoit un mot
 -- de passe temporaire et doit en choisir un nouveau à sa prochaine
@@ -2467,6 +2467,6 @@ on conflict do nothing;
 
 insert into public.coupons (code, type, value, min_order_amount, max_uses) values
   ('BIENVENUE10', 'percent', 10, 5000, 1000),
-  ('ELIJAH2000', 'fixed', 2000, 20000, 500)
+  ('DREAMTEAM2000', 'fixed', 2000, 20000, 500)
 on conflict (code) do nothing;
 

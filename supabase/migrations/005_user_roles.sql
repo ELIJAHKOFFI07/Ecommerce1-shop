@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — trois niveaux de comptes
+-- DreamTeamShop — trois niveaux de comptes
 --
 --   user    : consulte, met au panier, achète. Ne peut pas vendre.
 --   vendeur : tout ce qui précède + ouvre sa boutique et publie des produits.

@@ -252,7 +252,7 @@ export default async function Home() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <Reveal>
           <h2 className="mb-10 text-center text-3xl font-bold sm:text-4xl">
-            Pourquoi ElijahShop ?
+            Pourquoi DreamTeamShop ?
           </h2>
         </Reveal>
         <div className="stagger grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -342,7 +342,7 @@ export default async function Home() {
 
       <footer className="border-t border-border py-8">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 text-sm text-muted sm:px-6">
-          <span className="font-semibold text-gold">ElijahShop</span>
+          <span className="font-semibold text-gold">DreamTeamShop</span>
           <nav className="flex flex-wrap gap-5">
             <Link href="/play" className="underline-grow hover:text-foreground">
               Boutique
@@ -361,7 +361,7 @@ export default async function Home() {
             </Link>
           </nav>
           <span className="text-xs">
-            © {new Date().getFullYear()} ElijahShop
+            © {new Date().getFullYear()} DreamTeamShop
           </span>
         </div>
       </footer>

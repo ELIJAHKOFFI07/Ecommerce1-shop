@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Megaphone, X } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 
-const DISMISS_KEY = "elijahshop_announcement_dismissed";
+const DISMISS_KEY = "dreamteamshop_announcement_dismissed";
 
 /// Message à la une publié par un administrateur (Réglages du back-office).
 /// Visible par tous les comptes connectés ou non, sur /play.

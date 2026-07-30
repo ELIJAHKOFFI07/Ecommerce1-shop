@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ElijahShop — Achetez. Vendez. Brillez.",
+  title: "DreamTeamShop — Achetez. Vendez. Brillez.",
   description:
     "La marketplace sociale de Côte d'Ivoire : postez vos produits, négociez en direct, payez en Mobile Money.",
 };
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
 const themeInitScript = `
 (function () {
   try {
-    var preset = localStorage.getItem("elijahshop_theme_preset") || "gold";
-    var mode = localStorage.getItem("elijahshop_theme_mode") || "dark";
+    var preset = localStorage.getItem("dreamteamshop_theme_preset") || "gold";
+    var mode = localStorage.getItem("dreamteamshop_theme_mode") || "dark";
     document.documentElement.dataset.preset = preset;
     document.documentElement.dataset.theme = mode;
   } catch (e) {}

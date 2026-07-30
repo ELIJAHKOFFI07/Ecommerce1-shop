@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — gestion des comptes par l'administrateur.
+-- DreamTeamShop — gestion des comptes par l'administrateur.
 --
 -- L'admin peut réinitialiser un mot de passe : l'utilisateur reçoit un mot
 -- de passe temporaire et doit en choisir un nouveau à sa prochaine

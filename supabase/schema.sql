@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — schéma Postgres (Supabase)
+-- DreamTeamShop — schéma Postgres (Supabase)
 -- Exécuté par SETUP_SERVICES.ps1 via `supabase db push` ou psql.
 -- Anti-triche : tout ce qui a de la valeur (stock, prix, totaux,
 -- portefeuille, points, statuts) est calculé par des fonctions

@@ -1,6 +1,6 @@
 # Déploiement sur Vercel
 
-Guide pas à pas pour mettre ElijahShop en ligne. Backend actif : **Supabase**.
+Guide pas à pas pour mettre DreamTeamShop en ligne. Backend actif : **Supabase**.
 
 ---
 
@@ -118,13 +118,13 @@ Puis lancer **Deploy**.
 
 ## 5. Configurer Supabase pour le domaine Vercel
 
-Une fois l'URL de production connue (ex. `https://elijahshop.vercel.app`) :
+Une fois l'URL de production connue (ex. `https://dreamteamshop.vercel.app`) :
 
 **Supabase → Authentication → URL Configuration**
 
-- **Site URL** : `https://elijahshop.vercel.app`
+- **Site URL** : `https://dreamteamshop.vercel.app`
 - **Redirect URLs** — ajouter :
-  - `https://elijahshop.vercel.app/**`
+  - `https://dreamteamshop.vercel.app/**`
   - `http://localhost:3000/**` (pour continuer à développer en local)
 
 Sans cela, la connexion Google et les liens de confirmation d'e-mail

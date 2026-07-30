@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — fonctionnalités de croissance / engagement
+-- DreamTeamShop — fonctionnalités de croissance / engagement
 -- Appliqué après schema.sql. Même règle anti-triche : toute
 -- récompense (points, wallet, coupon) est calculée par des
 -- fonctions SECURITY DEFINER, jamais écrite directement par le client.

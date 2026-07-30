@@ -10,7 +10,7 @@
 //
 // Secrets requis :
 //   supabase secrets set RESEND_API_KEY=re_xxx
-//   supabase secrets set NOTIFY_FROM="ElijahShop <no-reply@votre-domaine.com>"
+//   supabase secrets set NOTIFY_FROM="DreamTeamShop <no-reply@votre-domaine.com>"
 //   supabase secrets set APP_URL=https://votre-domaine.vercel.app
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
           : ""
       }
       <p style="margin-top:32px;font-size:12px;color:#888">
-        ElijahShop — vous recevez cet e-mail car vous avez un compte sur la plateforme.
+        DreamTeamShop — vous recevez cet e-mail car vous avez un compte sur la plateforme.
       </p>
     </div>`;
 

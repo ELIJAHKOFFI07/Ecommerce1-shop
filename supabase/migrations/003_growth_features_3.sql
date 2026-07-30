@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — croissance / engagement (vague 3)
+-- DreamTeamShop — croissance / engagement (vague 3)
 -- Enchères, historique des prix, conversion de points fidélité,
 -- code de retrait sécurisé. Toujours la même règle : la valeur
 -- (enchères, points, statuts) est validée par des fonctions

@@ -43,7 +43,7 @@ export function PlayNav() {
           </button>
 
           <Link href="/play" className="text-lg font-bold text-gold">
-            ElijahShop
+            DreamTeamShop
           </Link>
 
           <nav className="ml-auto hidden gap-6 text-sm md:flex">
@@ -70,8 +70,10 @@ export function PlayNav() {
         </div>
       </header>
 
-      {/* Barre du bas (téléphone) */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border bg-background/95 backdrop-blur-md md:hidden">
+      {/* Barre du bas (téléphone).
+          `pb-[env(safe-area-inset-bottom)]` : sur les iPhone récents, la
+          barre d'accueil recouvrirait sinon le bas des libellés. */}
+      <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
         {items.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}

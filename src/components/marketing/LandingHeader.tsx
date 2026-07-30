@@ -15,7 +15,7 @@ export function LandingHeader({ connected }: { connected: boolean }) {
           className="press flex shrink-0 items-center gap-2 text-lg font-bold text-gold"
         >
           <Sparkles className="h-5 w-5" />
-          ElijahShop
+          DreamTeamShop
         </Link>
 
         <Link

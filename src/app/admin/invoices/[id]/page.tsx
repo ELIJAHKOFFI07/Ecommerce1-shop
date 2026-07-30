@@ -34,7 +34,7 @@ export default function InvoiceDetailPage({
   if (!order) return <p className="py-16 text-center text-muted">Commande introuvable.</p>;
 
   const address = order.address_snapshot as Record<string, string>;
-  const invoiceNumber = `ELJ-${order.id.slice(0, 8).toUpperCase()}`;
+  const invoiceNumber = `DTS-${order.id.slice(0, 8).toUpperCase()}`;
 
   return (
     <div>
@@ -56,7 +56,7 @@ export default function InvoiceDetailPage({
       <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 text-sm print:border-0 print:bg-white print:text-black">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xl font-bold text-gold print:text-black">ElijahShop</p>
+            <p className="text-xl font-bold text-gold print:text-black">DreamTeamShop</p>
             <p className="text-muted">La marketplace sociale de Côte d&apos;Ivoire</p>
           </div>
           <div className="text-right">
@@ -141,7 +141,7 @@ export default function InvoiceDetailPage({
         <p className="mt-8 text-xs text-muted">
           Paiement : {order.payment_method} —{" "}
           {order.payment_status === "paid" ? "réglé" : "en attente"}. Commission
-          plateforme ElijahShop prélevée sur le montant vendeur, hors TVA
+          plateforme DreamTeamShop prélevée sur le montant vendeur, hors TVA
           (marketplace non assujettie). Document généré automatiquement, sans
           valeur fiscale contractuelle.
         </p>

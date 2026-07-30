@@ -1,5 +1,5 @@
 -- ============================================================
--- ElijahShop — back-office : stock audité, comptabilité, factures,
+-- DreamTeamShop — back-office : stock audité, comptabilité, factures,
 -- paramètres plateforme. Toujours la même règle anti-triche : le
 -- stock et la commission ne sont jamais modifiés directement par le
 -- client, uniquement via des RPC SECURITY DEFINER réservées aux admins.

@@ -1,4 +1,4 @@
-# ElijahShop — Web
+# DreamTeamShop — Web
 
 Marketplace sociale : vitrine publique + application et back-office.
 

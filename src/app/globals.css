@@ -106,11 +106,18 @@ body {
 /* Garde-fou : aucun élément ne doit provoquer de défilement horizontal de la
    page entière. Les tableaux et carrousels larges défilent dans leur propre
    conteneur `overflow-x-auto` ; ceci empêche qu'un débordement isolé décale
-   toute la mise en page (constaté sur mobile et sur desktop). */
+   toute la mise en page (constaté sur mobile et sur desktop).
+
+   `clip` et non `hidden` : avec `overflow-x: hidden`, l'axe vertical passe
+   de `visible` à `auto` et <body> devient un conteneur de défilement. Les
+   éléments `position: fixed` se calent alors sur ce conteneur au lieu de la
+   fenêtre — c'est ce qui faisait remonter la barre de navigation du bas en
+   fin de page sur mobile. `clip` coupe le débordement sans créer de
+   conteneur de défilement, donc sans casser le positionnement fixe. */
 html,
 body {
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Shimmer des blocs de chargement (voir components/Skeleton.tsx). */

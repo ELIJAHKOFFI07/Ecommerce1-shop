@@ -43,7 +43,7 @@ npx supabase login
 npx supabase link --project-ref pwkcwtgbngkcxgduhopy
 
 npx supabase secrets set RESEND_API_KEY=re_xxxxxxxx
-npx supabase secrets set NOTIFY_FROM="ElijahShop <no-reply@votre-domaine.com>"
+npx supabase secrets set NOTIFY_FROM="DreamTeamShop <no-reply@votre-domaine.com>"
 npx supabase secrets set APP_URL=https://votre-domaine.vercel.app
 
 npx supabase functions deploy send-notification-email --no-verify-jwt

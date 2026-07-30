@@ -25,8 +25,8 @@ export const THEME_PRESETS: {
 
 export type ThemeMode = "dark" | "light";
 
-const PRESET_KEY = "elijahshop_theme_preset";
-const MODE_KEY = "elijahshop_theme_mode";
+const PRESET_KEY = "dreamteamshop_theme_preset";
+const MODE_KEY = "dreamteamshop_theme_mode";
 
 export function getStoredPreset(): ThemePresetId {
   if (typeof window === "undefined") return "gold";
