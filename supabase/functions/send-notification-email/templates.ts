@@ -170,6 +170,10 @@ export function renderEmail({
                   </td>
                 </tr>
               </table>
+              <p style="margin:12px 0 0;font-size:11px;color:${MUTED};">
+                Ce bouton vous connecte directement. Il ne fonctionne
+                qu&apos;une seule fois — ne transférez pas cet e-mail.
+              </p>
             </td>
           </tr>`
               : ""
@@ -221,7 +225,9 @@ export function renderPlainText({
     title,
     "",
     body,
-    actionUrl ? `\nVoir dans l'application : ${actionUrl}` : "",
+    actionUrl
+      ? `\nVoir dans l'application : ${actionUrl}\n(Ce lien vous connecte directement et ne fonctionne qu'une seule fois. Ne le transférez pas.)`
+      : "",
     "",
     "—",
     "Vous recevez cet e-mail parce que vous avez un compte sur DreamTeamShop.",

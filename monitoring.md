@@ -104,6 +104,26 @@ Utilisé par `supabase/functions/send-notification-email/`.
 > compte, pas une adresse du type `no-reply@votre-domaine`. C'est une limite
 > du service, pas de la configuration.
 
+
+### Liens de connexion dans les e-mails
+
+Chaque e-mail de notification porte un bouton qui connecte directement son
+destinataire, via la route `/auth/confirm`. Le jeton est **à usage unique** :
+Supabase le consomme à la première vérification, un second clic échoue.
+
+> ⚠️ **Réglez la durée de validité.** Authentication → Email →
+> « Email OTP Expiration ». Une heure suffit largement pour une
+> notification ; la valeur par défaut est souvent plus longue.
+
+Le compromis est assumé : tant que le jeton est valide, un e-mail transféré
+donne accès au compte. L'usage unique et l'expiration courte sont les deux
+garde-fous — passé le délai, un vieil e-mail devient inoffensif. Le gabarit
+le rappelle au lecteur : « ne transférez pas cet e-mail ».
+
+En cas d'échec de génération (quota Supabase atteint), le bouton retombe sur
+un lien simple menant à l'écran de connexion : l'e-mail part toujours, il
+demande juste une identification.
+
 ### Quand changer
 
 - plus de ~50 commandes/jour (chaque commande envoie 2 e-mails) ;

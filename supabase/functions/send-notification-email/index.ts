@@ -44,6 +44,47 @@ function targetPath(n: NotificationRow): string {
   return "/play/notifications";
 }
 
+/// Lien qui connecte le destinataire d'un clic, puis l'amène à la bonne page.
+///
+/// Le jeton est à **usage unique** : Supabase le consomme à la première
+/// vérification. Il expire par ailleurs selon « Email OTP Expiration »
+/// (Authentication → Email), à régler court — une heure suffit largement pour
+/// une notification.
+///
+/// Le compromis est assumé : un e-mail transféré donne accès au compte tant
+/// que le jeton est valide. C'est pourquoi il ne sert qu'une fois et pour peu
+/// de temps. En cas d'échec — quota atteint, adresse inconnue — on retombe
+/// sur le lien simple, qui mène à l'écran de connexion : l'e-mail part
+/// toujours, il demande juste une identification.
+async function signedLink(
+  // deno-lint-ignore no-explicit-any
+  admin: any,
+  email: string,
+  appUrl: string,
+  path: string,
+): Promise<string> {
+  const plain = `${appUrl}${path}`;
+  try {
+    const { data, error } = await admin.auth.admin.generateLink({
+      type: "magiclink",
+      email,
+    });
+    const hash = data?.properties?.hashed_token;
+    if (error || !hash) {
+      console.error("Lien de connexion indisponible", error);
+      return plain;
+    }
+    const url = new URL("/auth/confirm", appUrl);
+    url.searchParams.set("token_hash", hash);
+    url.searchParams.set("type", "magiclink");
+    url.searchParams.set("next", path);
+    return url.toString();
+  } catch (err) {
+    console.error("Lien de connexion indisponible", err);
+    return plain;
+  }
+}
+
 function actionLabel(n: NotificationRow): string {
   const data = n.data ?? {};
   if (data.order_id) return "Suivre ma commande";
@@ -107,7 +148,10 @@ Deno.serve(async (req) => {
   const recipientName = row?.full_name?.split(" ")[0] ?? row?.username ?? null;
 
   const appUrl = Deno.env.get("APP_URL") ?? "";
-  const actionUrl = appUrl ? `${appUrl}${targetPath(notification)}` : undefined;
+  const path = targetPath(notification);
+  const actionUrl = appUrl
+    ? await signedLink(admin, userData.user.email, appUrl, path)
+    : undefined;
 
   const html = renderEmail({
     kind: (notification.type as EmailKind) ?? "info",
