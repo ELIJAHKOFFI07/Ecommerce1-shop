@@ -70,13 +70,18 @@ async function signedLink(
       email,
     });
     const hash = data?.properties?.hashed_token;
+    // Le type effectif n'est pas toujours celui demandé : pour un compte dont
+    // l'adresse n'est pas encore confirmée, Supabase renvoie un jeton de type
+    // `signup`. Le coder en dur ferait échouer la vérification pour ces
+    // comptes-là — on reprend donc la valeur renvoyée.
+    const verificationType = data?.properties?.verification_type ?? "magiclink";
     if (error || !hash) {
       console.error("Lien de connexion indisponible", error);
       return plain;
     }
     const url = new URL("/auth/confirm", appUrl);
     url.searchParams.set("token_hash", hash);
-    url.searchParams.set("type", "magiclink");
+    url.searchParams.set("type", verificationType);
     url.searchParams.set("next", path);
     return url.toString();
   } catch (err) {
