@@ -37,6 +37,21 @@ export const PRIMARY_LINKS: NavLink[] = [
   { href: "/play/account", label: "Compte", icon: User },
 ];
 
+/// Barre du bas (téléphone) : quatre destinations valables pour tout le
+/// monde, sans condition de rôle.
+///
+/// Volontairement distincte de PRIMARY_LINKS : les items étant en `flex-1`,
+/// une entrée qui apparaît après le chargement de la session ferait passer
+/// chaque item de 25 % à 20 % de largeur, et toutes les icônes se
+/// décaleraient sous le doigt. « Vendre » reste accessible par la barre du
+/// haut et par le menu.
+export const BOTTOM_LINKS: NavLink[] = [
+  { href: "/play", label: "Accueil", icon: Home },
+  { href: "/play/search", label: "Recherche", icon: Search },
+  { href: "/play/cart", label: "Panier", icon: ShoppingCart },
+  { href: "/play/account", label: "Compte", icon: User },
+];
+
 /// Toutes les fonctionnalités de l'espace personnel, regroupées par thème.
 /// Source unique partagée par le menu de navigation et la page /play/account :
 /// ajouter une entrée ici la fait apparaître aux deux endroits.

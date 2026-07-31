@@ -97,7 +97,7 @@ function SearchInner() {
                   active={categoryId === cat.id}
                   onClick={() => setCategoryId(cat.id)}
                 >
-                  {cat.icon} {cat.name}
+                  {cat.name}
                 </FilterChip>
               ))}
             </div>

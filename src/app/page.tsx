@@ -25,6 +25,7 @@ import { BenefitsTable } from "@/components/marketing/BenefitsTable";
 import { CountUp } from "@/components/marketing/CountUp";
 import { Reveal } from "@/components/marketing/Reveal";
 import { ProductCard } from "@/components/play/ProductCard";
+import { CategoryCard } from "@/components/play/CategoryCard";
 import {
   Card,
   CardContent,
@@ -208,22 +209,11 @@ export default async function Home() {
           <h2 className="mb-5 text-lg font-semibold">
             Parcourir par catégorie
           </h2>
-          <ScrollCarousel itemClassName="w-28">
+          <div className="stagger grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
             {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/play/search?category=${cat.id}`}
-                className="lift press group flex h-full flex-col items-center gap-2 rounded-2xl border border-border bg-surface px-3 py-4 hover:border-gold/50"
-              >
-                <span className="text-3xl transition-transform duration-300 group-hover:scale-110">
-                  {cat.icon}
-                </span>
-                <span className="text-center text-xs leading-tight text-muted transition-colors group-hover:text-foreground">
-                  {cat.name}
-                </span>
-              </Link>
+              <CategoryCard key={cat.id} category={cat} />
             ))}
-          </ScrollCarousel>
+          </div>
         </Section>
       )}
 

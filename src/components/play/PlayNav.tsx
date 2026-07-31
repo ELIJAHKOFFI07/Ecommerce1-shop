@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { useSession } from "@/lib/session";
-import { PRIMARY_LINKS, visibleLinks } from "@/lib/nav";
+import { BOTTOM_LINKS, PRIMARY_LINKS, visibleLinks } from "@/lib/nav";
 import { NavDrawer } from "@/components/play/NavDrawer";
 
 export function PlayNav() {
@@ -74,7 +74,7 @@ export function PlayNav() {
           `pb-[env(safe-area-inset-bottom)]` : sur les iPhone récents, la
           barre d'accueil recouvrirait sinon le bas des libellés. */}
       <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
-        {items.map(({ href, label, icon: Icon }) => (
+        {BOTTOM_LINKS.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
             href={href}
