@@ -39,6 +39,8 @@ export type Category = {
   name: string;
   slug: string;
   icon: string;
+  /// Visuel de fond de la carte de catégorie (migration 010).
+  image_url: string | null;
   parent_id: string | null;
   position: number;
 };

@@ -11,6 +11,7 @@ import {
   type Offer,
 } from "@/lib/types";
 import { HeaderSkeleton, ListSkeleton, Skeleton } from "@/components/Skeleton";
+import { PageHeader } from "@/components/play/PageHeader";
 
 export default function OffersPage() {
   const [connected, setConnected] = useState(true);
@@ -124,10 +125,7 @@ export default function OffersPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="text-2xl font-bold">Offres</h1>
-      <p className="mt-1 text-sm text-muted">
-        Proposez votre prix au vendeur, ou répondez aux offres reçues.
-      </p>
+      <PageHeader title="Offres" subtitle="Proposez votre prix au vendeur, ou répondez aux offres reçues." />
 
       <div className="mt-6 flex gap-2">
         <button

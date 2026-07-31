@@ -39,7 +39,8 @@ export default function AccountPage() {
 
   async function signOut() {
     await createClient().auth.signOut();
-    router.push("/play/login");
+    // Retour a l'espace visiteur : la vitrine reste consultable sans compte.
+    router.push("/");
   }
 
   async function refreshProfile() {

@@ -99,6 +99,32 @@ export const SECTIONS: { title: string; links: NavLink[] }[] = [
   },
 ];
 
+/// Sections réservées aux comptes connectés.
+///
+/// Un visiteur peut tout parcourir — catalogue, fiches produit, boutiques,
+/// recherche, panier — mais ces chemins-là n'ont aucun sens sans compte : ils
+/// le renvoient vers la connexion, avec retour automatique une fois connecté.
+///
+/// `/play/cart` en est volontairement absent : le panier se remplit sans
+/// compte, la connexion n'est exigée qu'au paiement.
+export const MEMBER_ONLY_PREFIXES = [
+  "/play/account",
+  "/play/orders",
+  "/play/wishlists",
+  "/play/offers",
+  "/play/messages",
+  "/play/notifications",
+  "/play/wallet",
+  "/play/spin",
+  "/play/referral",
+  "/play/sell",
+  "/play/checkout",
+] as const;
+
+export function isMemberOnly(pathname: string): boolean {
+  return MEMBER_ONLY_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
 /// Filtre les entrées selon le rôle du compte courant.
 export function visibleLinks(
   links: NavLink[],

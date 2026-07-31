@@ -6,6 +6,7 @@ import { MessageCircle } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { relativeTime, type Conversation, type Profile } from "@/lib/types";
 import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
+import { PageHeader } from "@/components/play/PageHeader";
 
 type Row = Conversation & { otherName: string };
 
@@ -84,9 +85,7 @@ export default function MessagesPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-bold">Messages</h1>
-
-      {rows.length === 0 ? (
+      <PageHeader title="Messages" />{rows.length === 0 ? (
         <p className="py-20 text-center text-muted">
           Aucune conversation. Contactez un vendeur depuis une fiche produit.
         </p>

@@ -12,6 +12,7 @@ import {
   type WalletTransaction,
 } from "@/lib/types";
 import { HeaderSkeleton, ListSkeleton, Skeleton } from "@/components/Skeleton";
+import { PageHeader } from "@/components/play/PageHeader";
 
 export default function WalletPage() {
   const [connected, setConnected] = useState(true);
@@ -110,10 +111,7 @@ export default function WalletPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="text-2xl font-bold">Portefeuille</h1>
-      <p className="mt-1 text-sm text-muted">
-        Vos ventes livrées sont créditées ici, commission déduite.
-      </p>
+      <PageHeader title="Portefeuille" subtitle="Vos ventes livrées sont créditées ici, commission déduite." />
 
       {/* Deux colonnes dès `lg` : le solde et le formulaire restent visibles
           pendant qu'on parcourt l'historique, au lieu de défiler hors écran. */}

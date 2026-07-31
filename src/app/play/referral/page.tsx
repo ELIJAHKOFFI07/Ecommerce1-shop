@@ -6,6 +6,7 @@ import { Copy, Gift, Trophy } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Profile, ReferralLeaderboardEntry } from "@/lib/types";
 import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
+import { PageHeader } from "@/components/play/PageHeader";
 
 export default function ReferralPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -71,11 +72,7 @@ export default function ReferralPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="text-2xl font-bold">Parrainage</h1>
-      <p className="mt-1 text-sm text-muted">
-        Votre filleul gagne 100 points à l&apos;inscription, et vous 200 points dès
-        sa première commande livrée.
-      </p>
+      <PageHeader title="Parrainage" subtitle="Votre filleul gagne 100 points à l&apos;inscription, et vous 200 points dès sa première commande livrée." />
 
       {profile?.referral_code ? (
         <div className="mt-6 rounded-xl border border-border bg-surface p-6 text-center">

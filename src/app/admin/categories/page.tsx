@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Plus, Save, Trash2 } from "lucide-react";
+import { ImagePlus, Plus, Save, Trash2, X } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
+import { uploadImage } from "@/lib/storage";
 import { ListSkeleton } from "@/components/Skeleton";
 import type { Category } from "@/lib/types";
 
@@ -47,11 +48,55 @@ export default function AdminCategoriesPage() {
       .update({
         name: category.name,
         icon: category.icon,
+        image_url: category.image_url,
         position: category.position,
       })
       .eq("id", category.id);
     setSavingId(null);
     if (updErr) setError(updErr.message);
+  }
+
+  /// Visuel de fond de la carte de catégorie.
+  ///
+  /// L'envoi et l'enregistrement se font en une fois : demander à l'admin de
+  /// cliquer « Enregistrer » après avoir choisi une image serait une source
+  /// d'oubli, l'aperçu laissant croire que c'est déjà fait.
+  async function uploadCover(category: Category, file: File) {
+    setSavingId(category.id);
+    setError(null);
+    try {
+      const supabase = createClient();
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("Session expirée.");
+
+      const url = await uploadImage("shop-images", userData.user.id, file);
+      const { error: updErr } = await supabase
+        .from("categories")
+        .update({ image_url: url })
+        .eq("id", category.id);
+      if (updErr) throw updErr;
+
+      patch(category.id, { image_url: url });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Envoi impossible.");
+    } finally {
+      setSavingId(null);
+    }
+  }
+
+  async function removeCover(category: Category) {
+    setSavingId(category.id);
+    setError(null);
+    const { error: updErr } = await createClient()
+      .from("categories")
+      .update({ image_url: null })
+      .eq("id", category.id);
+    setSavingId(null);
+    if (updErr) {
+      setError(updErr.message);
+      return;
+    }
+    patch(category.id, { image_url: null });
   }
 
   async function remove(category: Category) {
@@ -115,7 +160,9 @@ export default function AdminCategoriesPage() {
     <div>
       <h1 className="mb-1 text-2xl font-bold">Catégories ({categories.length})</h1>
       <p className="mb-6 text-sm text-muted">
-        L&apos;icône est un emoji : collez celui de votre choix dans le champ.
+        Le visuel sert de fond à la carte de catégorie côté client. Sans
+        image, un dégradé de couleur est utilisé — l&apos;emoji reste
+        enregistré mais n&apos;est plus affiché.
       </p>
 
       {error && (
@@ -162,12 +209,53 @@ export default function AdminCategoriesPage() {
             key={c.id}
             className="flex flex-wrap items-end gap-2 rounded-xl border border-border bg-surface p-3"
           >
-            <label className="w-20">
-              <span className="mb-1 block text-xs text-muted">Icône</span>
+            {/* Visuel de fond, tel qu'il apparaît côté client. */}
+            <div className="w-24">
+              <span className="mb-1 block text-xs text-muted">Visuel</span>
+              <div className="group relative h-16 w-24 overflow-hidden rounded-lg border border-border bg-surface-2">
+                {c.image_url ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={c.image_url}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                    <button
+                      onClick={() => removeCover(c)}
+                      disabled={savingId === c.id}
+                      aria-label="Retirer le visuel"
+                      className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 disabled:opacity-50"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </>
+                ) : (
+                  <label className="flex h-full cursor-pointer flex-col items-center justify-center gap-1 text-muted transition-colors hover:text-gold">
+                    <ImagePlus className="h-4 w-4" />
+                    <span className="text-[10px]">Ajouter</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) uploadCover(c, f);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                )}
+              </div>
+            </div>
+
+            <label className="w-16">
+              <span className="mb-1 block text-xs text-muted">Emoji</span>
               <input
                 value={c.icon}
                 onChange={(e) => patch(c.id, { icon: e.target.value })}
                 maxLength={4}
+                title="Conservé en base ; le client affiche le visuel."
                 className="w-full rounded-lg border border-border bg-background px-2 py-2 text-center text-xl outline-none focus:border-gold"
               />
             </label>

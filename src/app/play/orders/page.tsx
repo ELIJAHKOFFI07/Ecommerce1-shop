@@ -6,6 +6,7 @@ import { createClient } from "@/lib/backend/client";
 import { ORDER_STATUS_LABELS, formatFcfa, type Order } from "@/lib/types";
 import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
 import { MessageCircle } from "lucide-react";
+import { PageHeader } from "@/components/play/PageHeader";
 
 /// Lien wa.me pré-rempli : le vendeur reçoit le détail de la commande
 /// directement, sans ressaisie. Le numéro est normalisé (wa.me n'accepte que
@@ -94,8 +95,7 @@ function OrdersInner() {
 
   return (
     <div>
-      <h1 className="mb-4 text-xl font-bold">Mes commandes</h1>
-      {orders.length === 0 ? (
+      <PageHeader title="Mes commandes" />{orders.length === 0 ? (
         <p className="py-12 text-center text-muted">Aucune commande.</p>
       ) : (
         <div className="grid gap-4 xl:grid-cols-2">

@@ -31,13 +31,24 @@ export function CategoryCard({ category }: { category: Category }) {
       href={`/play/search?category=${category.id}`}
       className="press group relative flex h-28 w-full flex-col justify-end overflow-hidden rounded-2xl border border-border p-4 transition-all duration-300 hover:border-gold/60 hover:shadow-lg lg:h-32"
     >
-      {/* Fond dégradé, discret au repos et qui s'affirme au survol. */}
-      <span
-        aria-hidden
-        className={`absolute inset-0 bg-gradient-to-br ${gradientFor(
-          category.id,
-        )} opacity-25 transition-all duration-500 group-hover:scale-110 group-hover:opacity-40`}
-      />
+      {/* Visuel s'il en existe un, dégradé sinon : une catégorie sans image
+          reste présentable, elle ne laisse pas un rectangle vide. */}
+      {category.image_url ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={category.image_url}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+      ) : (
+        <span
+          aria-hidden
+          className={`absolute inset-0 bg-gradient-to-br ${gradientFor(
+            category.id,
+          )} opacity-25 transition-all duration-500 group-hover:scale-110 group-hover:opacity-40`}
+        />
+      )}
 
       {/* Voile sombre : garantit la lisibilité du nom quelle que soit la
           teinte tirée pour cette catégorie. */}

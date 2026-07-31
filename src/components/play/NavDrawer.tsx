@@ -44,7 +44,8 @@ export function NavDrawer({
   async function signOut() {
     await createClient().auth.signOut();
     onClose();
-    window.location.href = "/play/login";
+    // Retour a l'espace visiteur : la vitrine reste consultable sans compte.
+    window.location.href = "/";
   }
 
   return (

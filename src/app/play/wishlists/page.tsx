@@ -6,6 +6,7 @@ import { Bookmark, Plus, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Wishlist } from "@/lib/types";
 import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
+import { PageHeader } from "@/components/play/PageHeader";
 
 export default function WishlistsPage() {
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
@@ -68,10 +69,7 @@ export default function WishlistsPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="text-2xl font-bold">Mes listes</h1>
-      <p className="mt-1 text-sm text-muted">
-        Organisez vos envies par thème (cadeaux, à surveiller…).
-      </p>
+      <PageHeader title="Mes listes" subtitle="Organisez vos envies par thème (cadeaux, à surveiller…)." />
 
       <div className="mt-6 flex gap-2">
         <input
