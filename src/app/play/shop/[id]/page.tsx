@@ -48,7 +48,7 @@ export default function ShopPage({
           {shop.name[0]?.toUpperCase()}
         </div>
         <div>
-          <h1 className="flex items-center gap-2 text-xl font-bold">
+          <h1 className="flex items-center gap-2 text-xl font-medium tracking-tight">
             {shop.name}
             {shop.identity_verified && (
               <ShieldCheck className="h-5 w-5 text-accent" />
@@ -64,7 +64,7 @@ export default function ShopPage({
       {products.length === 0 ? (
         <p className="py-12 text-center text-muted">Aucun produit.</p>
       ) : (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

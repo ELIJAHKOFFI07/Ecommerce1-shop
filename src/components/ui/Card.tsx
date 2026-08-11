@@ -56,7 +56,7 @@ export function CardTitle({
   className?: string;
 }) {
   return (
-    <h3 className={`text-xl font-bold lg:text-2xl ${className}`}>{children}</h3>
+    <h3 className={`text-xl font-medium tracking-tight lg:text-2xl ${className}`}>{children}</h3>
   );
 }
 

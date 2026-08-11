@@ -67,7 +67,7 @@ export function NewCouponForm() {
       />
       <button
         disabled={busy}
-        className="rounded-full bg-accent px-5 py-2 font-semibold text-on-accent disabled:opacity-50"
+        className="rounded-full bg-foreground px-5 py-2 font-semibold text-background disabled:opacity-50"
       >
         Créer
       </button>

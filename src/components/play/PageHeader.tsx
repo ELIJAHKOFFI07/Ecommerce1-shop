@@ -47,7 +47,7 @@ export function PageHeader({
         </button>
 
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold lg:text-3xl">{title}</h1>
+          <h1 className="text-2xl font-medium tracking-tight lg:text-3xl">{title}</h1>
           {subtitle && (
             <p className="mt-1 text-sm text-muted lg:text-base">{subtitle}</p>
           )}

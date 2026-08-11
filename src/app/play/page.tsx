@@ -120,7 +120,7 @@ export default function PlayHome() {
   const firstName = profile?.full_name?.split(" ")[0] ?? profile?.username;
 
   return (
-    <div className="space-y-10 lg:space-y-16">
+    <div className="space-y-12 lg:space-y-20">
       <section>
         <StoriesBar />
       </section>
@@ -130,7 +130,7 @@ export default function PlayHome() {
       {/* ---------------------------------------------------------------- */}
       <section className="animate-rise rounded-2xl border border-border bg-surface-2/60 p-6 md:p-8 lg:p-10">
         <div>
-          <h1 className="text-2xl font-bold md:text-3xl lg:text-4xl">
+          <h1 className="text-2xl font-medium tracking-tight md:text-3xl lg:text-4xl">
             {firstName ? `Bonjour ${firstName} ✦` : "Bienvenue ✦"}
           </h1>
           <p className="mt-2 max-w-lg text-muted lg:text-lg">
@@ -143,7 +143,7 @@ export default function PlayHome() {
             {canSell && (
               <Link
                 href="/play/sell"
-                className="press inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-on-accent hover:bg-accent-dark lg:text-base"
+                className="press inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background hover:bg-foreground/90 lg:text-base"
               >
                 <Store className="h-4 w-4" />
                 {hasShop ? "Gérer ma boutique" : "Ouvrir ma boutique"}
@@ -236,7 +236,7 @@ export default function PlayHome() {
       {flash.length > 0 && (
         <section>
           <SectionTitle
-            icon={<Zap className="h-5 w-5 text-accent" />}
+            icon={<Zap className="h-5 w-5 text-muted" />}
             action={{ href: "/play/search", label: "Tout voir" }}
           >
             Ventes flash
@@ -251,7 +251,7 @@ export default function PlayHome() {
       {auctions.length > 0 && (
         <section>
           <SectionTitle
-            icon={<Gavel className="h-5 w-5 text-accent" />}
+            icon={<Gavel className="h-5 w-5 text-muted" />}
             action={{ href: "/play/auctions", label: "Toutes les enchères" }}
           >
             Enchères en cours
@@ -269,7 +269,7 @@ export default function PlayHome() {
       {/* ---------------------------------------------------------------- */}
       {popular.length > 0 && (
         <section>
-          <SectionTitle icon={<TrendingUp className="h-5 w-5 text-accent" />}>
+          <SectionTitle icon={<TrendingUp className="h-5 w-5 text-muted" />}>
             Les plus aimés
           </SectionTitle>
           <ProductGrid products={popular} />
@@ -281,7 +281,7 @@ export default function PlayHome() {
       {/* ---------------------------------------------------------------- */}
       {shops.length > 0 && (
         <section>
-          <SectionTitle icon={<Store className="h-5 w-5 text-accent" />}>
+          <SectionTitle icon={<Store className="h-5 w-5 text-muted" />}>
             Boutiques à découvrir
           </SectionTitle>
           <div className="stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -297,7 +297,7 @@ export default function PlayHome() {
       {/* ---------------------------------------------------------------- */}
       <section>
         <SectionTitle
-          icon={<Flame className="h-5 w-5 text-accent" />}
+          icon={<Flame className="h-5 w-5 text-muted" />}
           subtitle={
             regular.length > 0
               ? `À partir de ${formatFcfa(
@@ -346,9 +346,9 @@ function SectionTitle({
   action?: { href: string; label: string };
 }) {
   return (
-    <div className="mb-4 flex flex-wrap items-end justify-between gap-x-4 gap-y-1 lg:mb-6">
+    <div className="mb-5 flex flex-wrap items-end justify-between gap-x-4 gap-y-1 lg:mb-8">
       <div>
-        <h2 className="flex items-center gap-2 text-lg font-semibold lg:text-2xl">
+        <h2 className="flex items-center gap-2 text-xl font-medium tracking-tight lg:text-3xl">
           {icon}
           {children}
         </h2>
@@ -359,7 +359,7 @@ function SectionTitle({
       {action && (
         <Link
           href={action.href}
-          className="press underline-grow inline-flex items-center gap-1.5 text-sm font-medium text-accent"
+          className="press inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-foreground"
         >
           {action.label}
           <ArrowRight className="h-4 w-4" />
@@ -384,7 +384,7 @@ function ProductGrid({ products }: { products: Product[] }) {
             ))}
           </ScrollCarousel>
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -392,7 +392,7 @@ function ProductGrid({ products }: { products: Product[] }) {
         )}
       </div>
 
-      <div className="stagger hidden gap-4 sm:grid sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+      <div className="stagger hidden gap-x-5 gap-y-10 sm:gap-x-6 sm:grid sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {products.map((p) => (
           <ProductCard key={p.id} product={p} />
         ))}
@@ -425,7 +425,7 @@ function AuctionTile({ auction }: { auction: Auction }) {
             Pas d&apos;image
           </span>
         )}
-        <span className="absolute left-2 top-2 rounded-md bg-accent px-2 py-0.5 text-xs font-bold text-on-accent">
+        <span className="absolute left-2 top-2 rounded-md bg-foreground px-2 py-0.5 text-xs font-bold text-background">
           {auction.bids_count} offre{auction.bids_count > 1 ? "s" : ""}
         </span>
       </div>
@@ -483,7 +483,7 @@ function EmptyCatalogue({
       {canSell ? (
         <Link
           href="/play/sell"
-          className="press mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-on-accent"
+          className="press mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-sm font-semibold text-background"
         >
           {hasShop ? "Publier un produit" : "Ouvrir ma boutique"}
           <ArrowRight className="h-4 w-4" />

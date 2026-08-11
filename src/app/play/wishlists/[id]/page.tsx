@@ -51,14 +51,14 @@ export default function WishlistDetailPage({
       >
         <ArrowLeft className="h-4 w-4" /> Mes listes
       </Link>
-      <h1 className="text-2xl font-bold">{wishlist?.name ?? "Liste"}</h1>
+      <h1 className="text-2xl font-medium tracking-tight">{wishlist?.name ?? "Liste"}</h1>
 
       {products.length === 0 ? (
         <p className="py-16 text-center text-muted">
           Liste vide. Ajoutez des produits depuis leur fiche.
         </p>
       ) : (
-        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <div className="mt-6 grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

@@ -59,7 +59,7 @@ export default function WishlistsPage() {
         <p className="text-muted">Connectez-vous pour créer des listes.</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-on-accent"
+          className="mt-4 inline-block rounded-lg bg-foreground px-5 py-2.5 font-semibold text-background"
         >
           Se connecter
         </Link>
@@ -82,7 +82,7 @@ export default function WishlistsPage() {
         <button
           onClick={create}
           disabled={creating || !newName.trim()}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
         >
           <Plus className="h-4 w-4" /> Créer
         </button>

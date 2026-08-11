@@ -38,7 +38,7 @@ export default function InvoicesPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold">Factures</h1>
+      <h1 className="mb-1 text-2xl font-medium tracking-tight">Factures</h1>
       <p className="mb-6 text-sm text-muted">
         Une facture par commande, imprimable ou exportable en PDF depuis le
         navigateur.

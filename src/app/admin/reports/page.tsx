@@ -21,7 +21,7 @@ export default async function AdminReports() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Signalements ({reports.length})</h1>
+      <h1 className="mb-6 text-2xl font-medium tracking-tight">Signalements ({reports.length})</h1>
       {reports.length === 0 ? (
         <p className="text-muted">Aucun signalement.</p>
       ) : (

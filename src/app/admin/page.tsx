@@ -74,7 +74,7 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Tableau de bord</h1>
+      <h1 className="mb-6 text-2xl font-medium tracking-tight">Tableau de bord</h1>
       {error && (
         <p className="mb-4 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-300">
           {error.message}

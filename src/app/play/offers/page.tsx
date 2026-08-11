@@ -113,7 +113,7 @@ export default function OffersPage() {
         </p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent"
+          className="mt-4 inline-block rounded-lg bg-foreground px-5 py-2.5 text-sm font-semibold text-background"
         >
           Se connecter
         </Link>
@@ -208,7 +208,7 @@ export default function OffersPage() {
                   <button
                     disabled={busyId === offer.id}
                     onClick={() => respond(offer.id, "accepted")}
-                    className="flex-1 rounded-lg bg-accent px-3 py-2 text-xs font-semibold text-on-accent disabled:opacity-50"
+                    className="flex-1 rounded-lg bg-foreground px-3 py-2 text-xs font-semibold text-background disabled:opacity-50"
                   >
                     Accepter
                   </button>

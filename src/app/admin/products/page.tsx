@@ -13,7 +13,7 @@ export default async function AdminProducts() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Produits ({products.length})</h1>
+      <h1 className="mb-6 text-2xl font-medium tracking-tight">Produits ({products.length})</h1>
       <div className="overflow-x-auto rounded-2xl border border-border">
         <table className="w-full text-sm">
           <thead className="bg-surface text-left text-muted">

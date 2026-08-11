@@ -69,7 +69,7 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="max-w-lg">
-      <h1 className="mb-1 text-2xl font-bold">Réglages de la plateforme</h1>
+      <h1 className="mb-1 text-2xl font-medium tracking-tight">Réglages de la plateforme</h1>
       <p className="mb-6 text-sm text-muted">
         Ces paramètres s&apos;appliquent immédiatement à toutes les nouvelles
         transactions (RPC admin_update_settings).
@@ -158,7 +158,7 @@ export default function AdminSettingsPage() {
         <button
           onClick={save}
           disabled={saving}
-          className="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-on-accent disabled:opacity-40"
+          className="w-full rounded-lg bg-foreground py-2.5 text-sm font-semibold text-background disabled:opacity-40"
         >
           {saving ? "Enregistrement…" : "Enregistrer"}
         </button>

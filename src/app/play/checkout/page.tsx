@@ -63,14 +63,14 @@ export default function CheckoutPage() {
         <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent/15">
           <LockKeyhole className="h-6 w-6 text-accent" />
         </span>
-        <h1 className="mt-4 text-xl font-bold">Plus qu&apos;une étape</h1>
+        <h1 className="mt-4 text-xl font-medium tracking-tight">Plus qu&apos;une étape</h1>
         <p className="mt-2 text-sm text-muted">
           Connectez-vous pour finaliser votre commande. Votre panier est
           conservé.
         </p>
         <Link
           href="/play/login?next=/play/checkout"
-          className="press mt-6 inline-block w-full rounded-full bg-accent px-6 py-3 font-semibold text-on-accent"
+          className="press mt-6 inline-block w-full rounded-full bg-foreground px-6 py-3 font-semibold text-background"
         >
           Se connecter
         </Link>
@@ -121,7 +121,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <h1 className="mb-6 text-xl font-bold">Finaliser la commande</h1>
+      <h1 className="mb-6 text-xl font-medium tracking-tight">Finaliser la commande</h1>
 
       {/* Deux colonnes dès `lg` : le récapitulatif et le bouton de paiement
           restent visibles pendant la saisie, plutôt qu'en bas d'un formulaire
@@ -241,7 +241,7 @@ export default function CheckoutPage() {
         <button
           disabled={placing || !fullName || !phone || !city}
           onClick={placeOrder}
-          className="press mt-4 w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
+          className="press mt-4 w-full rounded-full bg-foreground py-3 font-semibold text-background disabled:opacity-50"
         >
           {placing
             ? "Traitement…"

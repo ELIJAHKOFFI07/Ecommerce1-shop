@@ -256,7 +256,7 @@ export function ProductActions({ product }: { product: Product }) {
         {compareCount >= 2 && (
           <a
             href="/play/compare"
-            className="inline-flex items-center rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-on-accent"
+            className="inline-flex items-center rounded-lg bg-foreground px-3 py-2 text-sm font-semibold text-background"
           >
             Voir la comparaison ({compareCount})
           </a>

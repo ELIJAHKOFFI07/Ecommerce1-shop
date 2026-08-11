@@ -139,7 +139,7 @@ export function StoryViewer({
           {story.product_id && (
             <Link
               href={`/play/product/${story.product_id}`}
-              className="pointer-events-auto block rounded-lg bg-accent py-2.5 text-center font-semibold text-on-accent"
+              className="pointer-events-auto block rounded-lg bg-foreground py-2.5 text-center font-semibold text-background"
             >
               Voir le produit
             </Link>

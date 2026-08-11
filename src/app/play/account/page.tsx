@@ -80,7 +80,7 @@ export default function AccountPage() {
         <p className="text-lg font-medium">Connexion requise</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
+          className="mt-4 inline-block rounded-full bg-foreground px-6 py-2.5 font-semibold text-background"
         >
           Se connecter
         </Link>

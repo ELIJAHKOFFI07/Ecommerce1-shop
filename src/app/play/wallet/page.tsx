@@ -101,7 +101,7 @@ export default function WalletPage() {
         </p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent"
+          className="mt-4 inline-block rounded-lg bg-foreground px-5 py-2.5 text-sm font-semibold text-background"
         >
           Se connecter
         </Link>
@@ -152,7 +152,7 @@ export default function WalletPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-4 w-full rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent disabled:opacity-50"
+          className="mt-4 w-full rounded-lg bg-foreground px-5 py-2.5 text-sm font-semibold text-background disabled:opacity-50"
         >
           {submitting ? "Envoi…" : "Demander le retrait"}
         </button>

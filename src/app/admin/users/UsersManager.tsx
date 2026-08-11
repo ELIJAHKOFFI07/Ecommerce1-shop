@@ -87,10 +87,10 @@ export function UsersManager({ users }: { users: Profile[] }) {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-bold">Utilisateurs ({users.length})</h1>
+        <h1 className="text-2xl font-medium tracking-tight">Utilisateurs ({users.length})</h1>
         <button
           onClick={() => setCreating(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background"
         >
           <Plus className="h-4 w-4" /> Nouveau compte
         </button>
@@ -314,7 +314,7 @@ function UserDialog({
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={saving}
-          className="w-full rounded-full bg-accent py-2.5 font-semibold text-on-accent disabled:opacity-50"
+          className="w-full rounded-full bg-foreground py-2.5 font-semibold text-background disabled:opacity-50"
         >
           {saving ? "Enregistrement…" : "Enregistrer"}
         </button>
@@ -400,7 +400,7 @@ function CreateUserDialog({
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={saving}
-          className="w-full rounded-full bg-accent py-2.5 font-semibold text-on-accent disabled:opacity-50"
+          className="w-full rounded-full bg-foreground py-2.5 font-semibold text-background disabled:opacity-50"
         >
           {saving ? "Création…" : "Créer le compte"}
         </button>

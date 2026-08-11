@@ -150,7 +150,7 @@ export default function AdminCategoriesPage() {
   if (loading) {
     return (
       <div>
-        <h1 className="mb-6 text-2xl font-bold">Catégories</h1>
+        <h1 className="mb-6 text-2xl font-medium tracking-tight">Catégories</h1>
         <ListSkeleton count={6} />
       </div>
     );
@@ -158,7 +158,7 @@ export default function AdminCategoriesPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold">Catégories ({categories.length})</h1>
+      <h1 className="mb-1 text-2xl font-medium tracking-tight">Catégories ({categories.length})</h1>
       <p className="mb-6 text-sm text-muted">
         Le visuel sert de fond à la carte de catégorie côté client. Sans
         image, un dégradé de couleur est utilisé — l&apos;emoji reste
@@ -197,7 +197,7 @@ export default function AdminCategoriesPage() {
         </label>
         <button
           disabled={creating || !newName.trim()}
-          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-50"
         >
           <Plus className="h-4 w-4" /> Ajouter
         </button>

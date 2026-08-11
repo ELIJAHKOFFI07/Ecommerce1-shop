@@ -80,7 +80,7 @@ export function ProductQna({
           <button
             onClick={ask}
             disabled={busy || !draft.trim()}
-            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-40"
+            className="rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
           >
             Demander
           </button>

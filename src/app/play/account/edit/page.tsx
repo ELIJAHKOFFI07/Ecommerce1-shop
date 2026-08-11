@@ -111,7 +111,7 @@ export default function EditProfilePage() {
         <p className="text-lg font-medium">Connexion requise</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
+          className="mt-4 inline-block rounded-full bg-foreground px-6 py-2.5 font-semibold text-background"
         >
           Se connecter
         </Link>
@@ -132,7 +132,7 @@ export default function EditProfilePage() {
         <ArrowLeft className="h-4 w-4" /> Mon compte
       </Link>
 
-      <h1 className="mt-4 text-2xl font-bold">Modifier mon profil</h1>
+      <h1 className="mt-4 text-2xl font-medium tracking-tight">Modifier mon profil</h1>
 
       <form onSubmit={save} className="mt-6 space-y-4">
         <div className="flex flex-col items-center gap-3">
@@ -242,7 +242,7 @@ export default function EditProfilePage() {
 
         <button
           disabled={saving}
-          className="w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
+          className="w-full rounded-full bg-foreground py-3 font-semibold text-background disabled:opacity-50"
         >
           {saving ? "Enregistrement…" : "Enregistrer"}
         </button>

@@ -90,39 +90,43 @@ export default async function Home() {
       {/* ================================================================ */}
       {/* Bande d'accroche                                                  */}
       {/* ================================================================ */}
-      <section className="border-b border-border bg-surface-2/60 py-20 md:py-28">
-        <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-4 text-center sm:px-6">
-          <Pill>
-            <Flame className="h-3.5 w-3.5" />
-            La marketplace sociale de Côte d&apos;Ivoire
-          </Pill>
+      {/* Accroche alignée à gauche sur un aplat léger : la composition
+          éditoriale des deux références. Le titre est du texte simple —
+          l'animation d'entrée qu'il portait le laissait invisible quand elle
+          ne se déclenchait pas. */}
+      <section className="relative overflow-hidden border-b border-border bg-surface-2/60">
+        <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28 2xl:max-w-[1440px]">
+          <div className="max-w-2xl">
+            <Pill>
+              <Flame className="h-3.5 w-3.5" />
+              La marketplace sociale de Côte d&apos;Ivoire
+            </Pill>
 
-          <h1 className="mt-6 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            Achetez. Vendez.
-            <br />
-            <span className="text-accent">Brillez.</span>
-          </h1>
+            <h1 className="mt-6 text-4xl font-medium tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              Achetez, vendez et négociez près de chez vous
+            </h1>
 
-          <p className="mt-6 max-w-2xl text-base text-muted sm:text-lg lg:text-xl">
-            Des milliers de produits près de chez vous, des vendeurs vérifiés,
-            la négociation directe et le paiement Mobile Money. Parcourez
-            librement — un compte n&apos;est nécessaire que pour commander.
-          </p>
+            <p className="mt-6 text-lg leading-relaxed text-muted sm:text-xl">
+              Des milliers de produits, des vendeurs vérifiés, la négociation
+              directe et le paiement Mobile Money. Parcourez librement — un
+              compte n&apos;est nécessaire que pour commander.
+            </p>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/play"
-              className="press inline-flex items-center justify-center gap-2 rounded-full bg-accent px-8 py-3 text-base font-medium text-on-accent hover:bg-accent-dark"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              Explorer la boutique
-            </Link>
-            <Link
-              href="/play/register"
-              className="press inline-flex items-center justify-center gap-2 rounded-full border border-border bg-background px-8 py-3 text-base font-medium transition-colors hover:bg-surface-2"
-            >
-              Créer un compte
-            </Link>
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <Link
+                href="/play"
+                className="press inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-8 text-base font-medium text-background transition-colors hover:bg-foreground/90"
+              >
+                <ShoppingBag className="h-4 w-4" />
+                Explorer la boutique
+              </Link>
+              <Link
+                href="/play/register"
+                className="press inline-flex h-12 items-center justify-center gap-2 rounded-full border border-border px-8 text-base font-medium transition-colors hover:bg-surface-2"
+              >
+                Créer un compte
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -209,7 +213,7 @@ export default async function Home() {
       <Section>
         <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
+            <h2 className="text-2xl font-medium tracking-tight sm:text-3xl lg:text-4xl">
               Nos produits disponibles
             </h2>
             <p className="mt-2 text-sm text-muted lg:text-base">
@@ -232,7 +236,7 @@ export default async function Home() {
             <p className="text-muted">Aucun produit disponible pour le moment.</p>
             <Link
               href="/play/register"
-              className="press mt-4 inline-block rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-on-accent"
+              className="press mt-4 inline-block rounded-full bg-foreground px-6 py-2.5 text-sm font-semibold text-background"
             >
               Devenir vendeur
             </Link>
@@ -248,7 +252,7 @@ export default async function Home() {
                 ))}
               </ScrollCarousel>
             </div>
-            <div className="stagger hidden gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+            <div className="stagger hidden gap-x-6 gap-y-10 sm:grid sm:grid-cols-2 lg:grid-cols-4">
               {products.slice(0, 8).map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
@@ -323,7 +327,7 @@ export default async function Home() {
           </blockquote>
 
           <div className="pt-2">
-            <h3 className="text-2xl font-bold sm:text-3xl">
+            <h3 className="text-2xl font-medium tracking-tight sm:text-3xl">
               Prêt à ouvrir votre boutique ?
             </h3>
             <p className="mx-auto mt-3 max-w-lg text-muted">
@@ -332,7 +336,7 @@ export default async function Home() {
             </p>
             <Link
               href="/play/register"
-              className="press mt-7 inline-flex items-center gap-2 rounded-full bg-accent px-8 py-3.5 font-semibold text-on-accent"
+              className="press mt-7 inline-flex items-center gap-2 rounded-full bg-foreground px-8 py-3.5 font-semibold text-background"
             >
               Commencer gratuitement
               <ArrowRight className="h-4 w-4" />

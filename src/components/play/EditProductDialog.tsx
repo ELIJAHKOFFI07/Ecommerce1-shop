@@ -238,7 +238,7 @@ export function EditProductDialog({
           </button>
           <button
             disabled={saving}
-            className="w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
+            className="w-full rounded-full bg-foreground py-3 font-semibold text-background disabled:opacity-50"
           >
             {saving ? "Enregistrement…" : "Enregistrer"}
           </button>

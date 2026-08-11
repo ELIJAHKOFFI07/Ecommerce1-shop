@@ -22,7 +22,7 @@ export default async function AdminCoupons() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Coupons</h1>
+      <h1 className="mb-6 text-2xl font-medium tracking-tight">Coupons</h1>
       <NewCouponForm />
       <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
         <table className="w-full text-sm">

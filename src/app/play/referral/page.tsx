@@ -95,7 +95,7 @@ export default function ReferralPage() {
           </p>
           <Link
             href="/play/login"
-            className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent"
+            className="mt-4 inline-block rounded-lg bg-foreground px-5 py-2.5 text-sm font-semibold text-background"
           >
             Se connecter
           </Link>
@@ -121,7 +121,7 @@ export default function ReferralPage() {
             <button
               type="submit"
               disabled={redeeming || !sponsorCode.trim()}
-              className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-50"
+              className="rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-50"
             >
               {redeeming ? "…" : "Valider"}
             </button>

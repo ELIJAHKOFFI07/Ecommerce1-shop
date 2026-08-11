@@ -75,7 +75,7 @@ export default function ComparePage() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Comparer</h1>
+        <h1 className="text-2xl font-medium tracking-tight">Comparer</h1>
         <button
           onClick={() => {
             clearCompare();

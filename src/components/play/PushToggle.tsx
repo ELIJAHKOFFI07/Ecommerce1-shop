@@ -101,7 +101,7 @@ export function PushToggle() {
           className={`press shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors disabled:opacity-50 ${
             subscribed
               ? "border border-border hover:border-red-500 hover:text-red-400"
-              : "bg-accent text-on-accent"
+              : "bg-foreground text-background"
           }`}
         >
           {busy ? "…" : subscribed ? "Désactiver" : "Activer"}

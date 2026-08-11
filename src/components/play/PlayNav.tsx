@@ -58,7 +58,7 @@ export function PlayNav() {
                 <span className="relative">
                   <Icon className="h-4 w-4" />
                   {href === "/play/cart" && hydrated && count > 0 && (
-                    <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-on-accent">
+                    <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-foreground px-1 text-[10px] font-bold text-background">
                       {count}
                     </span>
                   )}
@@ -85,7 +85,7 @@ export function PlayNav() {
             <span className="relative">
               <Icon className="h-5 w-5" />
               {href === "/play/cart" && hydrated && count > 0 && (
-                <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-on-accent">
+                <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-foreground px-1 text-[9px] font-bold text-background">
                   {count}
                 </span>
               )}

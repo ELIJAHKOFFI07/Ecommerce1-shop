@@ -108,7 +108,7 @@ export default function SellPage() {
         <p className="text-lg font-medium">Connexion requise pour vendre</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
+          className="mt-4 inline-block rounded-full bg-foreground px-6 py-2.5 font-semibold text-background"
         >
           Se connecter
         </Link>
@@ -144,7 +144,7 @@ export default function SellPage() {
     return (
       <div className="mx-auto max-w-md py-16 text-center">
         <Store className="mx-auto h-10 w-10 text-accent" />
-        <h1 className="mt-4 text-xl font-bold">Compte vendeur requis</h1>
+        <h1 className="mt-4 text-xl font-medium tracking-tight">Compte vendeur requis</h1>
         <p className="mt-2 text-sm text-muted">
           Votre compte est un compte client : vous pouvez acheter, mais pas
           encore vendre. Contactez l&apos;administrateur de la plateforme pour
@@ -152,7 +152,7 @@ export default function SellPage() {
         </p>
         <Link
           href="/play"
-          className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
+          className="mt-6 inline-block rounded-full bg-foreground px-6 py-2.5 font-semibold text-background"
         >
           Retour à la boutique
         </Link>
@@ -238,7 +238,7 @@ export default function SellPage() {
             key={value}
             onClick={() => setTab(value)}
             className={`rounded-full px-4 py-1.5 text-sm ${
-              tab === value ? "bg-accent text-on-accent" : "bg-surface-2 text-muted"
+              tab === value ? "bg-foreground text-background" : "bg-surface-2 text-muted"
             }`}
           >
             {label}
@@ -385,7 +385,7 @@ function CreateShopForm({ onCreated }: { onCreated: () => void }) {
 
   return (
     <form onSubmit={submit} className="mx-auto max-w-md py-8">
-      <h1 className="mb-2 text-xl font-bold">Ouvrez votre boutique</h1>
+      <h1 className="mb-2 text-xl font-medium tracking-tight">Ouvrez votre boutique</h1>
       <p className="mb-6 text-sm text-muted">
         Gratuit, en quelques secondes.
       </p>
@@ -413,7 +413,7 @@ function CreateShopForm({ onCreated }: { onCreated: () => void }) {
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={loading}
-          className="w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
+          className="w-full rounded-full bg-foreground py-3 font-semibold text-background disabled:opacity-50"
         >
           {loading ? "Création…" : "Créer ma boutique"}
         </button>
@@ -549,7 +549,7 @@ function NewProductForm({
       {error && <p className="text-sm text-red-400">{error}</p>}
       <button
         disabled={loading}
-        className="w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
+        className="w-full rounded-full bg-foreground py-3 font-semibold text-background disabled:opacity-50"
       >
         {loading ? "Publication…" : "Publier le produit"}
       </button>

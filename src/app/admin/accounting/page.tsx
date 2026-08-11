@@ -65,7 +65,7 @@ export default function AccountingPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold">Comptabilité</h1>
+      <h1 className="mb-1 text-2xl font-medium tracking-tight">Comptabilité</h1>
       <p className="mb-6 text-sm text-muted">
         Commission actuelle : {settings?.commission_percent ?? 5} % — modifiable dans
         Réglages.

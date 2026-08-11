@@ -140,7 +140,7 @@ function SearchInner() {
           ) : products.length === 0 ? (
             <p className="py-12 text-center text-muted">Aucun résultat.</p>
           ) : (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {products.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
@@ -166,7 +166,7 @@ function FilterChip({
       onClick={onClick}
       className={`press rounded-full px-3 py-1.5 text-sm transition-colors lg:w-full lg:text-left ${
         active
-          ? "bg-accent font-medium text-on-accent"
+          ? "bg-foreground font-medium text-background"
           : "bg-surface-2 text-muted hover:text-foreground"
       }`}
     >

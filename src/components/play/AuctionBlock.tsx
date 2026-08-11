@@ -121,7 +121,7 @@ export function AuctionBlock({ product }: { product: Product }) {
           <button
             onClick={bid}
             disabled={busy}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-40"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
           >
             <Gavel className="h-4 w-4" />
             Enchérir (min {formatFcfa(minNextBid(auction))})

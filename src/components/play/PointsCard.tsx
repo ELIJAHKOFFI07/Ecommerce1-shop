@@ -65,7 +65,7 @@ export function PointsCard({
       <button
         onClick={redeem}
         disabled={busy || points < POINTS_MIN_REDEEM}
-        className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-40"
+        className="rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
       >
         Convertir
       </button>

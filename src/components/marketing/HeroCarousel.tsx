@@ -50,7 +50,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
 
   return (
     <div
-      className="group relative overflow-hidden rounded-3xl border border-border bg-surface"
+      className="group relative overflow-hidden rounded-3xl bg-surface-2"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -71,10 +71,10 @@ export function HeroCarousel({ products }: { products: Product[] }) {
         {/* Texte — remplacé à chaque diapositive, d'où la clé sur l'index
             qui relance l'animation d'entrée. */}
         <div key={index} className="animate-rise order-2 md:order-1">
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-medium text-accent">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-[11px] font-medium text-muted">
             ✦ Sélection du moment
           </span>
-          <h2 className="mt-4 line-clamp-2 text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl">
+          <h2 className="mt-4 line-clamp-2 text-2xl font-medium leading-tight tracking-tight sm:text-3xl lg:text-4xl">
             {active.title}
           </h2>
           {active.shops?.name && (
@@ -83,12 +83,12 @@ export function HeroCarousel({ products }: { products: Product[] }) {
               <span className="text-foreground">{active.shops.name}</span>
             </p>
           )}
-          <p className="mt-4 text-3xl font-bold text-accent">
+          <p className="mt-4 text-3xl font-medium text-foreground">
             {formatFcfa(active.price)}
           </p>
           <Link
             href={`/play/product/${active.id}`}
-            className="press mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-on-accent"
+            className="press mt-6 inline-flex h-12 items-center gap-2 rounded-full bg-foreground px-8 font-medium text-background transition-colors hover:bg-foreground/90"
           >
             Voir le produit
             <ArrowRight className="h-4 w-4" />
@@ -97,7 +97,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
 
         {/* Visuel */}
         <div className="order-1 md:order-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-surface-2">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-background">
             {cover ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -111,26 +111,22 @@ export function HeroCarousel({ products }: { products: Product[] }) {
                 Pas d&apos;image
               </div>
             )}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/30 via-transparent to-transparent"
-            />
           </div>
         </div>
       </div>
 
       {/* Contrôles */}
-      <div className="flex items-center gap-3 border-t border-border px-6 py-3 sm:px-8">
+      <div className="flex items-center gap-3 px-6 pb-6 sm:px-8">
         <button
           onClick={() => go(index - 1)}
-          className="press rounded-full border border-border p-2 transition-colors hover:border-accent hover:text-accent"
+          className="press rounded-full border border-border p-2 transition-colors hover:bg-background"
           aria-label="Produit précédent"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
         <button
           onClick={() => go(index + 1)}
-          className="press rounded-full border border-border p-2 transition-colors hover:border-accent hover:text-accent"
+          className="press rounded-full border border-border p-2 transition-colors hover:bg-background"
           aria-label="Produit suivant"
         >
           <ChevronRight className="h-4 w-4" />
@@ -146,7 +142,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
               aria-label={`Aller au produit ${i + 1} sur ${slides.length}`}
               aria-current={i === index}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === index ? "w-7 bg-accent" : "w-2.5 bg-border hover:bg-muted"
+                i === index ? "w-7 bg-foreground" : "w-2.5 bg-border hover:bg-muted"
               }`}
             />
           ))}
@@ -154,7 +150,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
 
         <button
           onClick={() => setStopped((s) => !s)}
-          className="press rounded-full border border-border p-2 transition-colors hover:border-accent hover:text-accent"
+          className="press rounded-full border border-border p-2 transition-colors hover:bg-background"
           aria-label={
             playing ? "Arrêter le défilement" : "Relancer le défilement"
           }

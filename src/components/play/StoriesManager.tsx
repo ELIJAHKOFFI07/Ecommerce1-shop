@@ -85,7 +85,7 @@ export function StoriesManager({ shopId }: { shopId: string }) {
             const file = e.target.files?.[0];
             if (file) upload(file);
           }}
-          className="mt-3 block w-full text-sm text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-accent file:px-4 file:py-2 file:text-sm file:font-semibold file:text-on-accent"
+          className="mt-3 block w-full text-sm text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-foreground file:px-4 file:py-2 file:text-sm file:font-semibold file:text-background"
         />
         {uploading && <p className="mt-2 text-xs text-accent">Publication…</p>}
         {error && <p className="mt-2 text-xs text-red-400">{error}</p>}

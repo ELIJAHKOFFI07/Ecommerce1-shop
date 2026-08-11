@@ -105,9 +105,9 @@ export default function ProductPage({
 
       {/* Infos */}
       <div>
-        <h1 className="text-2xl font-bold">{product.title}</h1>
+        <h1 className="text-2xl font-medium tracking-tight">{product.title}</h1>
         <div className="mt-2 flex items-baseline gap-3">
-          <span className="text-2xl font-bold text-accent">
+          <span className="text-3xl font-medium tracking-tight text-foreground">
             {formatFcfa(price)}
           </span>
           {product.compare_at_price != null &&
@@ -144,7 +144,7 @@ export default function ProductPage({
                   onClick={() => setVariantId(variantId === v.id ? null : v.id)}
                   className={`rounded-full border px-3 py-1 text-sm disabled:opacity-40 ${
                     variantId === v.id
-                      ? "border-accent text-accent"
+                      ? "border-foreground text-foreground"
                       : "border-border text-muted"
                   }`}
                 >
@@ -183,7 +183,7 @@ export default function ProductPage({
               setAdded(true);
               setTimeout(() => setAdded(false), 1500);
             }}
-            className="mt-6 w-full rounded-full bg-accent py-3 font-semibold text-on-accent transition-transform hover:scale-[1.02] disabled:opacity-40"
+            className="mt-6 w-full rounded-full bg-foreground py-3 font-semibold text-background transition-transform hover:scale-[1.02] disabled:opacity-40"
           >
             {added ? "Ajouté ✓" : "Ajouter au panier"}
           </button>
@@ -205,7 +205,7 @@ export default function ProductPage({
             href={`/play/shop/${product.shop_id}`}
             className="mt-6 flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-accent/50"
           >
-            <Store className="h-5 w-5 text-accent" />
+            <Store className="h-5 w-5 text-muted" />
             <div>
               <p className="flex items-center gap-1 font-medium">
                 {product.shops.name}

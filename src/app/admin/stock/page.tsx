@@ -62,7 +62,7 @@ export default function AdminStockPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold">Gestion du stock</h1>
+      <h1 className="mb-1 text-2xl font-medium tracking-tight">Gestion du stock</h1>
       <p className="mb-6 text-sm text-muted">
         Ajustez le stock de n&apos;importe quel produit, avec motif et traçabilité
         complète (table stock_movements).

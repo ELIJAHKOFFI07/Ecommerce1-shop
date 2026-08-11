@@ -25,7 +25,7 @@ export function BenefitsTable({
   return (
     <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-border bg-surface">
       <div className="border-b border-border bg-surface-2/60 p-8 text-center">
-        <h3 className="text-xl font-bold sm:text-2xl lg:text-3xl">{title}</h3>
+        <h3 className="text-xl font-medium tracking-tight sm:text-2xl lg:text-3xl">{title}</h3>
         {subtitle && <p className="mt-2 text-sm text-muted">{subtitle}</p>}
       </div>
 

@@ -70,7 +70,7 @@ export function ThemeSwitcher() {
               }}
             >
               {preset === p.id && (
-                <span className="text-xs font-bold text-on-accent">✓</span>
+                <span className="text-xs font-bold text-background">✓</span>
               )}
             </span>
             <span className="text-[10px] text-muted">{p.label}</span>

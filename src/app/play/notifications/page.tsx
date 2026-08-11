@@ -102,7 +102,7 @@ export default function NotificationsPage() {
         </p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent"
+          className="mt-4 inline-block rounded-lg bg-foreground px-5 py-2.5 text-sm font-semibold text-background"
         >
           Se connecter
         </Link>
@@ -115,7 +115,7 @@ export default function NotificationsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Notifications</h1>
+        <h1 className="text-2xl font-medium tracking-tight">Notifications</h1>
         {unread > 0 && (
           <button
             onClick={markAllRead}

@@ -87,7 +87,7 @@ export function NavDrawer({
             <Link
               href="/play/login"
               onClick={onClose}
-              className="block rounded-full bg-accent py-2.5 text-center text-sm font-semibold text-on-accent"
+              className="block rounded-full bg-foreground py-2.5 text-center text-sm font-semibold text-background"
             >
               Se connecter
             </Link>

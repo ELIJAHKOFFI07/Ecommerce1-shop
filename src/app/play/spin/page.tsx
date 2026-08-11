@@ -84,7 +84,7 @@ export default function SpinPage() {
         <p className="text-muted">Connectez-vous pour tenter votre chance.</p>
         <a
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-on-accent"
+          className="mt-4 inline-block rounded-lg bg-foreground px-5 py-2.5 font-semibold text-background"
         >
           Se connecter
         </a>
@@ -94,7 +94,7 @@ export default function SpinPage() {
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8 text-center">
-      <h1 className="text-2xl font-bold">Roue de la chance</h1>
+      <h1 className="text-2xl font-medium tracking-tight">Roue de la chance</h1>
       <p className="mt-2 text-sm text-muted">
         Tentez votre chance une fois par jour !
       </p>
@@ -114,7 +114,7 @@ export default function SpinPage() {
           {SPIN_SEGMENTS.map((segment, i) => (
             <span
               key={`${segment.kind}-${segment.value}`}
-              className="absolute left-1/2 top-1/2 w-20 origin-[0_0] text-[10px] font-bold text-on-accent"
+              className="absolute left-1/2 top-1/2 w-20 origin-[0_0] text-[10px] font-bold text-background"
               style={{
                 transform: `rotate(${i * SLICE + SLICE / 2 - 90}deg) translate(70px, -8px)`,
               }}
@@ -140,7 +140,7 @@ export default function SpinPage() {
       <button
         onClick={spin}
         disabled={!canSpin || spinning}
-        className="mt-8 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-semibold text-on-accent disabled:opacity-40"
+        className="mt-8 inline-flex items-center gap-2 rounded-lg bg-foreground px-6 py-3 font-semibold text-background disabled:opacity-40"
       >
         <Sparkles className="h-4 w-4" />
         {spinning ? "Ça tourne…" : "Lancer la roue"}

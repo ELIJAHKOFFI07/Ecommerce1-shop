@@ -28,7 +28,7 @@ export default function CartPage() {
         <p className="mt-1 text-muted">Parcourez les nouveautés et ajoutez vos coups de cœur.</p>
         <Link
           href="/play"
-          className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
+          className="mt-6 inline-block rounded-full bg-foreground px-6 py-2.5 font-semibold text-background"
         >
           Découvrir
         </Link>
@@ -38,7 +38,7 @@ export default function CartPage() {
 
   return (
     <div>
-      <h1 className="mb-4 text-xl font-bold">Panier ({count})</h1>
+      <h1 className="mb-4 text-xl font-medium tracking-tight">Panier ({count})</h1>
 
       {/* Deux colonnes dès `lg` : le récapitulatif reste sous les yeux au
           lieu d'être relégué sous une longue liste d'articles. */}
@@ -108,7 +108,7 @@ export default function CartPage() {
         </div>
         <Link
           href="/play/checkout"
-          className="press mt-5 block rounded-full bg-accent py-3 text-center font-semibold text-on-accent"
+          className="press mt-5 block rounded-full bg-foreground py-3 text-center font-semibold text-background"
         >
           Passer la commande
         </Link>

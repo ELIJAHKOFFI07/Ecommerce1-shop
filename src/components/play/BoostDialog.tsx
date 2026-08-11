@@ -114,7 +114,7 @@ export function BoostDialog({
             <button
               onClick={confirm}
               disabled={loading || insufficient}
-              className="mt-4 w-full rounded-lg bg-accent py-3 font-semibold text-on-accent disabled:opacity-40"
+              className="mt-4 w-full rounded-lg bg-foreground py-3 font-semibold text-background disabled:opacity-40"
             >
               {insufficient
                 ? "Solde insuffisant"

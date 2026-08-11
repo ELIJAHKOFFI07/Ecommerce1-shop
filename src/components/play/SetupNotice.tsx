@@ -7,7 +7,7 @@ export function SetupNotice() {
   return (
     <div className="mx-auto max-w-lg py-20 text-center">
       <AlertTriangle className="mx-auto h-10 w-10 text-accent" />
-      <h1 className="mt-4 text-xl font-bold">Supabase n&apos;est pas configuré</h1>
+      <h1 className="mt-4 text-xl font-medium tracking-tight">Supabase n&apos;est pas configuré</h1>
       <p className="mt-2 text-sm text-muted">
         L&apos;app a besoin d&apos;un projet Supabase pour charger les produits,
         les comptes et les commandes.
