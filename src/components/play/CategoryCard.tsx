@@ -14,7 +14,7 @@ export function CategoryCard({ category }: { category: Category }) {
       href={`/play/search?category=${category.id}`}
       className="press group block"
     >
-      <div className="relative mb-2 flex h-28 items-center justify-center overflow-hidden rounded-2xl bg-surface-2 lg:h-32">
+      <div className="relative mb-2.5 flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-surface-2">
         {category.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -33,7 +33,7 @@ export function CategoryCard({ category }: { category: Category }) {
         )}
       </div>
 
-      <span className="block truncate text-sm font-medium text-foreground lg:text-base">
+      <span className="block truncate text-center text-sm font-medium text-foreground">
         {category.name}
       </span>
     </Link>

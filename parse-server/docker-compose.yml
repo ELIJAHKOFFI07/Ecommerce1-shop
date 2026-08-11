@@ -1,0 +1,80 @@
+# Parse Server — pile complète pour le VPS.
+#
+#   postgres   : la base (Parse sait utiliser Postgres, pas seulement Mongo).
+#   parse      : l'API + Cloud Code + LiveQuery, dans le même process.
+#   dashboard  : l'interface d'administration Parse.
+#
+# Rien n'est publié sur l'extérieur sauf via Nginx (voir README) : les ports
+# sont volontairement liés à 127.0.0.1. Exposer 1337 directement laisserait
+# l'API joignable sans TLS.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DATABASE}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Pas de ports: la base n'est joignable que depuis le réseau du compose.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER} -d ${PG_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  parse:
+    image: parseplatform/parse-server:8.0.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PARSE_SERVER_APPLICATION_ID: ${PARSE_APP_ID}
+      PARSE_SERVER_MASTER_KEY: ${PARSE_MASTER_KEY}
+      # Clé lisible par le navigateur. Elle n'autorise rien par elle-même :
+      # ce sont les CLP et les ACL qui protègent, jamais le secret de la clé.
+      PARSE_SERVER_JAVASCRIPT_KEY: ${PARSE_JS_KEY}
+      PARSE_SERVER_DATABASE_URI: postgres://${PG_USER}:${PG_PASSWORD}@postgres:5432/${PG_DATABASE}
+      PARSE_SERVER_URL: http://parse:1337/parse
+      PARSE_SERVER_PUBLIC_URL: ${PARSE_PUBLIC_URL}
+      PARSE_SERVER_MOUNT_PATH: /parse
+      PARSE_SERVER_CLOUD: /parse-server/cloud/main.js
+      PARSE_SERVER_ALLOW_CLIENT_CLASS_CREATION: "false"
+      PARSE_SERVER_ENABLE_ANON_USERS: "false"
+      # LiveQuery : remplace le Realtime Supabase sur ces trois classes.
+      PARSE_SERVER_START_LIVE_QUERY_SERVER: "true"
+      PARSE_SERVER_LIVE_QUERY: '{"classNames":["Message","Notification","ProductQuestion"]}'
+      # Fichiers : remplace les buckets product-images / shop-images.
+      PARSE_SERVER_FILE_UPLOAD_OPTIONS: '{"enableForPublic":false,"enableForAuthenticatedUser":true,"enableForAnonymousUser":false}'
+      # Secrets applicatifs lus par le Cloud Code.
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      FIREBASE_SERVICE_ACCOUNT: ${FIREBASE_SERVICE_ACCOUNT}
+    volumes:
+      - ./cloud:/parse-server/cloud:ro
+      - files:/parse-server/files
+    ports:
+      - "127.0.0.1:1337:1337"
+
+  dashboard:
+    image: parseplatform/parse-dashboard:7.0.0
+    restart: unless-stopped
+    depends_on: [parse]
+    environment:
+      PARSE_DASHBOARD_SERVER_URL: ${PARSE_PUBLIC_URL}
+      PARSE_DASHBOARD_APP_ID: ${PARSE_APP_ID}
+      PARSE_DASHBOARD_MASTER_KEY: ${PARSE_MASTER_KEY}
+      PARSE_DASHBOARD_APP_NAME: DreamTeamShop
+      PARSE_DASHBOARD_USER_ID: ${DASHBOARD_USER}
+      PARSE_DASHBOARD_USER_PASSWORD: ${DASHBOARD_PASSWORD}
+      PARSE_DASHBOARD_ALLOW_INSECURE_HTTP: "true" # TLS assuré par Nginx en amont
+    ports:
+      - "127.0.0.1:4040:4040"
+
+volumes:
+  pgdata:
+  files:

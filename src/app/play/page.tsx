@@ -222,7 +222,7 @@ export default function PlayHome() {
           >
             Catégories
           </SectionTitle>
-          <div className="stagger grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <div className="stagger grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4 lg:grid-cols-6">
             {categories.map((cat) => (
               <CategoryCard key={cat.id} category={cat} />
             ))}
