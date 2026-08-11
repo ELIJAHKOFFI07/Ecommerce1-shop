@@ -9,7 +9,7 @@ change rien à l'application tant que `NEXT_PUBLIC_BACKEND_PROVIDER` vaut
 ## Contenu
 
 ```
-docker-compose.yml   Postgres + Parse Server (API, Cloud Code, LiveQuery) + Dashboard
+docker-compose.yml   MongoDB + Parse Server (API, Cloud Code, LiveQuery) + Dashboard
 .env.example         Variables attendues — copier en .env sur le VPS
 cloud/
   main.js            point d'entrée
@@ -75,7 +75,6 @@ Générer les secrets et les coller dans `.env` :
 ```bash
 openssl rand -base64 48   # PARSE_MASTER_KEY
 openssl rand -base64 32   # PARSE_JS_KEY
-openssl rand -base64 32   # PG_PASSWORD
 ```
 
 Puis :

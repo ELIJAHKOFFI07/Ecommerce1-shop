@@ -1,43 +1,65 @@
 # Parse Server — pile complète pour le VPS.
 #
-#   postgres   : la base (Parse sait utiliser Postgres, pas seulement Mongo).
+#   mongo      : la base. L'image officielle parseplatform/parse-server est
+#                construite et testée contre MongoDB — c'est le chemin sans
+#                friction. Rien dans le Cloud Code n'est du SQL brut (tout
+#                passe par Parse.Query/Parse.Object), donc le moteur de
+#                stockage est invisible pour la logique métier écrite dans
+#                cloud/.
 #   parse      : l'API + Cloud Code + LiveQuery, dans le même process.
 #   dashboard  : l'interface d'administration Parse.
 #
 # Rien n'est publié sur l'extérieur sauf via Nginx (voir README) : les ports
 # sont volontairement liés à 127.0.0.1. Exposer 1337 directement laisserait
-# l'API joignable sans TLS.
+# l'API joignable sans TLS. Mongo n'a même pas de port publié : seul le
+# réseau interne du compose peut l'atteindre.
 
 services:
-  postgres:
-    image: postgres:16-alpine
+  mongo:
+    image: mongo:7
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_DATABASE}
+    command: ["--replSet", "rs0", "--bind_ip_all"]
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    # Pas de ports: la base n'est joignable que depuis le réseau du compose.
+      - mongodata:/data/db
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${PG_USER} -d ${PG_DATABASE}"]
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 10
+
+  # LiveQuery a besoin d'un replica set pour suivre les changements
+  # (change streams) : un Mongo seul, sans réplication, ne le permet pas.
+  # Cette étape initialise le replica set une seule fois puis se termine.
+  mongo-init:
+    image: mongo:7
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: "no"
+    entrypoint: >
+      bash -c "
+        mongosh --host mongo --quiet --eval '
+          try {
+            rs.status();
+          } catch (e) {
+            rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"mongo:27017\"}]});
+          }
+        '
+      "
 
   parse:
     image: parseplatform/parse-server:8.0.0
     restart: unless-stopped
     depends_on:
-      postgres:
-        condition: service_healthy
+      mongo-init:
+        condition: service_completed_successfully
     environment:
       PARSE_SERVER_APPLICATION_ID: ${PARSE_APP_ID}
       PARSE_SERVER_MASTER_KEY: ${PARSE_MASTER_KEY}
       # Clé lisible par le navigateur. Elle n'autorise rien par elle-même :
       # ce sont les CLP et les ACL qui protègent, jamais le secret de la clé.
       PARSE_SERVER_JAVASCRIPT_KEY: ${PARSE_JS_KEY}
-      PARSE_SERVER_DATABASE_URI: postgres://${PG_USER}:${PG_PASSWORD}@postgres:5432/${PG_DATABASE}
+      PARSE_SERVER_DATABASE_URI: mongodb://mongo:27017/${MONGO_DATABASE}?replicaSet=rs0
       PARSE_SERVER_URL: http://parse:1337/parse
       PARSE_SERVER_PUBLIC_URL: ${PARSE_PUBLIC_URL}
       PARSE_SERVER_MOUNT_PATH: /parse
@@ -76,5 +98,5 @@ services:
       - "127.0.0.1:4040:4040"
 
 volumes:
-  pgdata:
+  mongodata:
   files:

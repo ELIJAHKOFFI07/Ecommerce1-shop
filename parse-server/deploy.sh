@@ -44,23 +44,52 @@ log()  { printf '\n\033[1;34m==> %s\033[0m\n' "$1"; }
 warn() { printf '\033[1;33m!! %s\033[0m\n' "$1"; }
 die()  { printf '\033[1;31mERREUR : %s\033[0m\n' "$1"; exit 1; }
 
-[[ $EUID -eq 0 ]] && die "Ne pas lancer en root — lancez avec un utilisateur sudo normal."
-command -v sudo >/dev/null || die "sudo est requis."
+# Beaucoup de VPS neufs ne donnent que root, sans utilisateur sudo créé — le
+# script s'adapte : SUDO reste vide en root (les commandes s'exécutent déjà
+# avec les droits nécessaires), et vaut "sudo" sinon.
+if [[ $EUID -eq 0 ]]; then
+  SUDO=""
+  warn "Exécution en root — ok, mais réservez ce compte à l'administration du serveur."
+else
+  command -v sudo >/dev/null || die "sudo est requis (ou relancez en root)."
+  SUDO="sudo"
+fi
 
 # ---------------------------------------------------------------------------
 # 1. Paquets système
 # ---------------------------------------------------------------------------
-log "Installation des paquets système (docker, nginx, git, openssl…)"
-sudo apt-get update -qq
-sudo apt-get install -y -qq docker.io docker-compose-plugin nginx git openssl curl >/dev/null
+log "Paquets de base (git, nginx, openssl…)"
+$SUDO apt-get update -qq
+$SUDO apt-get install -y -qq ca-certificates curl gnupg nginx git openssl >/dev/null
 
-sudo systemctl enable --now docker >/dev/null
-sudo systemctl enable --now nginx >/dev/null
+# docker-compose-plugin n'existe pas dans les dépôts par défaut de toutes les
+# versions Ubuntu/Debian (c'est l'erreur "Unable to locate package") : on
+# utilise le dépôt officiel Docker plutôt que celui de la distribution.
+if ! command -v docker >/dev/null || ! docker compose version >/dev/null 2>&1; then
+  log "Installation de Docker depuis le dépôt officiel"
+  . /etc/os-release   # fournit $ID (ubuntu / debian)
+
+  $SUDO install -m 0755 -d /etc/apt/keyrings
+  curl -fsSL "https://download.docker.com/linux/$ID/gpg" \
+    | $SUDO gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  $SUDO chmod a+r /etc/apt/keyrings/docker.gpg
+
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$ID $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+    | $SUDO tee /etc/apt/sources.list.d/docker.list >/dev/null
+
+  $SUDO apt-get update -qq
+  $SUDO apt-get install -y -qq docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin >/dev/null
+else
+  log "Docker déjà installé — étape ignorée"
+fi
+
+$SUDO systemctl enable --now docker >/dev/null
+$SUDO systemctl enable --now nginx >/dev/null
 
 # Le groupe docker évite le sudo sur chaque commande docker, mais son effet
 # n'est visible qu'à la prochaine connexion — ce script utilise `sudo docker`
 # partout pour ne pas dépendre d'une reconnexion en plein milieu.
-sudo usermod -aG docker "$USER" || true
+$SUDO usermod -aG docker "$USER" || true
 
 # ---------------------------------------------------------------------------
 # 2. Clé de déploiement SSH (dépôt privé)
@@ -112,12 +141,18 @@ if [[ ! -f .env ]]; then
   log "Génération du .env avec des secrets aléatoires"
   cp .env.example .env
 
-  PG_PASSWORD=$(openssl rand -base64 32)
   PARSE_MASTER_KEY=$(openssl rand -base64 48)
   PARSE_JS_KEY=$(openssl rand -base64 32)
   DASHBOARD_PASSWORD=$(openssl rand -base64 18)
 
-  SERVER_IP=$(curl -fsSL ifconfig.me || hostname -I | awk '{print $1}')
+  # IPv4 d'abord : une URL IPv6 nue casse tout client (curl, navigateur, SDK
+  # Parse) car ':' y est le séparateur de port — il faut l'entourer de
+  # crochets. Se rabattre sur IPv6 seulement si le serveur n'a pas d'IPv4.
+  SERVER_IP=$(curl -4 -fsSL ifconfig.me 2>/dev/null || curl -fsSL ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
+  if [[ "$SERVER_IP" == *:* ]]; then
+    SERVER_IP="[$SERVER_IP]"
+  fi
+
   if [[ -n "$DOMAIN" ]]; then
     PUBLIC_BASE="https://$DOMAIN/parse"
   else
@@ -127,7 +162,7 @@ if [[ ! -f .env ]]; then
   fi
 
   sed -i \
-    -e "s#^PG_PASSWORD=.*#PG_PASSWORD=$PG_PASSWORD#" \
+    -e "s#^MONGO_DATABASE=.*#MONGO_DATABASE=$PARSE_APP_ID#" \
     -e "s#^PARSE_APP_ID=.*#PARSE_APP_ID=$PARSE_APP_ID#" \
     -e "s#^PARSE_MASTER_KEY=.*#PARSE_MASTER_KEY=$PARSE_MASTER_KEY#" \
     -e "s#^PARSE_JS_KEY=.*#PARSE_JS_KEY=$PARSE_JS_KEY#" \
@@ -155,16 +190,16 @@ fi
 # ---------------------------------------------------------------------------
 # 5. Démarrage des conteneurs
 # ---------------------------------------------------------------------------
-log "Démarrage de Postgres, Parse Server et le Dashboard"
-sudo docker compose up -d
+log "Démarrage de MongoDB, Parse Server et le Dashboard"
+$SUDO docker compose up -d
 
 log "Attente du démarrage de Parse Server (jusqu'à 60 s)…"
 for i in $(seq 1 30); do
-  if sudo docker compose logs parse 2>/dev/null | grep -q "classes vérifiées"; then
+  if $SUDO docker compose logs parse 2>/dev/null | grep -q "classes vérifiées"; then
     echo "Parse Server prêt."
     break
   fi
-  [[ $i -eq 30 ]] && warn "Toujours pas de confirmation après 60 s — vérifiez : sudo docker compose logs parse"
+  [[ $i -eq 30 ]] && warn "Toujours pas de confirmation après 60 s — vérifiez : $SUDO docker compose logs parse"
   sleep 2
 done
 
@@ -175,9 +210,10 @@ log "Configuration de Nginx"
 NGINX_CONF=/etc/nginx/sites-available/dreamteamshop-parse
 SERVER_NAME="${DOMAIN:-_}"
 
-sudo tee "$NGINX_CONF" >/dev/null <<EOF
+$SUDO tee "$NGINX_CONF" >/dev/null <<EOF
 server {
     listen 80;
+    listen [::]:80;
     server_name $SERVER_NAME;
 
     location /parse/ {
@@ -204,18 +240,18 @@ server {
 }
 EOF
 
-sudo ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/dreamteamshop-parse
-sudo nginx -t
-sudo systemctl reload nginx
+$SUDO ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/dreamteamshop-parse
+$SUDO nginx -t
+$SUDO systemctl reload nginx
 
 # ---------------------------------------------------------------------------
 # 7. TLS — uniquement si un domaine est fourni
 # ---------------------------------------------------------------------------
 if [[ -n "$DOMAIN" ]]; then
   log "Domaine fourni ($DOMAIN) — obtention du certificat TLS"
-  sudo apt-get install -y -qq certbot python3-certbot-nginx >/dev/null
-  sudo certbot --nginx -d "$DOMAIN" -m "$CERTBOT_EMAIL" --agree-tos --redirect --non-interactive \
-    || warn "certbot a échoué — vérifiez que $DOMAIN pointe bien vers l'IP de ce serveur (DNS), puis relancez : sudo certbot --nginx -d $DOMAIN"
+  $SUDO apt-get install -y -qq certbot python3-certbot-nginx >/dev/null
+  $SUDO certbot --nginx -d "$DOMAIN" -m "$CERTBOT_EMAIL" --agree-tos --redirect --non-interactive \
+    || warn "certbot a échoué — vérifiez que $DOMAIN pointe bien vers l'IP de ce serveur (DNS), puis relancez : $SUDO certbot --nginx -d $DOMAIN"
 else
   warn "Pas de domaine : étape TLS ignorée. Quand un domaine sera prêt :"
   echo "   DOMAIN=api.exemple.ci CERTBOT_EMAIL=vous@exemple.ci ./deploy.sh"
