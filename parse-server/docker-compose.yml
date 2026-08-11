@@ -66,6 +66,15 @@ services:
       PARSE_SERVER_CLOUD: /parse-server/cloud/main.js
       PARSE_SERVER_ALLOW_CLIENT_CLASS_CREATION: "false"
       PARSE_SERVER_ENABLE_ANON_USERS: "false"
+      # Sans ça, Parse Server 8.x rejette les appels en master key qui ne
+      # viennent pas de 127.0.0.1/::1 — y compris les nôtres : le Cloud Code
+      # (schema.js, roles.js) s'auto-appelle via PARSE_SERVER_URL, ce qui
+      # traverse le réseau Docker et arrive avec l'IP du conteneur, pas
+      # localhost. [] restaure le comportement par défaut documenté
+      # (« allow all »). La vraie protection du master key reste ailleurs :
+      # le port 1337 n'est lié qu'à 127.0.0.1 côté hôte, et Nginx ne
+      # transmet jamais cet en-tête depuis un client externe.
+      PARSE_SERVER_MASTER_KEY_IPS: "[]"
       # LiveQuery : remplace le Realtime Supabase sur ces trois classes.
       PARSE_SERVER_START_LIVE_QUERY_SERVER: "true"
       PARSE_SERVER_LIVE_QUERY: '{"classNames":["Message","Notification","ProductQuestion"]}'

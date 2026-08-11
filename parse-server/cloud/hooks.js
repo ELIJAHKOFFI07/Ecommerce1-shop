@@ -16,23 +16,28 @@ const { addToRole } = require("./roles");
  *   1. `increment('stock', -qty)` — l'opération est atomique côté base, deux
  *      commandes simultanées ne peuvent pas lire la même valeur puis écrire
  *      chacune la sienne.
- *   2. ce hook — il refuse l'enregistrement si le compteur est passé sous
- *      zéro. C'est lui qui transforme un décrément atomique en garantie de
- *      non-survente ; sans lui, `increment` accepterait un stock négatif.
+ *   2. cette vérification — elle refuse l'enregistrement si le compteur est
+ *      passé sous zéro. C'est elle qui transforme un décrément atomique en
+ *      garantie de non-survente ; sans elle, `increment` accepterait un
+ *      stock négatif.
  *
  * Traduire naïvement `for update` par un `query.first()` suivi d'un `save()`
  * réintroduirait exactement la survente que le verrou Postgres évitait.
+ *
+ * Appelée directement depuis le beforeSave("Product") ci-dessous plutôt que
+ * dans son propre beforeSave séparé : Parse Server n'exécute qu'un seul
+ * beforeSave par classe — en enregistrer deux fait taire silencieusement le
+ * premier ("Duplicate cloud functions exist"), qui est exactement ce qui est
+ * arrivé ici avant ce correctif.
  */
-function guardStock(className) {
-  Parse.Cloud.beforeSave(className, (request) => {
-    const stock = request.object.get("stock");
-    if (typeof stock === "number" && stock < 0) {
-      throw new Parse.Error(Parse.Error.VALIDATION_ERROR, "Stock insuffisant");
-    }
-  });
+function guardStock(object) {
+  const stock = object.get("stock");
+  if (typeof stock === "number" && stock < 0) {
+    throw new Parse.Error(Parse.Error.VALIDATION_ERROR, "Stock insuffisant");
+  }
 }
-guardStock("Product");
-guardStock("ProductVariant");
+
+Parse.Cloud.beforeSave("ProductVariant", (request) => guardStock(request.object));
 
 /* ------------------------------------------------------------------ *
  * Utilisateurs — trigger on_auth_user_created / handle_new_user
@@ -122,6 +127,8 @@ Parse.Cloud.beforeSave("Product", async (request) => {
     // arrondis de calcul de commission sur des valeurs non représentables.
     throw new Parse.Error(Parse.Error.VALIDATION_ERROR, "Prix invalide");
   }
+
+  guardStock(product);
 });
 
 /* ------------------------------------------------------------------ *
