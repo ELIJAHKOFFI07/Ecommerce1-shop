@@ -68,6 +68,7 @@ Parse.Cloud.define("adminSetUserRole", async (request) => {
   }
 
   const user = await new Parse.Query(Parse.User).get(userId, { useMasterKey: true });
+  const wasSeller = await hasRole(user, "seller");
 
   // On repart d'une ardoise propre : promouvoir puis rétrograder ne doit pas
   // laisser un rôle résiduel.
@@ -79,6 +80,18 @@ Parse.Cloud.define("adminSetUserRole", async (request) => {
   } else if (role === "seller") {
     await addToRole(user, "seller");
   }
+
+  // Équivalent du trigger on_seller_revoked : un vendeur rétrogradé garde ses
+  // produits, mais ils ne doivent plus rester en vente sans surveillance.
+  if (wasSeller && role === "user") {
+    const products = await new Parse.Query("Product")
+      .equalTo("seller", user)
+      .equalTo("status", "active")
+      .find({ useMasterKey: true });
+    for (const product of products) product.set("status", "paused");
+    await Parse.Object.saveAll(products, { useMasterKey: true });
+  }
+
   return { ok: true, role };
 });
 

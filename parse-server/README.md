@@ -14,12 +14,52 @@ docker-compose.yml   Postgres + Parse Server (API, Cloud Code, LiveQuery) + Dash
 cloud/
   main.js            point d'entrée
   schema.js          classes, index et CLP (idempotent, rejouable)
-  roles.js           rôles admin / seller — remplacent is_admin / is_seller
+  roles.js           rôles admin / seller — remplacent is_admin / is_seller,
+                     adminSetUserRole
   hooks.js           les 12 triggers Postgres + le garde-fou anti-survente
-  orders.js          placeOrder, confirmDelivery, advanceOrderStatus
+  orders.js          placeOrder, advanceOrderStatus (machine à états unique),
+                     confirmDelivery
+  offers.js          makeOffer, respondToOffer
+  auctions.js        createAuction, placeBid, settleExpiredAuctions (+ job)
+  wallet.js          requestWithdrawal, redeemPoints, spinWheel, boostProduct
+  referral.js        linkReferral, redeemReferral, referralLeaderboard, myReferralRank
+  social.js          openConversation, markConversationRead, markStoryViewed,
+                     answerQuestion, activeViewers, registerProductView
+  admin.js           adminStats, adminWalletsOverview, adminShopRevenue,
+                     adminRevenueReport, adminUpdateSettings, adminAdjustStock,
+                     adminUpdateProfile, adminRequirePasswordChange,
+                     clearPasswordChangeFlag, shopStats
 ```
 
-## Installation
+Les 29 RPC appelées par l'application sont toutes portées. Aucune n'est
+testée contre un serveur réel — voir `../PARSE_MIGRATION.md §7`.
+
+## Installation automatisée
+
+`deploy.sh` fait tout : paquets système, clé de déploiement SSH (dépôt
+privé), clonage, génération des secrets, démarrage des conteneurs, Nginx, et
+TLS si un domaine est fourni. Rejouable — un second passage fait `git pull`
+et ne touche pas à un `.env` déjà rempli.
+
+Première exécution — le script n'étant pas encore sur le VPS avant le tout
+premier clonage, copiez son contenu dans un fichier sur le VPS (scp, ou
+copier-coller dans `nano deploy.sh`), puis :
+
+```bash
+chmod +x deploy.sh
+./deploy.sh                     # sans domaine : Nginx en HTTP simple
+# ou, si le domaine est déjà prêt en DNS :
+DOMAIN=api.exemple.ci CERTBOT_EMAIL=vous@exemple.ci ./deploy.sh
+```
+
+S'il n'existe pas encore de clé de déploiement, le script en génère une,
+affiche la clé publique et attend que vous l'ajoutiez sur GitHub
+(`Settings > Deploy keys`, lecture seule) avant de continuer.
+
+Pour ajouter le domaine plus tard une fois le DNS prêt, relancez le script
+avec `DOMAIN=…` : il complète la conf Nginx et obtient le certificat TLS.
+
+## Installation manuelle (détail des étapes du script)
 
 ```bash
 ssh utilisateur@vps
@@ -82,11 +122,20 @@ sudo certbot --nginx -d api.exemple.ci
 
 ## Vérification
 
+`cloud/health.js` définit une fonction `ping` qui ne touche à aucune classe —
+elle sert uniquement à vérifier que le serveur répond et que le Cloud Code
+s'est bien chargé.
+
 ```bash
 curl -X POST https://api.exemple.ci/parse/functions/ping \
   -H "X-Parse-Application-Id: dreamteamshop" \
+  -H "X-Parse-JavaScript-Key: <PARSE_JS_KEY du .env>" \
   -H "Content-Type: application/json" -d '{}'
 ```
+
+Réponse attendue : `{"result":{"ok":true,"at":"...")}}`. Une erreur
+`unauthorized` signifie une clé manquante ou fausse ; une erreur de connexion
+signifie que Nginx ou le conteneur `parse` n'est pas up.
 
 ## Côté application
 
@@ -98,9 +147,9 @@ NEXT_PUBLIC_PARSE_JS_KEY=…
 PARSE_MASTER_KEY=…      # serveur uniquement, jamais préfixé NEXT_PUBLIC_
 ```
 
-**Ne pas basculer la variable maintenant.** Les Cloud Functions argent
-(`placeOrder`, `confirmDelivery`) existent mais ne sont pas testées, et le
-reste des ~29 RPC n'est pas écrit. La bascule se fait à l'étape 8 du plan.
+**Ne pas basculer la variable maintenant.** Les 29 Cloud Functions sont
+écrites mais **aucune n'est testée** contre un serveur réel. La bascule se
+fait à l'étape 8 du plan (`../PARSE_MIGRATION.md §6`), après vérification.
 
 ## Sécurité
 

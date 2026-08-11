@@ -84,41 +84,51 @@ clé étrangère → **Pointer**, `uuid` → `objectId`.
 **29 RPC sont appelées directement par l'application** (vérifié par
 `grep '.rpc("' src`). Les autres sont des triggers ou des utilitaires internes.
 
+**Les 29 sont maintenant écrites** dans `parse-server/cloud/` (`orders.js`,
+`offers.js`, `auctions.js`, `wallet.js`, `referral.js`, `social.js`,
+`admin.js`, plus `adminSetUserRole` dans `roles.js`). Chacune passe
+`node --check`. **Aucune n'est testée contre un serveur réel** — voir §6.
+
 ### Argent et stock — priorité 1, aucune tolérance
 | RPC | Cloud Function | Ce qu'elle doit continuer à garantir |
 | --- | --- | --- |
 | `place_order` | `placeOrder` | Une commande **par boutique** ; prix relu en base (jamais celui du panier) ; stock décrémenté atomiquement ; refus d'acheter ses propres produits ; remise coupon et frais de zone recalculés serveur ; code de retrait à 6 chiffres généré. |
 | `advance_order_status` | `advanceOrderStatus` | **La seule machine à états.** Transitions autorisées uniquement ; l'acheteur ne peut qu'annuler, et seulement avant expédition ; l'annulation rend le stock ; la livraison crédite le vendeur, ajoute les points de fidélité et le bonus de parrainage. |
 | `confirm_delivery` | `confirmDelivery` | Passe-plat : contrôle l'appartenance, l'état `shipped` et le code de retrait, puis délègue à la machine à états. Le code n'est jamais envoyé au client. |
-| `request_withdrawal` | `requestWithdrawal` | Contrôle du solde et du minimum de retrait. |
-| `admin_adjust_stock` | `adminAdjustStock` | Trace un `StockMovement`. |
-| `redeem_points`, `spin_wheel` | `redeemPoints`, `spinWheel` | Un tirage par jour ; le gain est décidé **serveur**. |
-| `boost_product` | `boostProduct` | Débit des points avant activation. |
+| `request_withdrawal` | `requestWithdrawal` | Contrôle du solde et du minimum de retrait, gardé par le même garde-fou que le stock (`increment` + `beforeSave` anti-négatif sur `Wallet`). |
+| `admin_adjust_stock` | `adminAdjustStock` | Trace un `StockMovement`, motif obligatoire. |
+| `redeem_points`, `spin_wheel` | `redeemPoints`, `spinWheel` | Un tirage par jour (vérifié par requête, pas par contrainte unique) ; le gain est décidé **serveur**. |
+| `boost_product` | `boostProduct` | Tarif fixe par durée, débité du portefeuille avant activation. |
 
 ### Négociation et enchères — priorité 1
 | RPC | Cloud Function | Garanties |
 | --- | --- | --- |
-| `make_offer` | `makeOffer` | Montant entre 50 % et 100 % du prix affiché. |
+| `make_offer` | `makeOffer` | Montant entre 50 % et 100 % du prix affiché, 3 offres max par produit et par acheteur. |
 | `respond_to_offer` | `respondToOffer` | Seul le vendeur répond ; contre-offre bornée. |
-| `create_auction` | `createAuction` | Propriétaire du produit uniquement. |
-| `place_bid` | `placeBid` | Surenchère minimale, prolongation anti-sniping, refus après expiration. **Le point le plus exposé aux courses** : deux enchères simultanées. |
-| `settle_expired_auctions` | `settleExpiredAuctions` | Passe en **job planifié** Parse (`Parse.Cloud.job`), plus en appel client. |
+| `create_auction` | `createAuction` | Propriétaire du produit uniquement, une enchère active à la fois. |
+| `place_bid` | `placeBid` | Surenchère minimale +5 %, prolongation anti-sniping de 2 minutes, refus après expiration. **Le point le plus exposé aux courses** : deux enchères simultanées — gardé par un `beforeSave` qui compare au montant persisté au moment du save (`request.original`), pas à celui lu en début de requête. Ce n'est pas un verrou de ligne : à vérifier sous charge avant la bascule. |
+| `settle_expired_auctions` | `settleExpiredAuctions` | Appelable en Cloud Function **et** planifiée en job (`Parse.Cloud.job`, à programmer depuis le Dashboard) — la version Postgres dépendait du trafic pour se déclencher, ce n'est plus la seule garantie. |
 
-### Parrainage, social, divers — priorité 2
-`link_referral`, `redeem_referral`, `referral_leaderboard`, `my_referral_rank`,
-`open_conversation`, `mark_conversation_read`, `answer_question`,
-`register_product_view`, `active_viewers`, `mark_story_viewed`, `shop_stats`.
+### Parrainage, social — priorité 2, toutes écrites
+| RPC | Cloud Function |
+| --- | --- |
+| `link_referral`, `redeem_referral` | `linkReferral`, `redeemReferral` |
+| `referral_leaderboard`, `my_referral_rank` | `referralLeaderboard`, `myReferralRank` — regroupent en mémoire, à revoir en pipeline d'agrégation si le volume grossit |
+| `open_conversation`, `mark_conversation_read` | `openConversation`, `markConversationRead` |
+| `answer_question`, `active_viewers`, `register_product_view`, `mark_story_viewed` | `answerQuestion`, `activeViewers`, `registerProductView`, `markStoryViewed` |
+| `shop_stats` | `shopStats` |
 
-### Back-office — priorité 3
-`admin_stats`, `admin_revenue_report`, `admin_shop_revenue`,
-`admin_wallets_overview`, `admin_update_settings`, `admin_update_profile`,
-`admin_set_user_role`, `admin_require_password_change`,
-`clear_password_change_flag`.
+### Back-office — priorité 3, toutes écrites
+| RPC | Cloud Function |
+| --- | --- |
+| `admin_stats`, `admin_revenue_report`, `admin_shop_revenue`, `admin_wallets_overview` | `adminStats`, `adminRevenueReport`, `adminShopRevenue`, `adminWalletsOverview` |
+| `admin_update_settings`, `admin_update_profile` | `adminUpdateSettings`, `adminUpdateProfile` |
+| `admin_set_user_role` | `adminSetUserRole` (dans `roles.js`) — met aussi en pause les produits actifs d'un vendeur rétrogradé, comme le trigger `on_seller_revoked` |
+| `admin_require_password_change`, `clear_password_change_flag` | idem |
 
-> Les rapports agrègent aujourd'hui en SQL (`group by`, `sum`). Parse n'a pas
-> d'équivalent en Query : il faut soit l'**aggregation pipeline** (master key),
-> soit conserver un accès SQL direct depuis la Cloud Function. La seconde
-> option est plus simple et Parse tourne de toute façon sur Postgres.
+> Les rapports agrègent en mémoire (JS) plutôt qu'en SQL. Ça reste correct
+> tant que le volume de commandes reste à l'échelle MVP ; au-delà, remplacer
+> par l'aggregation pipeline Mongo/PG que Parse expose en master key.
 
 ### Triggers → hooks
 | Trigger Postgres | Hook Parse |
@@ -199,8 +209,17 @@ erreur en Parse donne une élévation de privilège.
 - [x] Inventaire complet (ce document)
 - [x] Déploiement VPS : `parse-server/` (compose, schéma, Cloud Code)
 - [x] Cloud Functions commandes : `placeOrder`, `advanceOrderStatus`,
-      `confirmDelivery` — **écrites, pas encore testées**
-- [ ] Cloud Functions offres, enchères, portefeuille, points
-- [ ] Rôles / ACL / `beforeSave`
-- [ ] Fichiers, LiveQuery, e-mail, push
+      `confirmDelivery`
+- [x] Cloud Functions offres, enchères, portefeuille, points, parrainage,
+      social, back-office — les **29 RPC appelées par l'app sont toutes
+      écrites** (`parse-server/cloud/*.js`), syntaxe vérifiée
+      (`node --check`), **rien n'est testé contre un serveur réel**
+- [x] Rôles (`admin`, `seller`) et CLP par classe
+- [ ] ACL par objet à la volée — posées pour Shop/Product/Order/Conversation,
+      à vérifier une par une contre les 49 policies RLS d'origine
+- [ ] Fichiers (`Parse.File`), LiveQuery, e-mail, push
 - [ ] Reprise des données
+- [ ] **Tests contre un Parse Server réel** — priorité avant toute bascule :
+      écrire des cas pour la survente (achats simultanés), la course
+      d'enchères (`beforeSave` sur `Auction`), et la compensation de stock de
+      `placeOrder` en cas d'échec à mi-chemin

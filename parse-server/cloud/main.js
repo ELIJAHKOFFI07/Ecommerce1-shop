@@ -6,7 +6,14 @@
  * doivent être en place avant que les fonctions métier ne s'appuient dessus.
  */
 
+require("./health");
 require("./schema");
 require("./roles");
 require("./hooks");
 require("./orders");
+require("./offers");
+require("./auctions");
+require("./wallet");
+require("./referral");
+require("./social");
+require("./admin");
