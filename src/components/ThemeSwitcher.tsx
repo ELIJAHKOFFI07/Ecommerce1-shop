@@ -41,7 +41,7 @@ export function ThemeSwitcher() {
         <p className="text-sm font-semibold">Thème de couleur</p>
         <button
           onClick={toggleMode}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs hover:border-gold"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs hover:border-accent"
         >
           {mode === "dark" ? (
             <Moon className="h-3.5 w-3.5" />
@@ -70,7 +70,7 @@ export function ThemeSwitcher() {
               }}
             >
               {preset === p.id && (
-                <span className="text-xs font-bold text-black">✓</span>
+                <span className="text-xs font-bold text-on-accent">✓</span>
               )}
             </span>
             <span className="text-[10px] text-muted">{p.label}</span>

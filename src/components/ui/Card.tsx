@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 ///   leur `bg-card`            → notre `bg-surface`
 ///   leur `bg-muted` (surface) → notre `bg-surface-2`
 ///   leur `text-muted-foreground` → notre `text-muted`
-///   leur `text-primary`       → notre `text-gold`
+///   leur `text-primary`       → notre `text-accent`
 /// Utiliser `bg-muted` tel quel ici donnerait un fond gris-texte.
 
 export function Card({

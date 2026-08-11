@@ -181,7 +181,7 @@ export default function AdminCategoriesPage() {
             value={newIcon}
             onChange={(e) => setNewIcon(e.target.value)}
             maxLength={4}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-center text-xl outline-none focus:border-gold"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-center text-xl outline-none focus:border-accent"
           />
         </label>
         <label className="min-w-0 flex-1">
@@ -192,12 +192,12 @@ export default function AdminCategoriesPage() {
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Nom de la catégorie"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
           />
         </label>
         <button
           disabled={creating || !newName.trim()}
-          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-50"
         >
           <Plus className="h-4 w-4" /> Ajouter
         </button>
@@ -231,7 +231,7 @@ export default function AdminCategoriesPage() {
                     </button>
                   </>
                 ) : (
-                  <label className="flex h-full cursor-pointer flex-col items-center justify-center gap-1 text-muted transition-colors hover:text-gold">
+                  <label className="flex h-full cursor-pointer flex-col items-center justify-center gap-1 text-muted transition-colors hover:text-accent">
                     <ImagePlus className="h-4 w-4" />
                     <span className="text-[10px]">Ajouter</span>
                     <input
@@ -256,7 +256,7 @@ export default function AdminCategoriesPage() {
                 onChange={(e) => patch(c.id, { icon: e.target.value })}
                 maxLength={4}
                 title="Conservé en base ; le client affiche le visuel."
-                className="w-full rounded-lg border border-border bg-background px-2 py-2 text-center text-xl outline-none focus:border-gold"
+                className="w-full rounded-lg border border-border bg-background px-2 py-2 text-center text-xl outline-none focus:border-accent"
               />
             </label>
             <label className="min-w-0 flex-1">
@@ -264,7 +264,7 @@ export default function AdminCategoriesPage() {
               <input
                 value={c.name}
                 onChange={(e) => patch(c.id, { name: e.target.value })}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
               />
             </label>
             <label className="w-20">
@@ -275,15 +275,15 @@ export default function AdminCategoriesPage() {
                 onChange={(e) =>
                   patch(c.id, { position: Number(e.target.value) })
                 }
-                className="w-full rounded-lg border border-border bg-background px-2 py-2 text-sm outline-none focus:border-gold"
+                className="w-full rounded-lg border border-border bg-background px-2 py-2 text-sm outline-none focus:border-accent"
               />
             </label>
             <button
               onClick={() => save(c)}
               disabled={savingId === c.id}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs hover:border-gold disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs hover:border-accent disabled:opacity-50"
             >
-              <Save className="h-3.5 w-3.5 text-gold" />
+              <Save className="h-3.5 w-3.5 text-accent" />
               {savingId === c.id ? "…" : "Enregistrer"}
             </button>
             <button

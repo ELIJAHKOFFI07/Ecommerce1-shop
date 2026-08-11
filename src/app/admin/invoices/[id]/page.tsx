@@ -47,16 +47,16 @@ export default function InvoiceDetailPage({
         </Link>
         <button
           onClick={() => window.print()}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent"
         >
           <Printer className="h-4 w-4" /> Imprimer / PDF
         </button>
       </div>
 
-      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 text-sm print:border-0 print:bg-white print:text-black">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 text-sm print:border-0 print:bg-white print:text-on-accent">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xl font-bold text-gold print:text-black">DreamTeamShop</p>
+            <p className="text-xl font-bold text-accent print:text-on-accent">DreamTeamShop</p>
             <p className="text-muted">La marketplace sociale de Côte d&apos;Ivoire</p>
           </div>
           <div className="text-right">
@@ -134,7 +134,7 @@ export default function InvoiceDetailPage({
           </div>
           <div className="flex justify-between border-t border-border pt-1 font-bold">
             <span>Total</span>
-            <span className="text-gold print:text-black">{formatFcfa(order.total)}</span>
+            <span className="text-accent print:text-on-accent">{formatFcfa(order.total)}</span>
           </div>
         </div>
 

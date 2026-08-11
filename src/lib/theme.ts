@@ -1,6 +1,10 @@
-/// Palettes de couleurs prédéfinies — miroir de `ThemePresets` côté mobile
-/// (lib/core/theme.dart). Seul l'accent (gold/gold-dark) varie ; les
-/// surfaces et le texte restent cohérents pour ne pas casser le contraste.
+/// Palettes de couleurs prédéfinies. Seul l'accent varie ; les surfaces et le
+/// texte restent identiques, pour ne pas casser les contrastes vérifiés dans
+/// globals.css.
+///
+/// Les valeurs ci-dessous ne servent qu'aux pastilles du sélecteur : les
+/// couleurs réellement appliquées sont celles de globals.css, qui possèdent
+/// une variante par thème.
 export type ThemePresetId =
   | "gold"
   | "emerald"
@@ -15,12 +19,15 @@ export const THEME_PRESETS: {
   primary: string;
   secondary: string;
 }[] = [
-  { id: "gold", label: "Or & Noir", primary: "#E6C15C", secondary: "#B8933A" },
-  { id: "emerald", label: "Émeraude", primary: "#3DD68C", secondary: "#1F9D63" },
-  { id: "ocean", label: "Océan", primary: "#4FB8E8", secondary: "#2A7FB0" },
-  { id: "ruby", label: "Rubis", primary: "#E85C7B", secondary: "#B93A57" },
-  { id: "amethyst", label: "Améthyste", primary: "#A378E8", secondary: "#6D4CB0" },
-  { id: "sahel", label: "Terracotta", primary: "#E8823D", secondary: "#B35A22" },
+  // `gold` est conservé comme identifiant : c'est la valeur déjà écrite dans
+  // le stockage local des visiteurs. La renommer ferait repartir chacun sur
+  // un thème qu'il n'a pas choisi.
+  { id: "gold", label: "Bleu", primary: "#2563EB", secondary: "#1D4ED8" },
+  { id: "emerald", label: "Émeraude", primary: "#047857", secondary: "#065F46" },
+  { id: "ocean", label: "Océan", primary: "#0369A1", secondary: "#075985" },
+  { id: "ruby", label: "Rubis", primary: "#BE123C", secondary: "#9F1239" },
+  { id: "amethyst", label: "Améthyste", primary: "#7C3AED", secondary: "#6D28D9" },
+  { id: "sahel", label: "Terracotta", primary: "#C2410C", secondary: "#9A3412" },
 ];
 
 export type ThemeMode = "dark" | "light";

@@ -56,7 +56,7 @@ export function BoostDialog({
       <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-6">
         <div className="flex items-start justify-between">
           <h2 className="flex items-center gap-2 text-lg font-bold">
-            <Zap className="h-5 w-5 text-gold" /> Mettre en avant
+            <Zap className="h-5 w-5 text-accent" /> Mettre en avant
           </h2>
           <button onClick={onClose} aria-label="Fermer" className="text-muted">
             <X className="h-5 w-5" />
@@ -66,12 +66,12 @@ export function BoostDialog({
         <p className="mt-1 line-clamp-1 text-sm text-muted">{product.title}</p>
 
         {done ? (
-          <p className="py-8 text-center font-semibold text-gold">
+          <p className="py-8 text-center font-semibold text-accent">
             Produit mis en avant ! 🚀
           </p>
         ) : (
           <>
-            <div className="mt-4 rounded-lg bg-gold/10 p-3 text-sm">
+            <div className="mt-4 rounded-lg bg-accent/10 p-3 text-sm">
               Un produit mis en avant apparaît en priorité dans la recherche et
               l&apos;accueil.
             </div>
@@ -81,7 +81,7 @@ export function BoostDialog({
                 <label
                   key={d.hours}
                   className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 ${
-                    selected === d.hours ? "border-gold bg-gold/5" : "border-border"
+                    selected === d.hours ? "border-accent bg-accent/5" : "border-border"
                   }`}
                 >
                   <span className="flex items-center gap-2 text-sm">
@@ -114,7 +114,7 @@ export function BoostDialog({
             <button
               onClick={confirm}
               disabled={loading || insufficient}
-              className="mt-4 w-full rounded-lg bg-gold py-3 font-semibold text-black disabled:opacity-40"
+              className="mt-4 w-full rounded-lg bg-accent py-3 font-semibold text-on-accent disabled:opacity-40"
             >
               {insufficient
                 ? "Solde insuffisant"

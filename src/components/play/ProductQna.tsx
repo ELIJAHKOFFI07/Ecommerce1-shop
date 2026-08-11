@@ -64,7 +64,7 @@ export function ProductQna({
   return (
     <section className="mt-10">
       <h2 className="flex items-center gap-2 text-lg font-semibold">
-        <HelpCircle className="h-5 w-5 text-gold" /> Questions & réponses
+        <HelpCircle className="h-5 w-5 text-accent" /> Questions & réponses
       </h2>
 
       {myId && !isOwner && (
@@ -75,12 +75,12 @@ export function ProductQna({
             onKeyDown={(e) => e.key === "Enter" && ask()}
             placeholder="Ex : Livrez-vous à Bouaké ?"
             maxLength={300}
-            className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-gold"
+            className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
           />
           <button
             onClick={ask}
             disabled={busy || !draft.trim()}
-            className="rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-40"
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-40"
           >
             Demander
           </button>
@@ -107,8 +107,8 @@ export function ProductQna({
               </div>
 
               {q.answer ? (
-                <div className="ml-6 mt-2 flex gap-2 rounded-lg bg-gold/[0.08] p-3">
-                  <Store className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                <div className="ml-6 mt-2 flex gap-2 rounded-lg bg-accent/[0.08] p-3">
+                  <Store className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                   <p className="text-sm">{q.answer}</p>
                 </div>
               ) : (
@@ -121,12 +121,12 @@ export function ProductQna({
                       }
                       onKeyDown={(e) => e.key === "Enter" && answer(q.id)}
                       placeholder="Votre réponse…"
-                      className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm outline-none focus:border-gold"
+                      className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm outline-none focus:border-accent"
                     />
                     <button
                       onClick={() => answer(q.id)}
                       disabled={busy}
-                      className="rounded-lg border border-border px-3 py-1.5 text-sm hover:border-gold disabled:opacity-40"
+                      className="rounded-lg border border-border px-3 py-1.5 text-sm hover:border-accent disabled:opacity-40"
                     >
                       Répondre
                     </button>

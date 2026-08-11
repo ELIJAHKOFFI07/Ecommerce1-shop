@@ -75,7 +75,7 @@ export function StoriesManager({ shopId }: { shopId: string }) {
           onChange={(e) => setCaption(e.target.value)}
           placeholder="Légende (optionnelle)"
           maxLength={200}
-          className="mt-3 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+          className="mt-3 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
         />
         <input
           type="file"
@@ -85,9 +85,9 @@ export function StoriesManager({ shopId }: { shopId: string }) {
             const file = e.target.files?.[0];
             if (file) upload(file);
           }}
-          className="mt-3 block w-full text-sm text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-gold file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black"
+          className="mt-3 block w-full text-sm text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-accent file:px-4 file:py-2 file:text-sm file:font-semibold file:text-on-accent"
         />
-        {uploading && <p className="mt-2 text-xs text-gold">Publication…</p>}
+        {uploading && <p className="mt-2 text-xs text-accent">Publication…</p>}
         {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
       </div>
 

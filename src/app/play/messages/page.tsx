@@ -69,13 +69,13 @@ export default function MessagesPage() {
   if (!connected) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
-        <MessageCircle className="mx-auto h-8 w-8 text-gold" />
+        <MessageCircle className="mx-auto h-8 w-8 text-accent" />
         <p className="mt-3 text-sm text-muted">
           Connectez-vous pour accéder à vos messages.
         </p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-black"
+          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -95,9 +95,9 @@ export default function MessagesPage() {
             <li key={c.id}>
               <Link
                 href={`/play/messages/${c.id}`}
-                className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-gold/50"
+                className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-accent/50"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold/20 font-bold text-gold">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/20 font-bold text-accent">
                   {c.otherName.charAt(0).toUpperCase()}
                 </span>
                 <span className="min-w-0 flex-1">

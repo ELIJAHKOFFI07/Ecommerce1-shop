@@ -114,7 +114,7 @@ export function StoryViewer({
             {stories.map((s, i) => (
               <span key={s.id} className="h-[3px] flex-1 overflow-hidden rounded bg-white/30">
                 <span
-                  className="block h-full bg-gold"
+                  className="block h-full bg-accent"
                   style={{
                     width: `${i < index ? 100 : i === index ? progress * 100 : 0}%`,
                   }}
@@ -139,7 +139,7 @@ export function StoryViewer({
           {story.product_id && (
             <Link
               href={`/play/product/${story.product_id}`}
-              className="pointer-events-auto block rounded-lg bg-gold py-2.5 text-center font-semibold text-black"
+              className="pointer-events-auto block rounded-lg bg-accent py-2.5 text-center font-semibold text-on-accent"
             >
               Voir le produit
             </Link>

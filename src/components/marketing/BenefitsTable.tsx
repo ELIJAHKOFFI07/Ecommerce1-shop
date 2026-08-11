@@ -35,7 +35,7 @@ export function BenefitsTable({
             key={b.title}
             className="grid grid-cols-1 gap-2 p-6 transition-colors hover:bg-surface-2/40 sm:grid-cols-3 sm:gap-6 lg:p-8"
           >
-            <div className="flex items-center gap-3 font-semibold text-gold lg:text-lg">
+            <div className="flex items-center gap-3 font-semibold text-accent lg:text-lg">
               <span className="shrink-0">{b.icon}</span>
               {b.title}
             </div>

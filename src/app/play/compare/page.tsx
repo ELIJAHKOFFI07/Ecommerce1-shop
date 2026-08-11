@@ -54,7 +54,7 @@ export default function ComparePage() {
   if (products.length < 2) {
     return (
       <div className="py-20 text-center">
-        <GitCompareArrows className="mx-auto h-10 w-10 text-gold" />
+        <GitCompareArrows className="mx-auto h-10 w-10 text-accent" />
         <p className="mt-4 font-medium">Ajoutez au moins 2 produits</p>
         <p className="mt-1 text-sm text-muted">
           Utilisez le bouton « Comparer » sur une fiche produit (3 max).
@@ -126,7 +126,7 @@ export default function ComparePage() {
                 {products.map((p) => (
                   <td
                     key={p.id}
-                    className={`p-2 ${row.label === "Prix" ? "font-bold text-gold" : ""}`}
+                    className={`p-2 ${row.label === "Prix" ? "font-bold text-accent" : ""}`}
                   >
                     {row.value(p)}
                   </td>

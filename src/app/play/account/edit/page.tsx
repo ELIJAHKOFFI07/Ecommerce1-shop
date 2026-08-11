@@ -111,7 +111,7 @@ export default function EditProfilePage() {
         <p className="text-lg font-medium">Connexion requise</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+          className="mt-4 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -120,14 +120,14 @@ export default function EditProfilePage() {
   }
 
   const field =
-    "w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold";
+    "w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent";
   const shown = preview ?? avatarUrl;
 
   return (
     <div className="mx-auto max-w-lg">
       <Link
         href="/play/account"
-        className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-gold"
+        className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-accent"
       >
         <ArrowLeft className="h-4 w-4" /> Mon compte
       </Link>
@@ -150,7 +150,7 @@ export default function EditProfilePage() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="flex h-full w-full items-center justify-center text-3xl font-bold text-gold">
+              <span className="flex h-full w-full items-center justify-center text-3xl font-bold text-accent">
                 {(fullName || username || "?")[0]?.toUpperCase()}
               </span>
             )}
@@ -242,7 +242,7 @@ export default function EditProfilePage() {
 
         <button
           disabled={saving}
-          className="w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+          className="w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
         >
           {saving ? "Enregistrement…" : "Enregistrer"}
         </button>

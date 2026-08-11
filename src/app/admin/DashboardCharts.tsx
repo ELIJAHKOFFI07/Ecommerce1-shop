@@ -113,12 +113,12 @@ function StatTile({
   accent?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-gold/40">
+    <div className="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-accent/40">
       <p className="text-sm text-muted">{label}</p>
       {/* Chiffres proportionnels : tabular-nums fait « flotter » un grand
           nombre isolé. Réservé aux colonnes qui s'alignent. */}
       <p
-        className={`mt-1.5 text-2xl font-bold ${accent ? "text-gold" : ""}`}
+        className={`mt-1.5 text-2xl font-bold ${accent ? "text-accent" : ""}`}
       >
         {value}
       </p>

@@ -23,7 +23,6 @@ import { HeroCarousel } from "@/components/marketing/HeroCarousel";
 import { ScrollCarousel } from "@/components/marketing/ScrollCarousel";
 import { BenefitsTable } from "@/components/marketing/BenefitsTable";
 import { CountUp } from "@/components/marketing/CountUp";
-import { Reveal } from "@/components/marketing/Reveal";
 import { ProductCard } from "@/components/play/ProductCard";
 import { CategoryCard } from "@/components/play/CategoryCard";
 import {
@@ -91,30 +90,17 @@ export default async function Home() {
       {/* ================================================================ */}
       {/* Bande d'accroche                                                  */}
       {/* ================================================================ */}
-      <section className="relative overflow-hidden border-b border-border bg-surface py-20 md:py-28 lg:py-36">
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.14] via-transparent to-gold/[0.06]" />
-          <div className="animate-drift absolute -left-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-gold/20 blur-[130px]" />
-          <div
-            className="animate-drift absolute -right-32 bottom-0 h-[24rem] w-[24rem] rounded-full bg-gold/10 blur-[110px]"
-            style={{ animationDelay: "-7s" }}
-          />
-        </div>
-
-        <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center px-4 text-center sm:px-6">
+      <section className="border-b border-border bg-surface-2/60 py-20 md:py-28">
+        <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-4 text-center sm:px-6">
           <Pill>
             <Flame className="h-3.5 w-3.5" />
             La marketplace sociale de Côte d&apos;Ivoire
           </Pill>
 
-          <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            <Reveal type="line">Achetez. Vendez.</Reveal>
+          <h1 className="mt-6 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            Achetez. Vendez.
             <br />
-            <Reveal type="line" delay={0.1}>
-              <span className="bg-gradient-to-r from-gold to-gold-dark bg-clip-text text-transparent">
-                Brillez.
-              </span>
-            </Reveal>
+            <span className="text-accent">Brillez.</span>
           </h1>
 
           <p className="mt-6 max-w-2xl text-base text-muted sm:text-lg lg:text-xl">
@@ -126,14 +112,14 @@ export default async function Home() {
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/play"
-              className="press sheen inline-flex items-center justify-center gap-2 rounded-full bg-gold px-8 py-3.5 text-base font-semibold text-black"
+              className="press inline-flex items-center justify-center gap-2 rounded-full bg-accent px-8 py-3 text-base font-medium text-on-accent hover:bg-accent-dark"
             >
               <ShoppingBag className="h-4 w-4" />
               Explorer la boutique
             </Link>
             <Link
               href="/play/register"
-              className="press inline-flex items-center justify-center gap-2 rounded-full border border-border bg-background px-8 py-3.5 text-base font-semibold transition-colors hover:border-gold hover:text-gold"
+              className="press inline-flex items-center justify-center gap-2 rounded-full border border-border bg-background px-8 py-3 text-base font-medium transition-colors hover:bg-surface-2"
             >
               Créer un compte
             </Link>
@@ -234,7 +220,7 @@ export default async function Home() {
           </div>
           <Link
             href="/play"
-            className="press underline-grow inline-flex items-center gap-1.5 text-sm font-semibold text-gold"
+            className="press underline-grow inline-flex items-center gap-1.5 text-sm font-semibold text-accent"
           >
             Tout voir
             <ArrowRight className="h-4 w-4" />
@@ -246,7 +232,7 @@ export default async function Home() {
             <p className="text-muted">Aucun produit disponible pour le moment.</p>
             <Link
               href="/play/register"
-              className="press mt-4 inline-block rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-black"
+              className="press mt-4 inline-block rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-on-accent"
             >
               Devenir vendeur
             </Link>
@@ -329,7 +315,7 @@ export default async function Home() {
       {/* ================================================================ */}
       <Section tone="raised">
         <div className="mx-auto max-w-2xl space-y-8 text-center">
-          <ShieldCheck className="mx-auto h-8 w-8 text-gold" />
+          <ShieldCheck className="mx-auto h-8 w-8 text-accent" />
           <blockquote className="text-lg font-medium italic text-muted sm:text-xl">
             « Une marketplace n&apos;a de valeur que si l&apos;acheteur et le
             vendeur s&apos;y sentent également protégés. C&apos;est la règle
@@ -346,7 +332,7 @@ export default async function Home() {
             </p>
             <Link
               href="/play/register"
-              className="press sheen mt-7 inline-flex items-center gap-2 rounded-full bg-gold px-8 py-3.5 font-semibold text-black"
+              className="press mt-7 inline-flex items-center gap-2 rounded-full bg-accent px-8 py-3.5 font-semibold text-on-accent"
             >
               Commencer gratuitement
               <ArrowRight className="h-4 w-4" />
@@ -416,7 +402,7 @@ function PillarCard({
 function StatBlock({ value, label }: { value: number; label: string }) {
   return (
     <div>
-      <p className="text-3xl font-bold text-gold sm:text-4xl">
+      <p className="text-3xl font-bold text-accent sm:text-4xl">
         <CountUp to={value} />
       </p>
       <p className="mt-1 text-xs text-muted sm:text-sm">{label}</p>

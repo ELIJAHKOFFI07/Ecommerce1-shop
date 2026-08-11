@@ -98,7 +98,7 @@ function Arrow({
       aria-label={label}
       // `pointer-events-none` en plus de l'opacité : un bouton invisible
       // resterait cliquable et volerait le clic sur la carte du dessous.
-      className={`press absolute top-1/2 hidden -translate-y-1/2 rounded-full border border-border bg-background/90 p-2 shadow-lg backdrop-blur transition-opacity hover:border-gold hover:text-gold sm:block ${
+      className={`press absolute top-1/2 hidden -translate-y-1/2 rounded-full border border-border bg-background/90 p-2 shadow-lg backdrop-blur transition-opacity hover:border-accent hover:text-accent sm:block ${
         side === "left" ? "-left-3" : "-right-3"
       } ${hidden ? "pointer-events-none opacity-0" : "opacity-100"}`}
     >

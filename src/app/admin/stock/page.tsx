@@ -73,7 +73,7 @@ export default function AdminStockPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher un produit…"
-          className="w-64 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-gold"
+          className="w-64 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
         />
         <label className="flex items-center gap-2 text-sm text-muted">
           <input
@@ -128,7 +128,7 @@ export default function AdminStockPage() {
                       </button>
                       <button
                         onClick={() => adjust(p, null, 1)}
-                        className="rounded-md border border-border p-1.5 hover:border-gold hover:text-gold"
+                        className="rounded-md border border-border p-1.5 hover:border-accent hover:text-accent"
                         aria-label="Ajouter 1"
                       >
                         <Plus className="h-3.5 w-3.5" />
@@ -139,7 +139,7 @@ export default function AdminStockPage() {
                           const delta = Number(raw);
                           if (raw && Number.isInteger(delta) && delta !== 0) adjust(p, null, delta);
                         }}
-                        className="rounded-md border border-border px-2 py-1 text-xs hover:border-gold"
+                        className="rounded-md border border-border px-2 py-1 text-xs hover:border-accent"
                       >
                         Quantité…
                       </button>
@@ -148,7 +148,7 @@ export default function AdminStockPage() {
                   <td className="p-3">
                     <button
                       onClick={() => setHistoryFor(p)}
-                      className="inline-flex items-center gap-1 text-xs text-muted hover:text-gold"
+                      className="inline-flex items-center gap-1 text-xs text-muted hover:text-accent"
                     >
                       <History className="h-3.5 w-3.5" /> Voir
                     </button>
@@ -177,7 +177,7 @@ export default function AdminStockPage() {
                             </button>
                             <button
                               onClick={() => adjust(p, v.id, 1)}
-                              className="rounded border border-border p-1 hover:border-gold hover:text-gold"
+                              className="rounded border border-border p-1 hover:border-accent hover:text-accent"
                               aria-label="Ajouter 1"
                             >
                               <Plus className="h-3 w-3" />

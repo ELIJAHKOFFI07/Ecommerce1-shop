@@ -80,7 +80,7 @@ export default function AccountPage() {
         <p className="text-lg font-medium">Connexion requise</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+          className="mt-4 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -97,7 +97,7 @@ export default function AccountPage() {
     <div className="grid gap-6 lg:grid-cols-[20rem_1fr] lg:items-start">
       <aside className="space-y-4 lg:sticky lg:top-20">
         <div className="rounded-2xl border border-border bg-surface p-5 text-center">
-          <div className="mx-auto h-20 w-20 overflow-hidden rounded-full bg-gold/15">
+          <div className="mx-auto h-20 w-20 overflow-hidden rounded-full bg-accent/15">
             {profile?.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -106,7 +106,7 @@ export default function AccountPage() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="flex h-full w-full items-center justify-center text-3xl font-bold text-gold">
+              <span className="flex h-full w-full items-center justify-center text-3xl font-bold text-accent">
                 {(profile?.full_name ?? profile?.username ?? "?")[0]?.toUpperCase()}
               </span>
             )}
@@ -116,14 +116,14 @@ export default function AccountPage() {
             {profile?.full_name ?? profile?.username ?? "Utilisateur"}
           </p>
           <p className="truncate text-sm text-muted">{email}</p>
-          <p className="mt-1 text-sm text-gold">
+          <p className="mt-1 text-sm text-accent">
             {ROLE_LABELS[roleOf(profile) ?? "user"]} ·{" "}
             {profile?.loyalty_points ?? 0} points
           </p>
 
           <Link
             href="/play/account/edit"
-            className="press mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-semibold transition-colors hover:border-gold hover:text-gold"
+            className="press mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-semibold transition-colors hover:border-accent hover:text-accent"
           >
             <UserPen className="h-4 w-4" />
             Modifier mon profil
@@ -189,9 +189,9 @@ function AccountLink({
   return (
     <Link
       href={href}
-      className="lift press flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-gold/50"
+      className="lift press flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-accent/50"
     >
-      <span className="text-gold">{icon}</span>
+      <span className="text-accent">{icon}</span>
       {label}
     </Link>
   );

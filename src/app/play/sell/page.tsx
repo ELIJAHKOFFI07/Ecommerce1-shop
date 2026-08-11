@@ -25,7 +25,7 @@ function StatTile({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-border bg-surface p-3">
       <p className="text-xs text-muted">{label}</p>
-      <p className="mt-1 font-bold text-gold">{value}</p>
+      <p className="mt-1 font-bold text-accent">{value}</p>
     </div>
   );
 }
@@ -108,7 +108,7 @@ export default function SellPage() {
         <p className="text-lg font-medium">Connexion requise pour vendre</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+          className="mt-4 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -143,7 +143,7 @@ export default function SellPage() {
   if (!canSell) {
     return (
       <div className="mx-auto max-w-md py-16 text-center">
-        <Store className="mx-auto h-10 w-10 text-gold" />
+        <Store className="mx-auto h-10 w-10 text-accent" />
         <h1 className="mt-4 text-xl font-bold">Compte vendeur requis</h1>
         <p className="mt-2 text-sm text-muted">
           Votre compte est un compte client : vous pouvez acheter, mais pas
@@ -152,7 +152,7 @@ export default function SellPage() {
         </p>
         <Link
           href="/play"
-          className="mt-6 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+          className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
         >
           Retour à la boutique
         </Link>
@@ -194,7 +194,7 @@ export default function SellPage() {
   return (
     <div>
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 font-bold text-gold">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/15 font-bold text-accent">
           {shop.name[0]?.toUpperCase()}
         </div>
         <div>
@@ -238,7 +238,7 @@ export default function SellPage() {
             key={value}
             onClick={() => setTab(value)}
             className={`rounded-full px-4 py-1.5 text-sm ${
-              tab === value ? "bg-gold text-black" : "bg-surface-2 text-muted"
+              tab === value ? "bg-accent text-on-accent" : "bg-surface-2 text-muted"
             }`}
           >
             {label}
@@ -275,15 +275,15 @@ export default function SellPage() {
                 <div className="flex shrink-0 flex-wrap justify-end gap-2">
                   <button
                     onClick={() => setEditing(p)}
-                    className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs hover:border-gold"
+                    className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs hover:border-accent"
                   >
-                    <Pencil className="h-3.5 w-3.5 text-gold" /> Modifier
+                    <Pencil className="h-3.5 w-3.5 text-accent" /> Modifier
                   </button>
                   <button
                     onClick={() => setBoosting(p)}
-                    className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs hover:border-gold"
+                    className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs hover:border-accent"
                   >
-                    <Zap className="h-3.5 w-3.5 text-gold" /> Booster
+                    <Zap className="h-3.5 w-3.5 text-accent" /> Booster
                   </button>
                 </div>
               </div>
@@ -324,17 +324,17 @@ export default function SellPage() {
                   <span className="font-medium">
                     #{o.id.slice(0, 8).toUpperCase()}
                   </span>
-                  <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs text-gold">
+                  <span className="rounded-full bg-accent/15 px-2 py-0.5 text-xs text-accent">
                     {ORDER_STATUS_LABELS[o.status]}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-gold">{formatFcfa(o.total)}</p>
+                <p className="mt-1 text-sm text-accent">{formatFcfa(o.total)}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {NEXT_STATUS[o.status]?.map((s) => (
                     <button
                       key={s}
                       onClick={() => advance(o.id, s)}
-                      className="rounded-full border border-border px-3 py-1 text-xs hover:border-gold"
+                      className="rounded-full border border-border px-3 py-1 text-xs hover:border-accent"
                     >
                       {ORDER_STATUS_LABELS[s as Order["status"]]}
                     </button>
@@ -395,25 +395,25 @@ function CreateShopForm({ onCreated }: { onCreated: () => void }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Nom de la boutique"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         />
         <input
           value={city}
           onChange={(e) => setCity(e.target.value)}
           placeholder="Ville"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         />
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
           rows={3}
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         />
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={loading}
-          className="w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+          className="w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
         >
           {loading ? "Création…" : "Créer ma boutique"}
         </button>
@@ -489,14 +489,14 @@ function NewProductForm({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Titre"
-        className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+        className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
       />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Description"
         rows={3}
-        className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+        className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
       />
       <div className="flex gap-3">
         <input
@@ -505,7 +505,7 @@ function NewProductForm({
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           placeholder="Prix (FCFA)"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         />
         <input
           required
@@ -513,14 +513,14 @@ function NewProductForm({
           value={stock}
           onChange={(e) => setStock(e.target.value)}
           placeholder="Stock"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         />
       </div>
       <div className="flex gap-3">
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         >
           <option value="">Catégorie…</option>
           {categories.map((c) => (
@@ -532,7 +532,7 @@ function NewProductForm({
         <select
           value={condition}
           onChange={(e) => setCondition(e.target.value)}
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         >
           <option value="neuf">Neuf</option>
           <option value="occasion">Occasion</option>
@@ -543,13 +543,13 @@ function NewProductForm({
         value={city}
         onChange={(e) => setCity(e.target.value)}
         placeholder="Ville"
-        className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+        className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
       />
       <ImagePicker files={files} onChange={setFiles} />
       {error && <p className="text-sm text-red-400">{error}</p>}
       <button
         disabled={loading}
-        className="w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+        className="w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
       >
         {loading ? "Publication…" : "Publier le produit"}
       </button>

@@ -80,11 +80,11 @@ export function AuctionBlock({ product }: { product: Product }) {
       <div className="mt-4">
         <button
           onClick={create}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-gold"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
         >
-          <Gavel className="h-4 w-4 text-gold" /> Mettre aux enchères
+          <Gavel className="h-4 w-4 text-accent" /> Mettre aux enchères
         </button>
-        {message && <p className="mt-2 text-xs text-gold">{message}</p>}
+        {message && <p className="mt-2 text-xs text-accent">{message}</p>}
       </div>
     );
   }
@@ -92,16 +92,16 @@ export function AuctionBlock({ product }: { product: Product }) {
   const leading = myId != null && auction.current_bidder === myId;
 
   return (
-    <div className="mt-4 rounded-xl border border-gold bg-gold/[0.08] p-4">
+    <div className="mt-4 rounded-xl border border-accent bg-accent/[0.08] p-4">
       <div className="flex items-center justify-between">
         <p className="flex items-center gap-2 font-bold">
-          <Gavel className="h-4 w-4 text-gold" /> Enchère en cours
+          <Gavel className="h-4 w-4 text-accent" /> Enchère en cours
         </p>
         <span className="text-xs font-semibold">
           {auctionRemainingLabel(auction.ends_at)}
         </span>
       </div>
-      <p className="mt-2 text-lg font-bold text-gold">
+      <p className="mt-2 text-lg font-bold text-accent">
         {auction.current_bid == null
           ? `Prix de départ : ${formatFcfa(auction.starting_price)}`
           : `Meilleure offre : ${formatFcfa(auction.current_bid)} · ${auction.bids_count} enchère(s)`}
@@ -116,19 +116,19 @@ export function AuctionBlock({ product }: { product: Product }) {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             min={minNextBid(auction)}
-            className="w-36 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-gold"
+            className="w-36 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
           />
           <button
             onClick={bid}
             disabled={busy}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-40"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-40"
           >
             <Gavel className="h-4 w-4" />
             Enchérir (min {formatFcfa(minNextBid(auction))})
           </button>
         </div>
       )}
-      {message && <p className="mt-2 text-xs text-gold">{message}</p>}
+      {message && <p className="mt-2 text-xs text-accent">{message}</p>}
     </div>
   );
 }

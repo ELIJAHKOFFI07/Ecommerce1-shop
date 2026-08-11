@@ -59,7 +59,7 @@ export default function WishlistsPage() {
         <p className="text-muted">Connectez-vous pour créer des listes.</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-gold px-5 py-2.5 font-semibold text-black"
+          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -77,12 +77,12 @@ export default function WishlistsPage() {
           onChange={(e) => setNewName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && create()}
           placeholder="Ex : Idées cadeaux"
-          className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-gold"
+          className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
         />
         <button
           onClick={create}
           disabled={creating || !newName.trim()}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-40"
         >
           <Plus className="h-4 w-4" /> Créer
         </button>
@@ -99,7 +99,7 @@ export default function WishlistsPage() {
               key={w.id}
               className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4"
             >
-              <Bookmark className="h-5 w-5 shrink-0 text-gold" />
+              <Bookmark className="h-5 w-5 shrink-0 text-accent" />
               <Link href={`/play/wishlists/${w.id}`} className="flex-1">
                 <p className="font-medium">{w.name}</p>
                 <p className="text-xs text-muted">

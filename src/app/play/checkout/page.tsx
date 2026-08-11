@@ -60,8 +60,8 @@ export default function CheckoutPage() {
   if (authed === false) {
     return (
       <div className="animate-rise mx-auto max-w-sm py-16 text-center">
-        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gold/15">
-          <LockKeyhole className="h-6 w-6 text-gold" />
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent/15">
+          <LockKeyhole className="h-6 w-6 text-accent" />
         </span>
         <h1 className="mt-4 text-xl font-bold">Plus qu&apos;une étape</h1>
         <p className="mt-2 text-sm text-muted">
@@ -70,13 +70,13 @@ export default function CheckoutPage() {
         </p>
         <Link
           href="/play/login?next=/play/checkout"
-          className="press sheen mt-6 inline-block w-full rounded-full bg-gold px-6 py-3 font-semibold text-black"
+          className="press mt-6 inline-block w-full rounded-full bg-accent px-6 py-3 font-semibold text-on-accent"
         >
           Se connecter
         </Link>
         <Link
           href="/play/register"
-          className="press mt-3 inline-block w-full rounded-full border border-border px-6 py-3 font-semibold transition-colors hover:border-gold hover:text-gold"
+          className="press mt-3 inline-block w-full rounded-full border border-border px-6 py-3 font-semibold transition-colors hover:border-accent hover:text-accent"
         >
           Créer un compte
         </Link>
@@ -135,25 +135,25 @@ export default function CheckoutPage() {
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             placeholder="Nom complet"
-            className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+            className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
           />
           <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Téléphone"
-            className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+            className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
           />
           <input
             value={city}
             onChange={(e) => setCity(e.target.value)}
             placeholder="Ville"
-            className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+            className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
           />
           <input
             value={details}
             onChange={(e) => setDetails(e.target.value)}
             placeholder="Quartier, repère…"
-            className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+            className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
           />
         </div>
       </section>
@@ -166,13 +166,13 @@ export default function CheckoutPage() {
               key={m.id}
               onClick={() => setMethod(m)}
               className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left ${
-                method.id === m.id ? "border-gold" : "border-border"
+                method.id === m.id ? "border-accent" : "border-border"
               }`}
             >
               <span>{m.label}</span>
               <span
                 className={`h-4 w-4 rounded-full border ${
-                  method.id === m.id ? "border-gold bg-gold" : "border-muted"
+                  method.id === m.id ? "border-accent bg-accent" : "border-muted"
                 }`}
               />
             </button>
@@ -182,23 +182,23 @@ export default function CheckoutPage() {
         {method.needsPhone && (
           <input
             placeholder={`Numéro ${method.label}`}
-            className="mt-3 w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+            className="mt-3 w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
           />
         )}
         {method.needsCard && (
           <div className="mt-3 space-y-3">
             <input
               placeholder="Numéro de carte"
-              className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+              className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
             />
             <div className="flex gap-3">
               <input
                 placeholder="MM/AA"
-                className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+                className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
               />
               <input
                 placeholder="CVV"
-                className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+                className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
               />
             </div>
           </div>
@@ -235,13 +235,13 @@ export default function CheckoutPage() {
 
         <div className="flex justify-between">
           <span className="text-muted">Sous-total</span>
-          <span className="font-bold text-gold">{formatFcfa(subtotal)}</span>
+          <span className="font-bold text-accent">{formatFcfa(subtotal)}</span>
         </div>
         {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
         <button
           disabled={placing || !fullName || !phone || !city}
           onClick={placeOrder}
-          className="press sheen mt-4 w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+          className="press mt-4 w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
         >
           {placing
             ? "Traitement…"

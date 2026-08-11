@@ -97,7 +97,7 @@ export function EditProductDialog({
   }
 
   const field =
-    "w-full rounded-xl border border-border bg-background px-4 py-3 outline-none focus:border-gold";
+    "w-full rounded-xl border border-border bg-background px-4 py-3 outline-none focus:border-accent";
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/60 p-4 sm:items-center">
@@ -238,7 +238,7 @@ export function EditProductDialog({
           </button>
           <button
             disabled={saving}
-            className="w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+            className="w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
           >
             {saving ? "Enregistrement…" : "Enregistrer"}
           </button>

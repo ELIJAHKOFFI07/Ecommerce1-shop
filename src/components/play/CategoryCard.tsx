@@ -29,7 +29,7 @@ export function CategoryCard({ category }: { category: Category }) {
   return (
     <Link
       href={`/play/search?category=${category.id}`}
-      className="press group relative flex h-28 w-full flex-col justify-end overflow-hidden rounded-2xl border border-border p-4 transition-all duration-300 hover:border-gold/60 hover:shadow-lg lg:h-32"
+      className="press group relative flex h-28 w-full flex-col justify-end overflow-hidden rounded-2xl border border-border p-4 transition-all duration-300 hover:border-accent/60 hover:shadow-lg lg:h-32"
     >
       {/* Visuel s'il en existe un, dégradé sinon : une catégorie sans image
           reste présentable, elle ne laisse pas un rectangle vide. */}
@@ -66,10 +66,10 @@ export function CategoryCard({ category }: { category: Category }) {
       </span>
 
       <span className="relative flex items-end justify-between gap-2">
-        <span className="text-sm font-semibold leading-tight transition-colors group-hover:text-gold lg:text-base">
+        <span className="text-sm font-semibold leading-tight transition-colors group-hover:text-accent lg:text-base">
           {category.name}
         </span>
-        <ArrowUpRight className="h-4 w-4 shrink-0 translate-y-1 text-gold opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
+        <ArrowUpRight className="h-4 w-4 shrink-0 translate-y-1 text-accent opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
       </span>
     </Link>
   );

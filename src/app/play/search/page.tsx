@@ -166,7 +166,7 @@ function FilterChip({
       onClick={onClick}
       className={`press rounded-full px-3 py-1.5 text-sm transition-colors lg:w-full lg:text-left ${
         active
-          ? "bg-gold font-medium text-black"
+          ? "bg-accent font-medium text-on-accent"
           : "bg-surface-2 text-muted hover:text-foreground"
       }`}
     >

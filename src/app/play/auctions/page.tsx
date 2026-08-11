@@ -44,7 +44,7 @@ export default function AuctionsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <h1 className="flex items-center gap-2 text-2xl font-bold">
-        <Gavel className="h-6 w-6 text-gold" /> Enchères en cours
+        <Gavel className="h-6 w-6 text-accent" /> Enchères en cours
       </h1>
 
       {auctions.length === 0 ? (
@@ -58,7 +58,7 @@ export default function AuctionsPage() {
             <Link
               key={a.id}
               href={`/play/product/${a.product_id}`}
-              className="flex items-center gap-4 rounded-xl border border-border bg-surface p-3 hover:border-gold/50"
+              className="flex items-center gap-4 rounded-xl border border-border bg-surface p-3 hover:border-accent/50"
             >
               <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-2">
                 {a.products?.product_images?.[0]?.url && (
@@ -74,7 +74,7 @@ export default function AuctionsPage() {
                 <p className="line-clamp-2 text-sm font-medium">
                   {a.products?.title}
                 </p>
-                <p className="mt-1 text-sm font-bold text-gold">
+                <p className="mt-1 text-sm font-bold text-accent">
                   {a.current_bid == null
                     ? `Départ : ${formatFcfa(a.starting_price)}`
                     : `Offre : ${formatFcfa(a.current_bid)} (${a.bids_count})`}
@@ -84,7 +84,7 @@ export default function AuctionsPage() {
                   {auctionRemainingLabel(a.ends_at)}
                 </p>
               </div>
-              <Gavel className="h-5 w-5 shrink-0 text-gold" />
+              <Gavel className="h-5 w-5 shrink-0 text-accent" />
             </Link>
           ))}
         </div>

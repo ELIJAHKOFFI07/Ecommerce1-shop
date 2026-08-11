@@ -157,7 +157,7 @@ export function ProductActions({ product }: { product: Product }) {
   return (
     <div className="mt-4 space-y-3">
       {viewers > 1 && (
-        <p className="flex items-center gap-1.5 text-xs text-gold">
+        <p className="flex items-center gap-1.5 text-xs text-accent">
           <Eye className="h-3.5 w-3.5" />
           {viewers} personnes regardent ce produit
         </p>
@@ -168,13 +168,13 @@ export function ProductActions({ product }: { product: Product }) {
           <>
             <button
               onClick={makeOffer}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-gold"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
             >
               <Handshake className="h-4 w-4" /> Proposer un prix
             </button>
             <button
               onClick={contactSeller}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-gold"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
             >
               <MessageCircle className="h-4 w-4" /> Contacter le vendeur
             </button>
@@ -185,8 +185,8 @@ export function ProductActions({ product }: { product: Product }) {
           onClick={toggleAlert}
           className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
             hasAlert
-              ? "border-gold bg-gold/10 text-gold"
-              : "border-border hover:border-gold"
+              ? "border-accent bg-accent/10 text-accent"
+              : "border-border hover:border-accent"
           }`}
         >
           {hasAlert ? (
@@ -202,7 +202,7 @@ export function ProductActions({ product }: { product: Product }) {
             onClick={() =>
               myId ? setPickerOpen((o) => !o) : (window.location.href = "/play/login")
             }
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-gold"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
           >
             <BookmarkPlus className="h-4 w-4" /> Ajouter à une liste
           </button>
@@ -219,7 +219,7 @@ export function ProductActions({ product }: { product: Product }) {
               ))}
               <button
                 onClick={createAndAdd}
-                className="block w-full border-t border-border px-3 py-2 text-left text-sm text-gold hover:bg-surface-2"
+                className="block w-full border-t border-border px-3 py-2 text-left text-sm text-accent hover:bg-surface-2"
               >
                 + Nouvelle liste
               </button>
@@ -229,7 +229,7 @@ export function ProductActions({ product }: { product: Product }) {
 
         <button
           onClick={shareWhatsApp}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-gold"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
         >
           <Share2 className="h-4 w-4" /> WhatsApp
         </button>
@@ -246,7 +246,7 @@ export function ProductActions({ product }: { product: Product }) {
             flash(`Comparateur : ${next.length} produit(s).`);
           }}
           className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
-            inCompare ? "border-gold bg-gold/10 text-gold" : "border-border hover:border-gold"
+            inCompare ? "border-accent bg-accent/10 text-accent" : "border-border hover:border-accent"
           }`}
         >
           <GitCompareArrows className="h-4 w-4" />
@@ -256,14 +256,14 @@ export function ProductActions({ product }: { product: Product }) {
         {compareCount >= 2 && (
           <a
             href="/play/compare"
-            className="inline-flex items-center rounded-lg bg-gold px-3 py-2 text-sm font-semibold text-black"
+            className="inline-flex items-center rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-on-accent"
           >
             Voir la comparaison ({compareCount})
           </a>
         )}
       </div>
 
-      {status && <p className="text-xs text-gold">{status}</p>}
+      {status && <p className="text-xs text-accent">{status}</p>}
     </div>
   );
 }

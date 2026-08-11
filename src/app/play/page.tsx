@@ -128,12 +128,8 @@ export default function PlayHome() {
       {/* ---------------------------------------------------------------- */}
       {/* Accroche personnalisée                                            */}
       {/* ---------------------------------------------------------------- */}
-      <section className="animate-rise relative overflow-hidden rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/15 to-gold/[0.03] p-6 md:p-8 lg:p-10">
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          <div className="animate-drift absolute -right-16 -top-20 h-64 w-64 rounded-full bg-gold/20 blur-[90px]" />
-        </div>
-
-        <div className="relative">
+      <section className="animate-rise rounded-2xl border border-border bg-surface-2/60 p-6 md:p-8 lg:p-10">
+        <div>
           <h1 className="text-2xl font-bold md:text-3xl lg:text-4xl">
             {firstName ? `Bonjour ${firstName} ✦` : "Bienvenue ✦"}
           </h1>
@@ -147,7 +143,7 @@ export default function PlayHome() {
             {canSell && (
               <Link
                 href="/play/sell"
-                className="press sheen inline-flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-black lg:text-base"
+                className="press inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-on-accent hover:bg-accent-dark lg:text-base"
               >
                 <Store className="h-4 w-4" />
                 {hasShop ? "Gérer ma boutique" : "Ouvrir ma boutique"}
@@ -155,14 +151,14 @@ export default function PlayHome() {
             )}
             <Link
               href="/play/search"
-              className="press inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-2.5 text-sm font-semibold transition-colors hover:border-gold hover:text-gold lg:text-base"
+              className="press inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-2.5 text-sm font-medium transition-colors hover:bg-surface-2 lg:text-base"
             >
               Parcourir le catalogue
             </Link>
           </div>
 
           {profile && (
-            <p className="mt-4 text-sm text-gold lg:text-base">
+            <p className="mt-4 text-sm text-accent lg:text-base">
               {profile.loyalty_points} points de fidélité
             </p>
           )}
@@ -240,7 +236,7 @@ export default function PlayHome() {
       {flash.length > 0 && (
         <section>
           <SectionTitle
-            icon={<Zap className="h-5 w-5 text-gold" />}
+            icon={<Zap className="h-5 w-5 text-accent" />}
             action={{ href: "/play/search", label: "Tout voir" }}
           >
             Ventes flash
@@ -255,7 +251,7 @@ export default function PlayHome() {
       {auctions.length > 0 && (
         <section>
           <SectionTitle
-            icon={<Gavel className="h-5 w-5 text-gold" />}
+            icon={<Gavel className="h-5 w-5 text-accent" />}
             action={{ href: "/play/auctions", label: "Toutes les enchères" }}
           >
             Enchères en cours
@@ -273,7 +269,7 @@ export default function PlayHome() {
       {/* ---------------------------------------------------------------- */}
       {popular.length > 0 && (
         <section>
-          <SectionTitle icon={<TrendingUp className="h-5 w-5 text-gold" />}>
+          <SectionTitle icon={<TrendingUp className="h-5 w-5 text-accent" />}>
             Les plus aimés
           </SectionTitle>
           <ProductGrid products={popular} />
@@ -285,7 +281,7 @@ export default function PlayHome() {
       {/* ---------------------------------------------------------------- */}
       {shops.length > 0 && (
         <section>
-          <SectionTitle icon={<Store className="h-5 w-5 text-gold" />}>
+          <SectionTitle icon={<Store className="h-5 w-5 text-accent" />}>
             Boutiques à découvrir
           </SectionTitle>
           <div className="stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -301,7 +297,7 @@ export default function PlayHome() {
       {/* ---------------------------------------------------------------- */}
       <section>
         <SectionTitle
-          icon={<Flame className="h-5 w-5 text-gold" />}
+          icon={<Flame className="h-5 w-5 text-accent" />}
           subtitle={
             regular.length > 0
               ? `À partir de ${formatFcfa(
@@ -363,7 +359,7 @@ function SectionTitle({
       {action && (
         <Link
           href={action.href}
-          className="press underline-grow inline-flex items-center gap-1.5 text-sm font-medium text-gold"
+          className="press underline-grow inline-flex items-center gap-1.5 text-sm font-medium text-accent"
         >
           {action.label}
           <ArrowRight className="h-4 w-4" />
@@ -429,16 +425,16 @@ function AuctionTile({ auction }: { auction: Auction }) {
             Pas d&apos;image
           </span>
         )}
-        <span className="absolute left-2 top-2 rounded-md bg-gold px-2 py-0.5 text-xs font-bold text-black">
+        <span className="absolute left-2 top-2 rounded-md bg-accent px-2 py-0.5 text-xs font-bold text-on-accent">
           {auction.bids_count} offre{auction.bids_count > 1 ? "s" : ""}
         </span>
       </div>
       <div className="p-3 lg:p-4">
-        <p className="line-clamp-1 text-sm font-medium transition-colors group-hover:text-gold lg:text-base">
+        <p className="line-clamp-1 text-sm font-medium transition-colors group-hover:text-accent lg:text-base">
           {product?.title ?? "Produit"}
         </p>
         <p className="mt-1 text-xs text-muted">Offre actuelle</p>
-        <p className="font-bold text-gold lg:text-lg">{formatFcfa(current)}</p>
+        <p className="font-bold text-accent lg:text-lg">{formatFcfa(current)}</p>
       </div>
     </Link>
   );
@@ -487,7 +483,7 @@ function EmptyCatalogue({
       {canSell ? (
         <Link
           href="/play/sell"
-          className="press sheen mt-4 inline-flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-black"
+          className="press mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-on-accent"
         >
           {hasShop ? "Publier un produit" : "Ouvrir ma boutique"}
           <ArrowRight className="h-4 w-4" />

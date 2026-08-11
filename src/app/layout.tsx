@@ -29,7 +29,7 @@ const themeInitScript = `
 (function () {
   try {
     var preset = localStorage.getItem("dreamteamshop_theme_preset") || "gold";
-    var mode = localStorage.getItem("dreamteamshop_theme_mode") || "dark";
+    var mode = localStorage.getItem("dreamteamshop_theme_mode") || "light";
     document.documentElement.dataset.preset = preset;
     document.documentElement.dataset.theme = mode;
   } catch (e) {}
@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      data-theme="dark"
+      data-theme="light"
       data-preset="gold"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >

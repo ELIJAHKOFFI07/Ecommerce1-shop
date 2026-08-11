@@ -11,7 +11,7 @@ export function LandingFooter() {
           <div className="col-span-2 md:col-span-1">
             <Link
               href="/"
-              className="press inline-flex items-center gap-2 text-lg font-bold text-gold"
+              className="press inline-flex items-center gap-2 text-lg font-bold text-accent"
             >
               <Sparkles className="h-5 w-5" />
               DreamTeamShop

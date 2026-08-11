@@ -107,13 +107,13 @@ export default function OffersPage() {
   if (!connected) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
-        <Handshake className="mx-auto h-8 w-8 text-gold" />
+        <Handshake className="mx-auto h-8 w-8 text-accent" />
         <p className="mt-3 text-sm text-muted">
           Connectez-vous pour voir vos offres.
         </p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-black"
+          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -131,7 +131,7 @@ export default function OffersPage() {
         <button
           onClick={() => setTab("sent")}
           className={`flex-1 rounded-lg border px-4 py-2 text-sm ${
-            tab === "sent" ? "border-gold text-gold" : "border-border text-muted"
+            tab === "sent" ? "border-accent text-accent" : "border-border text-muted"
           }`}
         >
           Envoyées ({sent.length})
@@ -140,7 +140,7 @@ export default function OffersPage() {
           onClick={() => setTab("received")}
           className={`flex-1 rounded-lg border px-4 py-2 text-sm ${
             tab === "received"
-              ? "border-gold text-gold"
+              ? "border-accent text-accent"
               : "border-border text-muted"
           }`}
         >
@@ -168,7 +168,7 @@ export default function OffersPage() {
                   {offer.products ? (
                     <Link
                       href={`/play/product/${offer.product_id}`}
-                      className="block truncate font-semibold hover:text-gold"
+                      className="block truncate font-semibold hover:text-accent"
                     >
                       {offer.products.title}
                     </Link>
@@ -185,7 +185,7 @@ export default function OffersPage() {
                   </span>
                 </div>
                 <div className="shrink-0 text-right">
-                  <span className="block font-bold text-gold">
+                  <span className="block font-bold text-accent">
                     {formatFcfa(offer.amount)}
                   </span>
                   <span className="block text-xs text-muted">
@@ -197,7 +197,7 @@ export default function OffersPage() {
               {offer.counter_amount != null && (
                 <p className="mt-2 text-sm">
                   Contre-offre du vendeur :{" "}
-                  <span className="font-semibold text-gold">
+                  <span className="font-semibold text-accent">
                     {formatFcfa(offer.counter_amount)}
                   </span>
                 </p>
@@ -208,14 +208,14 @@ export default function OffersPage() {
                   <button
                     disabled={busyId === offer.id}
                     onClick={() => respond(offer.id, "accepted")}
-                    className="flex-1 rounded-lg bg-gold px-3 py-2 text-xs font-semibold text-black disabled:opacity-50"
+                    className="flex-1 rounded-lg bg-accent px-3 py-2 text-xs font-semibold text-on-accent disabled:opacity-50"
                   >
                     Accepter
                   </button>
                   <button
                     disabled={busyId === offer.id}
                     onClick={() => respond(offer.id, "countered")}
-                    className="flex-1 rounded-lg border border-border px-3 py-2 text-xs hover:border-gold disabled:opacity-50"
+                    className="flex-1 rounded-lg border border-border px-3 py-2 text-xs hover:border-accent disabled:opacity-50"
                   >
                     Contre-offre
                   </button>

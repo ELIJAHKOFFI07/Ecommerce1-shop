@@ -46,7 +46,7 @@ export function PriceHistory({ productId }: { productId: string }) {
     <div className="mt-4 rounded-xl border border-border p-4">
       <div className="flex items-center justify-between">
         <p className="flex items-center gap-2 text-sm font-bold">
-          <TrendingDown className="h-4 w-4 text-gold" /> Historique du prix
+          <TrendingDown className="h-4 w-4 text-accent" /> Historique du prix
         </p>
         {isLowest && (
           <span className="rounded-md bg-green-500/15 px-2 py-0.5 text-[11px] font-bold text-green-400">

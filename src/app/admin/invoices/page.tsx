@@ -48,7 +48,7 @@ export default function InvoicesPage() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Rechercher par n° de commande ou boutique…"
-        className="mb-4 w-80 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-gold"
+        className="mb-4 w-80 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
       />
 
       <div className="overflow-x-auto rounded-2xl border border-border">
@@ -82,7 +82,7 @@ export default function InvoicesPage() {
                 <td className="p-3">
                   <Link
                     href={`/admin/invoices/${o.id}`}
-                    className="inline-flex items-center gap-1 text-xs text-gold hover:underline"
+                    className="inline-flex items-center gap-1 text-xs text-accent hover:underline"
                   >
                     <Receipt className="h-3.5 w-3.5" /> Voir
                   </Link>

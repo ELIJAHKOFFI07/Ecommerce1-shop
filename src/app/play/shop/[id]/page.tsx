@@ -44,14 +44,14 @@ export default function ShopPage({
   return (
     <div>
       <div className="mb-6 flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gold/15 text-2xl font-bold text-gold">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/15 text-2xl font-bold text-accent">
           {shop.name[0]?.toUpperCase()}
         </div>
         <div>
           <h1 className="flex items-center gap-2 text-xl font-bold">
             {shop.name}
             {shop.identity_verified && (
-              <ShieldCheck className="h-5 w-5 text-gold" />
+              <ShieldCheck className="h-5 w-5 text-accent" />
             )}
           </h1>
           <p className="text-sm text-muted">{shop.city}</p>

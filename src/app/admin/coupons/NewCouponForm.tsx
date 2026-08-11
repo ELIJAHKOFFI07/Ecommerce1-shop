@@ -41,12 +41,12 @@ export function NewCouponForm() {
         value={code}
         onChange={(e) => setCode(e.target.value)}
         placeholder="CODE"
-        className="rounded-lg border border-border bg-background px-3 py-2 uppercase outline-none focus:border-gold"
+        className="rounded-lg border border-border bg-background px-3 py-2 uppercase outline-none focus:border-accent"
       />
       <select
         value={type}
         onChange={(e) => setType(e.target.value)}
-        className="rounded-lg border border-border bg-background px-3 py-2 outline-none focus:border-gold"
+        className="rounded-lg border border-border bg-background px-3 py-2 outline-none focus:border-accent"
       >
         <option value="percent">Pourcentage</option>
         <option value="fixed">Montant fixe</option>
@@ -56,18 +56,18 @@ export function NewCouponForm() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Valeur"
-        className="w-24 rounded-lg border border-border bg-background px-3 py-2 outline-none focus:border-gold"
+        className="w-24 rounded-lg border border-border bg-background px-3 py-2 outline-none focus:border-accent"
       />
       <input
         type="number"
         value={minOrder}
         onChange={(e) => setMinOrder(e.target.value)}
         placeholder="Min. commande"
-        className="w-32 rounded-lg border border-border bg-background px-3 py-2 outline-none focus:border-gold"
+        className="w-32 rounded-lg border border-border bg-background px-3 py-2 outline-none focus:border-accent"
       />
       <button
         disabled={busy}
-        className="rounded-full bg-gold px-5 py-2 font-semibold text-black disabled:opacity-50"
+        className="rounded-full bg-accent px-5 py-2 font-semibold text-on-accent disabled:opacity-50"
       >
         Créer
       </button>

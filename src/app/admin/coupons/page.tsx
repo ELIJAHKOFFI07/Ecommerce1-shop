@@ -39,7 +39,7 @@ export default async function AdminCoupons() {
           <tbody>
             {coupons.map((c) => (
               <tr key={c.id} className="border-t border-border">
-                <td className="p-3 font-mono font-bold text-gold">{c.code}</td>
+                <td className="p-3 font-mono font-bold text-accent">{c.code}</td>
                 <td className="p-3">{c.type}</td>
                 <td className="p-3">
                   {c.type === "percent" ? `${c.value}%` : `${c.value} FCFA`}

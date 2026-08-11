@@ -35,14 +35,14 @@ export function PlayNav() {
               que 5. */}
           <button
             onClick={() => setMenuOpen(true)}
-            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm hover:border-gold"
+            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm hover:border-accent"
             aria-label="Ouvrir le menu"
           >
             <Menu className="h-4 w-4" />
             <span className="hidden sm:inline">Menu</span>
           </button>
 
-          <Link href="/play" className="text-lg font-bold text-gold lg:text-xl">
+          <Link href="/play" className="text-lg font-bold text-accent lg:text-xl">
             DreamTeamShop
           </Link>
 
@@ -52,13 +52,13 @@ export function PlayNav() {
                 key={href}
                 href={href}
                 className={`flex items-center gap-1.5 ${
-                  isActive(href) ? "text-gold" : "text-muted hover:text-foreground"
+                  isActive(href) ? "text-accent" : "text-muted hover:text-foreground"
                 }`}
               >
                 <span className="relative">
                   <Icon className="h-4 w-4" />
                   {href === "/play/cart" && hydrated && count > 0 && (
-                    <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[10px] font-bold text-black">
+                    <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-on-accent">
                       {count}
                     </span>
                   )}
@@ -79,13 +79,13 @@ export function PlayNav() {
             key={href}
             href={href}
             className={`flex flex-1 flex-col items-center gap-1 py-2 text-[10px] ${
-              isActive(href) ? "text-gold" : "text-muted"
+              isActive(href) ? "text-accent" : "text-muted"
             }`}
           >
             <span className="relative">
               <Icon className="h-5 w-5" />
               {href === "/play/cart" && hydrated && count > 0 && (
-                <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-black">
+                <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-on-accent">
                   {count}
                 </span>
               )}

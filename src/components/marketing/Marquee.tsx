@@ -19,7 +19,7 @@ export function Marquee({
             className="flex items-center gap-8 text-2xl font-medium text-muted"
           >
             {item}
-            <span className="text-gold">✦</span>
+            <span className="text-accent">✦</span>
           </span>
         ))}
       </div>

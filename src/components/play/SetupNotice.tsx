@@ -6,7 +6,7 @@ import { AlertTriangle } from "lucide-react";
 export function SetupNotice() {
   return (
     <div className="mx-auto max-w-lg py-20 text-center">
-      <AlertTriangle className="mx-auto h-10 w-10 text-gold" />
+      <AlertTriangle className="mx-auto h-10 w-10 text-accent" />
       <h1 className="mt-4 text-xl font-bold">Supabase n&apos;est pas configuré</h1>
       <p className="mt-2 text-sm text-muted">
         L&apos;app a besoin d&apos;un projet Supabase pour charger les produits,
@@ -14,18 +14,18 @@ export function SetupNotice() {
       </p>
       <ol className="mt-6 space-y-2 text-left text-sm text-muted">
         <li>
-          1. Copiez <code className="text-gold">.env.example</code> en{" "}
-          <code className="text-gold">.env.local</code>.
+          1. Copiez <code className="text-accent">.env.example</code> en{" "}
+          <code className="text-accent">.env.local</code>.
         </li>
         <li>
           2. Renseignez{" "}
-          <code className="text-gold">NEXT_PUBLIC_SUPABASE_URL</code> et{" "}
-          <code className="text-gold">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>.
+          <code className="text-accent">NEXT_PUBLIC_SUPABASE_URL</code> et{" "}
+          <code className="text-accent">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>.
         </li>
         <li>3. Relancez le serveur de développement.</li>
       </ol>
       <p className="mt-6 text-xs text-muted">
-        La vitrine publique (<code className="text-gold">/</code>) fonctionne sans
+        La vitrine publique (<code className="text-accent">/</code>) fonctionne sans
         cette configuration.
       </p>
     </div>

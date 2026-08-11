@@ -12,7 +12,7 @@ export function LandingHeader({ connected }: { connected: boolean }) {
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:py-4 2xl:max-w-[1440px]">
         <Link
           href="/"
-          className="press flex shrink-0 items-center gap-2 text-lg font-bold text-gold lg:text-xl"
+          className="press flex shrink-0 items-center gap-2 text-lg font-bold text-accent lg:text-xl"
         >
           <Sparkles className="h-5 w-5" />
           DreamTeamShop
@@ -20,9 +20,9 @@ export function LandingHeader({ connected }: { connected: boolean }) {
 
         <Link
           href="/play/search"
-          className="press group ml-auto flex min-w-0 flex-1 items-center gap-2 rounded-full border border-border bg-surface/70 px-4 py-2 text-sm text-muted transition-colors hover:border-gold/60 sm:max-w-md"
+          className="press group ml-auto flex min-w-0 flex-1 items-center gap-2 rounded-full border border-border bg-surface/70 px-4 py-2 text-sm text-muted transition-colors hover:border-accent/60 sm:max-w-md"
         >
-          <Search className="h-4 w-4 shrink-0 transition-colors group-hover:text-gold" />
+          <Search className="h-4 w-4 shrink-0 transition-colors group-hover:text-accent" />
           <span className="truncate">Rechercher un produit…</span>
         </Link>
 
@@ -38,7 +38,7 @@ export function LandingHeader({ connected }: { connected: boolean }) {
           {connected ? (
             <Link
               href="/play/account"
-              className="press sheen rounded-full bg-gold px-4 py-2 text-sm font-semibold text-black"
+              className="press rounded-full bg-accent px-4 py-2 text-sm font-semibold text-on-accent"
             >
               Mon compte
             </Link>
@@ -46,7 +46,7 @@ export function LandingHeader({ connected }: { connected: boolean }) {
             <>
               <Link
                 href="/play/login"
-                className="press inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-2 text-sm transition-colors hover:border-gold hover:text-gold"
+                className="press inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-2 text-sm transition-colors hover:border-accent hover:text-accent"
               >
                 <LogIn className="h-4 w-4" />
                 <span className="hidden xs:inline">Se connecter</span>
@@ -54,7 +54,7 @@ export function LandingHeader({ connected }: { connected: boolean }) {
               </Link>
               <Link
                 href="/play/register"
-                className="press sheen hidden rounded-full bg-gold px-4 py-2 text-sm font-semibold text-black sm:inline-block"
+                className="press hidden rounded-full bg-accent px-4 py-2 text-sm font-semibold text-on-accent sm:inline-block"
               >
                 Créer un compte
               </Link>

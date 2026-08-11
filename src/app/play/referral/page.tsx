@@ -77,25 +77,25 @@ export default function ReferralPage() {
       {profile?.referral_code ? (
         <div className="mt-6 rounded-xl border border-border bg-surface p-6 text-center">
           <p className="text-sm text-muted">Votre code</p>
-          <p className="mt-2 text-3xl font-bold tracking-[0.2em] text-gold">
+          <p className="mt-2 text-3xl font-bold tracking-[0.2em] text-accent">
             {profile.referral_code}
           </p>
           <button
             onClick={copy}
-            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm hover:border-gold"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm hover:border-accent"
           >
             <Copy className="h-4 w-4" /> {copied ? "Copié !" : "Copier"}
           </button>
         </div>
       ) : (
         <div className="mt-6 rounded-xl border border-border bg-surface p-6 text-center">
-          <Gift className="mx-auto h-8 w-8 text-gold" />
+          <Gift className="mx-auto h-8 w-8 text-accent" />
           <p className="mt-3 text-sm text-muted">
             Connectez-vous pour obtenir votre code de parrainage.
           </p>
           <Link
             href="/play/login"
-            className="mt-4 inline-block rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-black"
+            className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent"
           >
             Se connecter
           </Link>
@@ -121,7 +121,7 @@ export default function ReferralPage() {
             <button
               type="submit"
               disabled={redeeming || !sponsorCode.trim()}
-              className="rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-50"
             >
               {redeeming ? "…" : "Valider"}
             </button>
@@ -133,8 +133,8 @@ export default function ReferralPage() {
       )}
 
       {myRank != null && (
-        <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-gold bg-gold/10 p-4 font-semibold">
-          <Trophy className="h-5 w-5 text-gold" /> Votre rang : #{myRank}
+        <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-accent bg-accent/10 p-4 font-semibold">
+          <Trophy className="h-5 w-5 text-accent" /> Votre rang : #{myRank}
         </div>
       )}
 
@@ -161,7 +161,7 @@ export default function ReferralPage() {
                     className="h-8 w-8 rounded-full object-cover"
                   />
                 ) : (
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/20 text-xs font-bold text-gold">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/20 text-xs font-bold text-accent">
                     {entry.username.charAt(0).toUpperCase()}
                   </span>
                 )}

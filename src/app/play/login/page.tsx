@@ -42,7 +42,7 @@ function LoginInner() {
   }
 
   const field =
-    "w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none transition-colors focus:border-gold";
+    "w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none transition-colors focus:border-accent";
 
   return (
     <div className="animate-rise mx-auto max-w-sm py-10">
@@ -71,7 +71,7 @@ function LoginInner() {
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={loading}
-          className="press sheen w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+          className="press w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
         >
           {loading ? "Connexion…" : "Se connecter"}
         </button>
@@ -87,7 +87,7 @@ function LoginInner() {
 
       <p className="mt-6 text-center text-sm text-muted">
         Pas de compte ?{" "}
-        <Link href="/play/register" className="underline-grow text-gold">
+        <Link href="/play/register" className="underline-grow text-accent">
           Créer un compte
         </Link>
       </p>

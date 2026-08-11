@@ -51,7 +51,7 @@ export function GoogleButton({
         type="button"
         onClick={signIn}
         disabled={loading}
-        className="press flex w-full items-center justify-center gap-3 rounded-full border border-border bg-surface py-3 font-semibold transition-colors hover:border-gold disabled:opacity-60"
+        className="press flex w-full items-center justify-center gap-3 rounded-full border border-border bg-surface py-3 font-semibold transition-colors hover:border-accent disabled:opacity-60"
       >
         <GoogleMark />
         {loading ? "Redirection…" : label}

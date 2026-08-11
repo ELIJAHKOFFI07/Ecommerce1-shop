@@ -62,7 +62,7 @@ export function ChartCard({
         {table && (
           <button
             onClick={() => setShowTable((v) => !v)}
-            className="shrink-0 rounded-lg border border-border p-1.5 text-muted transition-colors hover:border-gold hover:text-gold"
+            className="shrink-0 rounded-lg border border-border p-1.5 text-muted transition-colors hover:border-accent hover:text-accent"
             aria-label={
               showTable ? "Afficher le graphique" : "Afficher le tableau"
             }

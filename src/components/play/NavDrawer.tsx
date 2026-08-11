@@ -64,7 +64,7 @@ export function NavDrawer({
                 <p className="truncate font-semibold">
                   {profile.full_name ?? profile.username}
                 </p>
-                <p className="text-xs text-gold">
+                <p className="text-xs text-accent">
                   {ROLE_LABELS[roleOf(profile) ?? "user"]} ·{" "}
                   {profile.loyalty_points} points
                 </p>
@@ -87,7 +87,7 @@ export function NavDrawer({
             <Link
               href="/play/login"
               onClick={onClose}
-              className="block rounded-full bg-gold py-2.5 text-center text-sm font-semibold text-black"
+              className="block rounded-full bg-accent py-2.5 text-center text-sm font-semibold text-on-accent"
             >
               Se connecter
             </Link>
@@ -113,11 +113,11 @@ export function NavDrawer({
                           onClick={onClose}
                           className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm ${
                             active
-                              ? "bg-gold/10 text-gold"
+                              ? "bg-accent/10 text-accent"
                               : "hover:bg-surface-2"
                           }`}
                         >
-                          <Icon className="h-4 w-4 shrink-0 text-gold" />
+                          <Icon className="h-4 w-4 shrink-0 text-accent" />
                           {label}
                         </Link>
                       </li>

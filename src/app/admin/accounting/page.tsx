@@ -78,7 +78,7 @@ export default function AccountingPage() {
             type="date"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-gold"
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
           />
         </label>
         <label className="text-sm">
@@ -87,7 +87,7 @@ export default function AccountingPage() {
             type="date"
             value={to}
             onChange={(e) => setTo(e.target.value)}
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-gold"
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
           />
         </label>
       </div>
@@ -185,7 +185,7 @@ export default function AccountingPage() {
                       </td>
                       <td className="p-3">{r.orders_count}</td>
                       <td className="p-3">{formatFcfa(r.gmv)}</td>
-                      <td className="p-3 text-gold">{formatFcfa(r.commission)}</td>
+                      <td className="p-3 text-accent">{formatFcfa(r.commission)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -214,7 +214,7 @@ export default function AccountingPage() {
                       <td className="p-3">{s.shop_name}</td>
                       <td className="p-3">{s.orders_count}</td>
                       <td className="p-3">{formatFcfa(s.gmv)}</td>
-                      <td className="p-3 text-gold">{formatFcfa(s.commission)}</td>
+                      <td className="p-3 text-accent">{formatFcfa(s.commission)}</td>
                       <td className="p-3">{formatFcfa(s.payout)}</td>
                     </tr>
                   ))}
@@ -245,7 +245,7 @@ export default function AccountingPage() {
                     <tr key={w.user_id} className="border-t border-border">
                       <td className="p-3">{w.username}</td>
                       <td className="p-3 text-muted">{w.shop_name ?? "—"}</td>
-                      <td className="p-3 font-semibold text-gold">
+                      <td className="p-3 font-semibold text-accent">
                         {formatFcfa(w.balance)}
                       </td>
                       <td className="p-3">{formatFcfa(w.lifetime_credit)}</td>
@@ -266,7 +266,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-6">
       <p className="text-sm text-muted">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-gold">{value}</p>
+      <p className="mt-2 text-2xl font-bold text-accent">{value}</p>
     </div>
   );
 }

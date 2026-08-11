@@ -14,8 +14,8 @@ export function GhostCard({
 }) {
   return (
     <Reveal type="fade" delay={delay}>
-      <div className="group relative overflow-hidden rounded-2xl border border-border bg-surface p-8 transition-colors hover:border-gold/50">
-        <span className="pointer-events-none absolute -right-4 -top-10 select-none text-[9rem] font-bold leading-none text-surface-2 transition-colors group-hover:text-gold/10">
+      <div className="group relative overflow-hidden rounded-2xl border border-border bg-surface p-8 transition-colors hover:border-accent/50">
+        <span className="pointer-events-none absolute -right-4 -top-10 select-none text-[9rem] font-bold leading-none text-surface-2 transition-colors group-hover:text-accent/10">
           {number}
         </span>
         <div className="relative">

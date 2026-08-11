@@ -38,17 +38,25 @@ Google affiche 16 caractères en 4 groupes (`abcd efgh ijkl mnop`).
 
 ## Étape 3 — Poser les secrets
 
+> ⚠️ **Ce fichier est suivi par git.** N'y collez jamais vos vraies valeurs :
+> elles se retrouveraient publiées au prochain commit. Les valeurs réelles
+> vivent dans `all_secrets.md`, qui est exclu du dépôt.
+
 ```powershell
 npx supabase login
-npx supabase link --project-ref pwkcwtgbngkcxgduhopy
+npx supabase link --project-ref <votre-ref-projet>
 
 npx supabase secrets set SMTP_HOST=smtp.gmail.com
 npx supabase secrets set SMTP_PORT=465
-npx supabase secrets set SMTP_USER=votre.adresse@gmail.com
-npx supabase secrets set SMTP_PASSWORD=abcdefghijklmnop
+npx supabase secrets set SMTP_USER=<votre.adresse@gmail.com>
+npx supabase secrets set SMTP_PASSWORD="<mot de passe d'application>"
 npx supabase secrets set SMTP_FROM="DreamTeamShop <votre.adresse@gmail.com>"
-npx supabase secrets set APP_URL=https://ecommerce1-shop.vercel.app
+npx supabase secrets set APP_URL=<votre URL de production>
 ```
+
+Le mot de passe d'application s'écrit indifféremment avec ou sans les
+espaces des groupes de quatre : Google les ignore. Entre guillemets s'il en
+contient.
 
 Si `WEBHOOK_SECRET` n'est pas encore posé (voir `NOTIFICATIONS_SETUP.md`),
 ajoutez-le : sans lui la fonction rejette tout par 401.

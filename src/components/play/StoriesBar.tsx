@@ -32,7 +32,7 @@ export function StoriesBar() {
             onClick={() => setOpenShop(shop)}
             className="flex w-16 shrink-0 flex-col items-center gap-1"
           >
-            <span className="rounded-full bg-gradient-to-br from-gold to-gold-dark p-[2.5px]">
+            <span className="rounded-full bg-gradient-to-br from-accent to-accent-dark p-[2.5px]">
               <span className="block overflow-hidden rounded-full border-2 border-background">
                 {shop.logo_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -42,7 +42,7 @@ export function StoriesBar() {
                     className="h-14 w-14 object-cover"
                   />
                 ) : (
-                  <span className="flex h-14 w-14 items-center justify-center bg-surface-2 text-lg font-bold text-gold">
+                  <span className="flex h-14 w-14 items-center justify-center bg-surface-2 text-lg font-bold text-accent">
                     {shop.name.charAt(0).toUpperCase()}
                   </span>
                 )}

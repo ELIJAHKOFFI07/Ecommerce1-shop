@@ -14,7 +14,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/play/product/${product.id}`}
-      className="lift press group block overflow-hidden rounded-xl border border-border bg-surface hover:border-gold/50"
+      className="lift press group block overflow-hidden rounded-xl border border-border bg-surface hover:border-accent/50"
     >
       <div className="relative aspect-square overflow-hidden bg-surface-2">
         {cover ? (
@@ -49,11 +49,11 @@ export function ProductCard({ product }: { product: Product }) {
         )}
       </div>
       <div className="p-3 lg:p-4">
-        <p className="line-clamp-2 text-sm font-medium transition-colors group-hover:text-gold lg:text-base">
+        <p className="line-clamp-2 text-sm font-medium transition-colors group-hover:text-accent lg:text-base">
           {product.title}
         </p>
         <div className="mt-1 flex items-baseline gap-2">
-          <span className="font-bold text-gold lg:text-lg">{formatFcfa(product.price)}</span>
+          <span className="font-bold text-accent lg:text-lg">{formatFcfa(product.price)}</span>
           {hasDiscount && (
             <span className="text-xs text-muted line-through">
               {formatFcfa(product.compare_at_price!)}

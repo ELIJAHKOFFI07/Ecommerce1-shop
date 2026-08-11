@@ -71,7 +71,7 @@ export function AdminNav() {
     <>
       <Link
         href="/admin"
-        className="mb-6 block text-lg font-bold text-gold"
+        className="mb-6 block text-lg font-bold text-accent"
       >
         DreamTeamShop <span className="text-muted">admin</span>
       </Link>
@@ -91,7 +91,7 @@ export function AdminNav() {
                     onClick={() => setOpen(false)}
                     className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
                       isActive(href)
-                        ? "bg-gold/10 font-medium text-gold"
+                        ? "bg-accent/10 font-medium text-accent"
                         : "text-muted hover:bg-surface-2 hover:text-foreground"
                     }`}
                   >
@@ -110,7 +110,7 @@ export function AdminNav() {
         {/* Sortie explicite du back-office vers la boutique publique. */}
         <Link
           href="/play"
-          className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm hover:border-gold hover:text-gold"
+          className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent hover:text-accent"
         >
           <ArrowLeft className="h-4 w-4" />
           Retour à la boutique
@@ -130,17 +130,17 @@ export function AdminNav() {
       <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-border bg-background/90 px-4 py-3 backdrop-blur-md md:hidden">
         <button
           onClick={() => setOpen(true)}
-          className="rounded-lg border border-border p-2 hover:border-gold"
+          className="rounded-lg border border-border p-2 hover:border-accent"
           aria-label="Ouvrir le menu"
         >
           <Menu className="h-4 w-4" />
         </button>
-        <span className="font-bold text-gold">
+        <span className="font-bold text-accent">
           DreamTeamShop <span className="text-muted">admin</span>
         </span>
         <Link
           href="/play"
-          className="ml-auto text-xs text-muted hover:text-gold"
+          className="ml-auto text-xs text-muted hover:text-accent"
         >
           Boutique →
         </Link>

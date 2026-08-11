@@ -84,7 +84,7 @@ export function PushToggle() {
         <div className="min-w-0">
           <p className="flex items-center gap-2 text-sm font-medium">
             {subscribed ? (
-              <BellRing className="h-4 w-4 text-gold" />
+              <BellRing className="h-4 w-4 text-accent" />
             ) : (
               <Bell className="h-4 w-4 text-muted" />
             )}
@@ -101,7 +101,7 @@ export function PushToggle() {
           className={`press shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors disabled:opacity-50 ${
             subscribed
               ? "border border-border hover:border-red-500 hover:text-red-400"
-              : "bg-gold text-black"
+              : "bg-accent text-on-accent"
           }`}
         >
           {busy ? "…" : subscribed ? "Désactiver" : "Activer"}
@@ -116,7 +116,7 @@ export function PushToggle() {
         </p>
       )}
 
-      {message && <p className="mt-3 text-xs text-gold">{message}</p>}
+      {message && <p className="mt-3 text-xs text-accent">{message}</p>}
     </div>
   );
 }

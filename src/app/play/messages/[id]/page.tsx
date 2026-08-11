@@ -96,7 +96,7 @@ export default function ConversationPage({
     <div className="mx-auto flex max-w-2xl flex-col">
       <Link
         href="/play/messages"
-        className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-gold"
+        className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-accent"
       >
         <ArrowLeft className="h-4 w-4" /> Messages
       </Link>
@@ -117,7 +117,7 @@ export default function ConversationPage({
                 <span
                   className={`max-w-[75%] whitespace-pre-wrap rounded-2xl px-4 py-2 text-sm ${
                     mine
-                      ? "bg-gold text-black"
+                      ? "bg-accent text-on-accent"
                       : "border border-border bg-surface"
                   }`}
                 >
@@ -142,7 +142,7 @@ export default function ConversationPage({
         <button
           type="submit"
           disabled={sending || !draft.trim()}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold text-black disabled:opacity-50"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-on-accent disabled:opacity-50"
           aria-label="Envoyer"
         >
           <Send className="h-4 w-4" />

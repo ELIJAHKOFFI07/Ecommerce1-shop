@@ -68,7 +68,7 @@ export function AdminProductRow({
         <button
           disabled={busy}
           onClick={saveEdit}
-          className="rounded-md border border-gold p-1 text-gold"
+          className="rounded-md border border-accent p-1 text-accent"
           aria-label="Valider"
         >
           <Check className="h-3.5 w-3.5" />
@@ -88,7 +88,7 @@ export function AdminProductRow({
     <div className="flex flex-wrap gap-2">
       <button
         onClick={() => setEditing(true)}
-        className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs hover:border-gold hover:text-gold"
+        className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs hover:border-accent hover:text-accent"
       >
         <Pencil className="h-3 w-3" /> Modifier
       </button>
@@ -105,7 +105,7 @@ export function AdminProductRow({
         <button
           disabled={busy}
           onClick={() => setStatus("active")}
-          className="rounded-md border border-border px-2 py-1 text-xs hover:border-gold hover:text-gold"
+          className="rounded-md border border-border px-2 py-1 text-xs hover:border-accent hover:text-accent"
         >
           Réactiver
         </button>

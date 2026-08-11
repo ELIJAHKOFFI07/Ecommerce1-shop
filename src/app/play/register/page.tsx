@@ -48,7 +48,7 @@ export default function RegisterPage() {
         </p>
         <Link
           href="/play/login"
-          className="mt-6 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+          className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -82,7 +82,7 @@ export default function RegisterPage() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Nom d'utilisateur"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         />
         <input
           type="email"
@@ -90,7 +90,7 @@ export default function RegisterPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         />
         <input
           type="password"
@@ -99,32 +99,32 @@ export default function RegisterPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Mot de passe (8 caractères min.)"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         />
         <input
           type="tel"
           value={whatsapp}
           onChange={(e) => setWhatsapp(e.target.value)}
           placeholder="Numéro WhatsApp (ex : +225 07 00 00 00 00)"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
         />
         <input
           value={referral}
           onChange={(e) => setReferral(e.target.value)}
           placeholder="Code de parrainage (optionnel)"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 uppercase outline-none focus:border-gold"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 uppercase outline-none focus:border-accent"
         />
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={loading}
-          className="press sheen w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+          className="press w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
         >
           {loading ? "Création…" : "Créer mon compte"}
         </button>
       </form>
       <p className="mt-6 text-center text-sm text-muted">
         Déjà inscrit ?{" "}
-        <Link href="/play/login" className="text-gold">
+        <Link href="/play/login" className="text-accent">
           Se connecter
         </Link>
       </p>

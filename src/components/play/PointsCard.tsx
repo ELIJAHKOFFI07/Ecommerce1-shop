@@ -48,14 +48,14 @@ export function PointsCard({
 
   return (
     <div className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
-      <Star className="h-5 w-5 shrink-0 text-gold" />
+      <Star className="h-5 w-5 shrink-0 text-accent" />
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium">{points} points fidélité</p>
         <p className="text-xs text-muted">
           ≈ {formatFcfa(points * POINTS_FCFA_PER_POINT)} en coupons
         </p>
         {result && (
-          <p className="mt-1 text-xs text-gold">
+          <p className="mt-1 text-xs text-accent">
             Coupon créé : <span className="font-mono font-bold">{result}</span> —
             utilisez-le au paiement.
           </p>
@@ -65,7 +65,7 @@ export function PointsCard({
       <button
         onClick={redeem}
         disabled={busy || points < POINTS_MIN_REDEEM}
-        className="rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-40"
+        className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-40"
       >
         Convertir
       </button>

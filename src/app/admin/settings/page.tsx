@@ -86,7 +86,7 @@ export default function AdminSettingsPage() {
             max={100}
             value={commission}
             onChange={(e) => setCommission(e.target.value)}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
           />
           <p className="mt-1 text-xs text-muted">
             Prélevée sur chaque vente livrée avant crédit du portefeuille vendeur.
@@ -103,7 +103,7 @@ export default function AdminSettingsPage() {
             min={0}
             value={minWithdrawal}
             onChange={(e) => setMinWithdrawal(e.target.value)}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
           />
         </div>
 
@@ -115,7 +115,7 @@ export default function AdminSettingsPage() {
             value={supportPhone}
             onChange={(e) => setSupportPhone(e.target.value)}
             placeholder="+225 07 00 00 00 00"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
           />
         </div>
 
@@ -125,7 +125,7 @@ export default function AdminSettingsPage() {
             value={supportEmail}
             onChange={(e) => setSupportEmail(e.target.value)}
             placeholder="support@dreamteamshop.app"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
           />
         </div>
 
@@ -148,7 +148,7 @@ export default function AdminSettingsPage() {
             onChange={(e) => setAnnouncement(e.target.value)}
             rows={3}
             placeholder="Ex : Livraison offerte tout le week-end !"
-            className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+            className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
           />
         </div>
 
@@ -158,7 +158,7 @@ export default function AdminSettingsPage() {
         <button
           onClick={save}
           disabled={saving}
-          className="w-full rounded-lg bg-gold py-2.5 text-sm font-semibold text-black disabled:opacity-40"
+          className="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-on-accent disabled:opacity-40"
         >
           {saving ? "Enregistrement…" : "Enregistrer"}
         </button>

@@ -64,7 +64,7 @@ function PasswordInner() {
         <p className="text-lg font-medium">Connexion requise</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+          className="mt-4 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -73,17 +73,17 @@ function PasswordInner() {
   }
 
   const field =
-    "w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-gold";
+    "w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent";
 
   return (
     <div className="mx-auto max-w-sm">
-      <KeyRound className="mx-auto h-8 w-8 text-gold" />
+      <KeyRound className="mx-auto h-8 w-8 text-accent" />
       <h1 className="mt-4 text-center text-2xl font-bold">
         {forced ? "Choisissez un nouveau mot de passe" : "Changer mon mot de passe"}
       </h1>
 
       {forced && (
-        <p className="mt-2 rounded-xl border border-gold/40 bg-gold/10 p-3 text-center text-sm">
+        <p className="mt-2 rounded-xl border border-accent/40 bg-accent/10 p-3 text-center text-sm">
           Votre mot de passe a été réinitialisé par un administrateur. Vous
           devez en choisir un nouveau pour continuer.
         </p>
@@ -110,7 +110,7 @@ function PasswordInner() {
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={saving}
-          className="w-full rounded-full bg-gold py-3 font-semibold text-black disabled:opacity-50"
+          className="w-full rounded-full bg-accent py-3 font-semibold text-on-accent disabled:opacity-50"
         >
           {saving ? "Enregistrement…" : "Enregistrer"}
         </button>
@@ -119,7 +119,7 @@ function PasswordInner() {
       {!forced && (
         <Link
           href="/play/account"
-          className="mt-4 block text-center text-sm text-muted hover:text-gold"
+          className="mt-4 block text-center text-sm text-muted hover:text-accent"
         >
           Annuler
         </Link>

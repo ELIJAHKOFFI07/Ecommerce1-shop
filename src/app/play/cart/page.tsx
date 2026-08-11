@@ -28,7 +28,7 @@ export default function CartPage() {
         <p className="mt-1 text-muted">Parcourez les nouveautés et ajoutez vos coups de cœur.</p>
         <Link
           href="/play"
-          className="mt-6 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+          className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
         >
           Découvrir
         </Link>
@@ -63,7 +63,7 @@ export default function CartPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="line-clamp-1 font-medium">{line.title}</p>
-                <p className="text-sm text-gold">{formatFcfa(line.unitPrice)}</p>
+                <p className="text-sm text-accent">{formatFcfa(line.unitPrice)}</p>
               </div>
               <div className="flex items-center gap-1 rounded-lg border border-border">
                 <button
@@ -102,19 +102,19 @@ export default function CartPage() {
         </div>
         <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
           <span className="font-medium">Sous-total</span>
-          <span className="text-lg font-bold text-gold">
+          <span className="text-lg font-bold text-accent">
             {formatFcfa(subtotal)}
           </span>
         </div>
         <Link
           href="/play/checkout"
-          className="press sheen mt-5 block rounded-full bg-gold py-3 text-center font-semibold text-black"
+          className="press mt-5 block rounded-full bg-accent py-3 text-center font-semibold text-on-accent"
         >
           Passer la commande
         </Link>
         <Link
           href="/play"
-          className="press mt-3 block rounded-full border border-border py-2.5 text-center text-sm transition-colors hover:border-gold hover:text-gold"
+          className="press mt-3 block rounded-full border border-border py-2.5 text-center text-sm transition-colors hover:border-accent hover:text-accent"
         >
           Continuer mes achats
         </Link>

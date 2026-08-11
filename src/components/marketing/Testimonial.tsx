@@ -18,13 +18,13 @@ export function Testimonial({
       <p className="mb-6 text-lg text-foreground">&ldquo;{quote}&rdquo;</p>
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <p className="font-semibold text-gold">{author}</p>
+          <p className="font-semibold text-accent">{author}</p>
           <p className="text-sm text-muted">{role}</p>
         </div>
       </div>
       <div className="h-1 w-full overflow-hidden rounded-full bg-surface-2">
         <motion.div
-          className="h-full bg-gold"
+          className="h-full bg-accent"
           initial={{ width: 0 }}
           whileInView={{ width: `${progress}%` }}
           viewport={{ once: true }}

@@ -85,7 +85,7 @@ function OrdersInner() {
         <p className="text-lg font-medium">Connexion requise</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-gold px-6 py-2.5 font-semibold text-black"
+          className="mt-4 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -108,7 +108,7 @@ function OrdersInner() {
                 <span className="font-medium">
                   #{o.id.slice(0, 8).toUpperCase()}
                 </span>
-                <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs text-gold">
+                <span className="rounded-full bg-accent/15 px-2 py-0.5 text-xs text-accent">
                   {ORDER_STATUS_LABELS[o.status]}
                 </span>
               </div>
@@ -128,16 +128,16 @@ function OrdersInner() {
                   href={whatsappLink(o.shops.whatsapp, o)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:border-gold"
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:border-accent"
                 >
-                  <MessageCircle className="h-3.5 w-3.5 text-gold" />
+                  <MessageCircle className="h-3.5 w-3.5 text-accent" />
                   Prévenir le vendeur sur WhatsApp
                 </a>
               )}
               {pickupCodes[o.id] && (
-                <div className="mt-3 rounded-lg border border-gold bg-gold/10 p-3 text-center">
+                <div className="mt-3 rounded-lg border border-accent bg-accent/10 p-3 text-center">
                   <p className="text-xs font-semibold">Votre code de retrait</p>
-                  <p className="text-2xl font-bold tracking-[0.4em] text-gold">
+                  <p className="text-2xl font-bold tracking-[0.4em] text-accent">
                     {pickupCodes[o.id]}
                   </p>
                   <p className="mt-1 text-[11px] text-muted">

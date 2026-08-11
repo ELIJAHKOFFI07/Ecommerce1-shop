@@ -92,7 +92,7 @@ export default function ProductPage({
                 key={img.id}
                 onClick={() => setImageIndex(i)}
                 className={`h-16 w-16 shrink-0 overflow-hidden rounded-lg border ${
-                  i === imageIndex ? "border-gold" : "border-border"
+                  i === imageIndex ? "border-accent" : "border-border"
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -107,7 +107,7 @@ export default function ProductPage({
       <div>
         <h1 className="text-2xl font-bold">{product.title}</h1>
         <div className="mt-2 flex items-baseline gap-3">
-          <span className="text-2xl font-bold text-gold">
+          <span className="text-2xl font-bold text-accent">
             {formatFcfa(price)}
           </span>
           {product.compare_at_price != null &&
@@ -144,7 +144,7 @@ export default function ProductPage({
                   onClick={() => setVariantId(variantId === v.id ? null : v.id)}
                   className={`rounded-full border px-3 py-1 text-sm disabled:opacity-40 ${
                     variantId === v.id
-                      ? "border-gold text-gold"
+                      ? "border-accent text-accent"
                       : "border-border text-muted"
                   }`}
                 >
@@ -167,7 +167,7 @@ export default function ProductPage({
             </p>
             <Link
               href="/play/sell"
-              className="mt-3 inline-block rounded-full border border-border px-5 py-2 text-sm hover:border-gold"
+              className="mt-3 inline-block rounded-full border border-border px-5 py-2 text-sm hover:border-accent"
             >
               Gérer mes produits
             </Link>
@@ -183,7 +183,7 @@ export default function ProductPage({
               setAdded(true);
               setTimeout(() => setAdded(false), 1500);
             }}
-            className="mt-6 w-full rounded-full bg-gold py-3 font-semibold text-black transition-transform hover:scale-[1.02] disabled:opacity-40"
+            className="mt-6 w-full rounded-full bg-accent py-3 font-semibold text-on-accent transition-transform hover:scale-[1.02] disabled:opacity-40"
           >
             {added ? "Ajouté ✓" : "Ajouter au panier"}
           </button>
@@ -203,14 +203,14 @@ export default function ProductPage({
         {product.shops && (
           <Link
             href={`/play/shop/${product.shop_id}`}
-            className="mt-6 flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-gold/50"
+            className="mt-6 flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-accent/50"
           >
-            <Store className="h-5 w-5 text-gold" />
+            <Store className="h-5 w-5 text-accent" />
             <div>
               <p className="flex items-center gap-1 font-medium">
                 {product.shops.name}
                 {product.shops.identity_verified && (
-                  <ShieldCheck className="h-4 w-4 text-gold" />
+                  <ShieldCheck className="h-4 w-4 text-accent" />
                 )}
               </p>
               <p className="text-xs text-muted">{product.shops.city}</p>
@@ -231,7 +231,7 @@ export default function ProductPage({
                     <span className="font-medium">
                       {r.profiles?.full_name ?? r.profiles?.username ?? "Client"}
                     </span>
-                    <span className="text-gold">
+                    <span className="text-accent">
                       {"★".repeat(r.rating)}
                     </span>
                   </div>

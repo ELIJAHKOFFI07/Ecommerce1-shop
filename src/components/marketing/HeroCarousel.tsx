@@ -71,7 +71,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
         {/* Texte — remplacé à chaque diapositive, d'où la clé sur l'index
             qui relance l'animation d'entrée. */}
         <div key={index} className="animate-rise order-2 md:order-1">
-          <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-[11px] font-medium text-gold">
+          <span className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-medium text-accent">
             ✦ Sélection du moment
           </span>
           <h2 className="mt-4 line-clamp-2 text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl">
@@ -83,12 +83,12 @@ export function HeroCarousel({ products }: { products: Product[] }) {
               <span className="text-foreground">{active.shops.name}</span>
             </p>
           )}
-          <p className="mt-4 text-3xl font-bold text-gold">
+          <p className="mt-4 text-3xl font-bold text-accent">
             {formatFcfa(active.price)}
           </p>
           <Link
             href={`/play/product/${active.id}`}
-            className="press sheen mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 font-semibold text-black"
+            className="press mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-on-accent"
           >
             Voir le produit
             <ArrowRight className="h-4 w-4" />
@@ -123,14 +123,14 @@ export function HeroCarousel({ products }: { products: Product[] }) {
       <div className="flex items-center gap-3 border-t border-border px-6 py-3 sm:px-8">
         <button
           onClick={() => go(index - 1)}
-          className="press rounded-full border border-border p-2 transition-colors hover:border-gold hover:text-gold"
+          className="press rounded-full border border-border p-2 transition-colors hover:border-accent hover:text-accent"
           aria-label="Produit précédent"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
         <button
           onClick={() => go(index + 1)}
-          className="press rounded-full border border-border p-2 transition-colors hover:border-gold hover:text-gold"
+          className="press rounded-full border border-border p-2 transition-colors hover:border-accent hover:text-accent"
           aria-label="Produit suivant"
         >
           <ChevronRight className="h-4 w-4" />
@@ -146,7 +146,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
               aria-label={`Aller au produit ${i + 1} sur ${slides.length}`}
               aria-current={i === index}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === index ? "w-7 bg-gold" : "w-2.5 bg-border hover:bg-muted"
+                i === index ? "w-7 bg-accent" : "w-2.5 bg-border hover:bg-muted"
               }`}
             />
           ))}
@@ -154,7 +154,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
 
         <button
           onClick={() => setStopped((s) => !s)}
-          className="press rounded-full border border-border p-2 transition-colors hover:border-gold hover:text-gold"
+          className="press rounded-full border border-border p-2 transition-colors hover:border-accent hover:text-accent"
           aria-label={
             playing ? "Arrêter le défilement" : "Relancer le défilement"
           }

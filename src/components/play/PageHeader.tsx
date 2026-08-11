@@ -41,7 +41,7 @@ export function PageHeader({
         <button
           onClick={goBack}
           aria-label="Retour"
-          className="press mt-0.5 shrink-0 rounded-full border border-border p-2 text-muted transition-colors hover:border-gold hover:text-gold"
+          className="press mt-0.5 shrink-0 rounded-full border border-border p-2 text-muted transition-colors hover:border-accent hover:text-accent"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>

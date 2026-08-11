@@ -96,13 +96,13 @@ export default function NotificationsPage() {
   if (!connected) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
-        <Bell className="mx-auto h-8 w-8 text-gold" />
+        <Bell className="mx-auto h-8 w-8 text-accent" />
         <p className="mt-3 text-sm text-muted">
           Connectez-vous pour voir vos notifications.
         </p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-black"
+          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -119,7 +119,7 @@ export default function NotificationsPage() {
         {unread > 0 && (
           <button
             onClick={markAllRead}
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-sm hover:border-gold"
+            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-sm hover:border-accent"
           >
             <CheckCheck className="h-4 w-4" /> Tout marquer comme lu
           </button>
@@ -138,7 +138,7 @@ export default function NotificationsPage() {
               className={`flex gap-3 rounded-xl border p-3 ${
                 n.read_at
                   ? "border-border bg-surface"
-                  : "border-gold bg-gold/10"
+                  : "border-accent bg-accent/10"
               }`}
             >
               <span className="text-xl">{TYPE_EMOJI[n.type] ?? "🔔"}</span>

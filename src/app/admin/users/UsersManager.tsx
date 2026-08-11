@@ -90,7 +90,7 @@ export function UsersManager({ users }: { users: Profile[] }) {
         <h1 className="text-2xl font-bold">Utilisateurs ({users.length})</h1>
         <button
           onClick={() => setCreating(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent"
         >
           <Plus className="h-4 w-4" /> Nouveau compte
         </button>
@@ -103,13 +103,13 @@ export function UsersManager({ users }: { users: Profile[] }) {
       )}
 
       {tempPassword && (
-        <div className="mb-4 rounded-lg border border-gold bg-gold/10 p-4">
+        <div className="mb-4 rounded-lg border border-accent bg-accent/10 p-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-sm font-semibold">
                 Mot de passe temporaire pour « {tempPassword.username} »
               </p>
-              <p className="mt-2 break-all font-mono text-lg text-gold">
+              <p className="mt-2 break-all font-mono text-lg text-accent">
                 {tempPassword.password}
               </p>
               <p className="mt-2 text-xs text-muted">
@@ -150,7 +150,7 @@ export function UsersManager({ users }: { users: Profile[] }) {
                       @{u.username}
                     </span>
                     {u.must_change_password && (
-                      <span className="mt-1 inline-block rounded bg-gold/15 px-1.5 py-0.5 text-[10px] text-gold">
+                      <span className="mt-1 inline-block rounded bg-accent/15 px-1.5 py-0.5 text-[10px] text-accent">
                         doit changer son mot de passe
                       </span>
                     )}
@@ -167,7 +167,7 @@ export function UsersManager({ users }: { users: Profile[] }) {
                       onChange={(e) =>
                         changeRole(u, e.target.value as UserRole)
                       }
-                      className="rounded-md border border-border bg-surface px-2 py-1 text-xs outline-none focus:border-gold disabled:opacity-50"
+                      className="rounded-md border border-border bg-surface px-2 py-1 text-xs outline-none focus:border-accent disabled:opacity-50"
                     >
                       {(Object.keys(ROLE_LABELS) as UserRole[]).map((r) => (
                         <option key={r} value={r}>
@@ -181,14 +181,14 @@ export function UsersManager({ users }: { users: Profile[] }) {
                       <button
                         onClick={() => setEditing(u)}
                         disabled={busyId === u.id}
-                        className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs hover:border-gold disabled:opacity-50"
+                        className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs hover:border-accent disabled:opacity-50"
                       >
                         <Pencil className="h-3 w-3" /> Modifier
                       </button>
                       <button
                         onClick={() => resetPassword(u)}
                         disabled={busyId === u.id}
-                        className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs hover:border-gold disabled:opacity-50"
+                        className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs hover:border-accent disabled:opacity-50"
                       >
                         <KeyRound className="h-3 w-3" /> Mot de passe
                       </button>
@@ -233,7 +233,7 @@ export function UsersManager({ users }: { users: Profile[] }) {
 }
 
 const FIELD =
-  "w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-gold";
+  "w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-accent";
 
 function UserDialog({
   user,
@@ -314,7 +314,7 @@ function UserDialog({
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={saving}
-          className="w-full rounded-full bg-gold py-2.5 font-semibold text-black disabled:opacity-50"
+          className="w-full rounded-full bg-accent py-2.5 font-semibold text-on-accent disabled:opacity-50"
         >
           {saving ? "Enregistrement…" : "Enregistrer"}
         </button>
@@ -400,7 +400,7 @@ function CreateUserDialog({
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           disabled={saving}
-          className="w-full rounded-full bg-gold py-2.5 font-semibold text-black disabled:opacity-50"
+          className="w-full rounded-full bg-accent py-2.5 font-semibold text-on-accent disabled:opacity-50"
         >
           {saving ? "Création…" : "Créer le compte"}
         </button>

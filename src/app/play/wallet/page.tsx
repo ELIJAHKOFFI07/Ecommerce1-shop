@@ -95,13 +95,13 @@ export default function WalletPage() {
   if (!connected) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
-        <Wallet className="mx-auto h-8 w-8 text-gold" />
+        <Wallet className="mx-auto h-8 w-8 text-accent" />
         <p className="mt-3 text-sm text-muted">
           Connectez-vous pour consulter votre portefeuille.
         </p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-black"
+          className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent"
         >
           Se connecter
         </Link>
@@ -119,7 +119,7 @@ export default function WalletPage() {
       <div className="space-y-6 lg:sticky lg:top-20">
       <div className="rounded-xl border border-border bg-surface p-6 text-center">
         <p className="text-sm text-muted">Solde disponible</p>
-        <p className="mt-2 text-3xl font-bold text-gold">{formatFcfa(balance)}</p>
+        <p className="mt-2 text-3xl font-bold text-accent">{formatFcfa(balance)}</p>
       </div>
 
       <form
@@ -152,7 +152,7 @@ export default function WalletPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-4 w-full rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-black disabled:opacity-50"
+          className="mt-4 w-full rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent disabled:opacity-50"
         >
           {submitting ? "Envoi…" : "Demander le retrait"}
         </button>
