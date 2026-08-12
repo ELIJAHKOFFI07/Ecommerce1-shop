@@ -95,6 +95,15 @@ Parse.Cloud.beforeSave("Shop", (request) => {
 
 Parse.Cloud.beforeSave("Product", async (request) => {
   const product = request.object;
+
+  // Le garde-fou de stock doit s'appliquer À CHAQUE écriture, y compris (et
+  // surtout) celles en master key : c'est exactement ainsi que placeOrder,
+  // advanceOrderStatus et adminAdjustStock décrémentent ou restituent le
+  // stock. Un `return` anticipé ici pour les appels master key — comme
+  // c'était le cas avant ce correctif — désactive silencieusement la
+  // protection anti-survente pour le seul chemin qui compte vraiment.
+  guardStock(product);
+
   if (request.master) return;
 
   if (!request.user) {
@@ -127,8 +136,6 @@ Parse.Cloud.beforeSave("Product", async (request) => {
     // arrondis de calcul de commission sur des valeurs non représentables.
     throw new Parse.Error(Parse.Error.VALIDATION_ERROR, "Prix invalide");
   }
-
-  guardStock(product);
 });
 
 /* ------------------------------------------------------------------ *
