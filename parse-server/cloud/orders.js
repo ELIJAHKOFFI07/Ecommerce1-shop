@@ -21,18 +21,12 @@
  */
 
 const { requireAdmin } = require("./roles");
+const { withLock } = require("./lock");
+const { loadSettings } = require("./settings");
 
 /** Génère le code de retrait à 6 chiffres (équivalent de gen_pickup_code). */
 function pickupCode() {
   return String(require("crypto").randomInt(0, 1_000_000)).padStart(6, "0");
-}
-
-async function loadSettings() {
-  const settings = await new Parse.Query("PlatformSettings").first({ useMasterKey: true });
-  return {
-    commissionPercent: settings?.get("commissionPercent") ?? 10,
-    minWithdrawal: settings?.get("minWithdrawal") ?? 5000,
-  };
 }
 
 /**
@@ -91,6 +85,21 @@ Parse.Cloud.define("placeOrder", async (request) => {
   const variantById = new Map(variants.map((v) => [v.id, v]));
 
   // ---- Réservation du stock, avant toute création ------------------------
+  //
+  // La première version de ce bloc utilisait `target.increment(...)` sur
+  // l'objet chargé au début de la fonction, avec un garde-fou `beforeSave`
+  // censé refuser un stock négatif. Un test de charge réel a montré que ça
+  // ne protège rien : `request.object.get("stock")` dans `beforeSave`, pour
+  // un champ modifié par `increment()`, reflète l'estimation calculée côté
+  // CLIENT à partir de la lecture du début de fonction — pas la valeur
+  // réelle en base au moment de l'écriture. Cinq commandes concurrentes qui
+  // lisent toutes stock=3 calculent chacune 3-1=2 en local ; le garde-fou
+  // voit 2 ≥ 0 cinq fois de suite, pendant que Mongo applique cinq $inc
+  // atomiques réels sur la vraie valeur — stock final observé : -2.
+  //
+  // Le correctif : verrouiller par produit/variante (lock.js), puis relire
+  // l'état frais DEPUIS LA BASE une fois le verrou obtenu — c'est cette
+  // lecture-là, pas l'objet du début de fonction, qui décide.
   const taken = []; // pour la compensation
   try {
     for (const item of items) {
@@ -98,11 +107,18 @@ Parse.Cloud.define("placeOrder", async (request) => {
       const target = item.variantId ? variantById.get(item.variantId) : byId.get(item.productId);
       if (!target) throw new Parse.Error(Parse.Error.VALIDATION_ERROR, "Variante introuvable");
 
-      target.increment("stock", -quantity);
-      // Le beforeSave de hooks.js rejette un stock négatif : c'est ce save-là
-      // qui échoue, pas une lecture antérieure devenue obsolète.
-      await target.save(null, { useMasterKey: true });
-      taken.push({ object: target, quantity });
+      const productTitle = item.variantId ? byId.get(item.productId)?.get("title") : target.get("title");
+
+      await withLock(`${target.className}:${target.id}`, async () => {
+        const fresh = await new Parse.Query(target.className).get(target.id, { useMasterKey: true });
+        const current = fresh.get("stock");
+        if (current < quantity) {
+          throw new Parse.Error(Parse.Error.VALIDATION_ERROR, `Stock insuffisant pour ${productTitle}`);
+        }
+        fresh.set("stock", current - quantity);
+        await fresh.save(null, { useMasterKey: true });
+        taken.push({ object: fresh, quantity });
+      });
     }
 
     // ---- Une commande par boutique ---------------------------------------

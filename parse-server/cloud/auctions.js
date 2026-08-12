@@ -1,13 +1,20 @@
+const { withLock } = require("./lock");
+
 /**
  * Enchères — équivalent de create_auction / place_bid / settle_expired_auctions.
  *
  * `place_bid` verrouillait la ligne (`for update`) pour que deux enchères
- * simultanées ne valident jamais toutes les deux sur la même base. Parse n'a
- * pas ce verrou : le garde-fou ci-dessous s'appuie sur `request.original`,
- * que Parse fournit dans `beforeSave` sur une mise à jour — c'est la valeur
- * telle qu'elle est **au moment du save**, pas celle lue en début de requête.
- * Une écriture qui ferait reculer `currentBid` est donc rejetée même si deux
- * enchères ont été acceptées presque en même temps côté Cloud Function.
+ * simultanées ne valident jamais toutes les deux sur la même base. La
+ * sérialisation réelle vient maintenant de `withLock` dans `placeBid`
+ * (lecture fraîche + décision + écriture, tout sous le même verrou par
+ * `auctionId`) — voir lock.js pour la raison précise : une version
+ * antérieure s'appuyait uniquement sur la comparaison ci-dessous avec
+ * `request.original`, et un test de charge réel a montré que cinq mises
+ * identiques envoyées en parallèle passaient toutes les cinq.
+ *
+ * Ce garde-fou reste en place en défense en profondeur : si un futur appel
+ * modifiait `currentBid` sans passer par `placeBid` (donc sans le verrou),
+ * il resterait au moins protégé contre un recul de l'enchère.
  */
 Parse.Cloud.beforeSave("Auction", (request) => {
   if (!request.original) return; // création : rien à comparer
@@ -78,44 +85,52 @@ Parse.Cloud.define("placeBid", async (request) => {
   if (!user) throw new Parse.Error(Parse.Error.OPERATION_FORBIDDEN, "Non connecté");
 
   const { auctionId, amount } = request.params;
-  const auction = await new Parse.Query("Auction")
-    .include("product")
-    .get(auctionId, { useMasterKey: true });
 
-  if (auction.get("status") !== "active" || auction.get("endsAt") <= new Date()) {
-    throw new Parse.Error(Parse.Error.VALIDATION_ERROR, "Enchère terminée");
-  }
-
-  const product = await auction.get("product").fetch({ useMasterKey: true });
+  // Le vendeur et le produit ne changent pas pendant l'enchère : vérifiés
+  // une fois, hors du verrou, pour ne pas retenir la file d'attente plus
+  // longtemps que nécessaire — seule la décision sur le montant (la partie
+  // contestée) doit être sérialisée.
+  const preview = await new Parse.Query("Auction").include("product").get(auctionId, { useMasterKey: true });
+  const product = await preview.get("product").fetch({ useMasterKey: true });
   const shop = await product.get("shop").fetch({ useMasterKey: true });
   if (shop.get("owner")?.id === user.id) {
     throw new Parse.Error(Parse.Error.OPERATION_FORBIDDEN, "Vous êtes le vendeur");
   }
 
-  const currentBid = auction.get("currentBid");
-  const min = currentBid ? Math.ceil(currentBid * 1.05) : auction.get("startingPrice");
-  if (amount < min) {
-    throw new Parse.Error(Parse.Error.VALIDATION_ERROR, `Enchère minimum : ${min} FCFA`);
-  }
+  const { auction, previousBidder } = await withLock(`Auction:${auctionId}`, async () => {
+    // Relecture fraîche À L'INTÉRIEUR du verrou : c'est elle qui décide, pas
+    // `preview` ci-dessus ni `request.original` du beforeSave — voir lock.js.
+    const auction = await new Parse.Query("Auction").get(auctionId, { useMasterKey: true });
 
-  const previousBidder = auction.get("currentBidder");
+    if (auction.get("status") !== "active" || auction.get("endsAt") <= new Date()) {
+      throw new Parse.Error(Parse.Error.VALIDATION_ERROR, "Enchère terminée");
+    }
 
-  const bid = new Parse.Object("Bid");
-  bid.set("auction", auction);
-  bid.set("bidder", user);
-  bid.set("amount", amount);
-  await bid.save(null, { useMasterKey: true });
+    const currentBid = auction.get("currentBid");
+    const min = currentBid ? Math.ceil(currentBid * 1.05) : auction.get("startingPrice");
+    if (amount < min) {
+      throw new Parse.Error(Parse.Error.VALIDATION_ERROR, `Enchère minimum : ${min} FCFA`);
+    }
 
-  auction.set("currentBid", amount);
-  auction.set("currentBidder", user);
-  auction.increment("bidsCount", 1);
-  const remaining = auction.get("endsAt").getTime() - Date.now();
-  if (remaining < 2 * 60 * 1000) {
-    auction.set("endsAt", new Date(Date.now() + 2 * 60 * 1000));
-  }
-  // Le beforeSave ci-dessus rejette cet appel si une autre enchère a été
-  // acceptée entre-temps avec un montant supérieur ou égal.
-  await auction.save(null, { useMasterKey: true });
+    const previousBidder = auction.get("currentBidder");
+
+    const bid = new Parse.Object("Bid");
+    bid.set("auction", auction);
+    bid.set("bidder", user);
+    bid.set("amount", amount);
+    await bid.save(null, { useMasterKey: true });
+
+    auction.set("currentBid", amount);
+    auction.set("currentBidder", user);
+    auction.increment("bidsCount", 1);
+    const remaining = auction.get("endsAt").getTime() - Date.now();
+    if (remaining < 2 * 60 * 1000) {
+      auction.set("endsAt", new Date(Date.now() + 2 * 60 * 1000));
+    }
+    await auction.save(null, { useMasterKey: true });
+
+    return { auction, previousBidder };
+  });
 
   if (previousBidder && previousBidder.id !== user.id) {
     const notification = new Parse.Object("Notification");

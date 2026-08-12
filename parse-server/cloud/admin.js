@@ -6,6 +6,7 @@
  */
 
 const { requireAdmin } = require("./roles");
+const { loadSettings } = require("./settings");
 
 Parse.Cloud.define("adminStats", async (request) => {
   await requireAdmin(request);
@@ -118,14 +119,6 @@ Parse.Cloud.define("adminRevenueReport", async (request) => {
     .map((entry) => ({ ...entry, commission: Math.floor((entry.gmv * commissionPercent) / 100) }))
     .sort((a, b) => a.day.localeCompare(b.day));
 });
-
-async function loadSettings() {
-  const settings = await new Parse.Query("PlatformSettings").first({ useMasterKey: true });
-  return {
-    commissionPercent: settings?.get("commissionPercent") ?? 5,
-    minWithdrawal: settings?.get("minWithdrawal") ?? 5000,
-  };
-}
 
 /**
  * params: { commissionPercent, minWithdrawal, supportPhone?, supportEmail?,

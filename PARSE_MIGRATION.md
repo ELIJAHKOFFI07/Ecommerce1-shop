@@ -18,7 +18,7 @@ sont eux qui portent le risque de la migration, pas les tables.
 | --- | --- | --- |
 | **RLS** (49 policies) | Le serveur refuse la lecture/écriture, quel que soit le client | **CLP** par classe + **ACL** par objet + `beforeSave`/`beforeFind`. Aucun des trois seul ne suffit. |
 | **`security definer` + transaction** | `place_order` décrémente le stock et crée la commande **ou rien** | Cloud Function avec master key. **Parse n'a pas de transaction multi-objets** → il faut `Parse.Object.saveAll` + compensation explicite en cas d'échec. C'est le point dur. |
-| **`for update`** (verrou de ligne) | Deux acheteurs simultanés ne peuvent pas vider le même stock | `increment()` atomique côté Mongo/PG + relecture. Un `select … for update` naïvement traduit en `query.first()` **réintroduit la survente**. |
+| **`for update`** (verrou de ligne) | Deux acheteurs simultanés ne peuvent pas vider le même stock | **Ni `increment()`+`beforeSave` ni `request.original` ne suffisent** — vérifié par un test de charge réel, pas en théorie (voir `parse-server/cloud/lock.js`). `request.object.get(champ)` dans `beforeSave`, pour un champ modifié par `increment()`, reflète l'estimation calculée côté CLIENT à partir de la lecture du début de fonction, pas la valeur réelle en base à l'écriture. La solution retenue : un verrou asynchrone en mémoire par ressource (`withLock`), qui sérialise lecture-fraîche + décision + écriture au niveau du process Node. Ça suppose un seul process Parse Server (vrai pour ce déploiement, pas garanti si ça scale un jour horizontalement — voir le commentaire en tête de `lock.js`). |
 | **Triggers** (12) | Se déclenchent même si l'écriture vient d'ailleurs | `beforeSave`/`afterSave`. Équivalent fonctionnel. |
 
 > **Règle non négociable, déjà appliquée côté Supabase :** aucun calcul
@@ -212,14 +212,25 @@ erreur en Parse donne une élévation de privilège.
       `confirmDelivery`
 - [x] Cloud Functions offres, enchères, portefeuille, points, parrainage,
       social, back-office — les **29 RPC appelées par l'app sont toutes
-      écrites** (`parse-server/cloud/*.js`), syntaxe vérifiée
-      (`node --check`), **rien n'est testé contre un serveur réel**
+      écrites** (`parse-server/cloud/*.js`)
 - [x] Rôles (`admin`, `seller`) et CLP par classe
+- [x] **Tests contre un Parse Server réel** déployé sur le VPS
+      (`parse-server/test/migration-smoke-test.js`, 13 vérifications). Le
+      premier passage a trouvé deux bugs de concurrence réels que la seule
+      lecture du code n'avait pas révélés — survente sur commande (5
+      commandes acceptées sur un stock de 3, résultat -2) et course
+      d'enchères (5 mises identiques toutes acceptées). Corrigés via un
+      verrou en mémoire par ressource (`lock.js`), appliqué aussi à
+      `requestWithdrawal`/`boostProduct` (même famille de bug, pas encore
+      testée en pratique à l'époque). **Reste à repasser le test après ce
+      correctif pour confirmer qu'il est bien vert** — à réexécuter aussi
+      après tout futur changement touchant `orders.js`, `auctions.js` ou
+      `wallet.js`.
 - [ ] ACL par objet à la volée — posées pour Shop/Product/Order/Conversation,
       à vérifier une par une contre les 49 policies RLS d'origine
 - [ ] Fichiers (`Parse.File`), LiveQuery, e-mail, push
 - [ ] Reprise des données
-- [ ] **Tests contre un Parse Server réel** — priorité avant toute bascule :
-      écrire des cas pour la survente (achats simultanés), la course
-      d'enchères (`beforeSave` sur `Auction`), et la compensation de stock de
-      `placeOrder` en cas d'échec à mi-chemin
+- [ ] Test de charge sur `redeemPoints`/`spinWheel` — même famille de bug
+      corrigée pour le stock et le portefeuille, appliquée par prudence mais
+      pas encore vérifiée par un test dédié (risque plus faible : ni l'un ni
+      l'autre ne manipule d'argent réel)

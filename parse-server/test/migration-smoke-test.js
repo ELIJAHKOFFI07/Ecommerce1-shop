@@ -4,7 +4,8 @@
  * Vérifie exactement les points identifiés comme risqués dans
  * PARSE_MIGRATION.md §1 : la non-survente sur commande concurrente, la
  * restitution de stock à l'annulation, le code de retrait qui ne fuite
- * jamais vers le client, la course d'enchères, et l'auto-achat interdit.
+ * jamais vers le client, la course d'enchères, les retraits concurrents qui
+ * ne dépassent jamais le solde réel, et l'auto-achat interdit.
  *
  * Chaque appel passe un `sessionToken` explicite plutôt que de s'appuyer sur
  * Parse.User.logIn/logOut : le SDK garde un « utilisateur courant » global
@@ -357,6 +358,35 @@ async function main() {
     "Course d'enchères : une seule mise identique passe, état cohérent",
     bidSucceeded.length === 1 && bidRows.length === 1 && finalAuction.get("currentBid") === 1050,
     `${bidSucceeded.length} mise(s) acceptée(s) sur 5 envoyées en parallèle, currentBid=${finalAuction.get("currentBid")}`,
+  );
+
+  // -------------------------------------------------------------------
+  // Test 6 — retraits concurrents : jamais plus que le solde réel
+  //
+  // Même famille de bug que le stock (voir lock.js) : requestWithdrawal
+  // décrémente un solde avec un plancher. Trois retraits dont deux seulement
+  // devraient passer au vu du solde réel (crédité au test 4).
+  // -------------------------------------------------------------------
+  const balanceBeforeWithdrawals = sellerWalletAfter;
+  const perWithdrawal = Math.max(Math.floor(balanceBeforeWithdrawals / 2) - 500, 5000);
+
+  const withdrawAttempts = await Promise.allSettled(
+    [1, 2, 3].map(() =>
+      Parse.Cloud.run(
+        "requestWithdrawal",
+        { amount: perWithdrawal, phone: "0700000000" },
+        { sessionToken: sellerToken },
+      ),
+    ),
+  );
+  const withdrawSucceeded = withdrawAttempts.filter((r) => r.status === "fulfilled");
+  const finalWallet = await new Parse.Query("Wallet").equalTo("owner", seller).first({ useMasterKey: true });
+
+  record(
+    "Retraits concurrents : jamais plus que le solde réel, jamais négatif",
+    finalWallet.get("balance") >= 0 &&
+      finalWallet.get("balance") === balanceBeforeWithdrawals - withdrawSucceeded.length * perWithdrawal,
+    `${withdrawSucceeded.length} retrait(s) de ${perWithdrawal} FCFA accepté(s) sur 3 tentés en parallèle (solde de départ ${balanceBeforeWithdrawals}), solde final ${finalWallet.get("balance")}`,
   );
 
   // -------------------------------------------------------------------

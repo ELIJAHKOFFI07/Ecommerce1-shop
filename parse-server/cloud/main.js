@@ -9,6 +9,7 @@
 require("./health");
 require("./schema");
 require("./roles");
+require("./settings");
 require("./hooks");
 require("./orders");
 require("./offers");
