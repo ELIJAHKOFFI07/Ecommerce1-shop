@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/backend/client";
 import { GoogleButton } from "@/components/play/GoogleButton";
@@ -84,13 +83,6 @@ function LoginInner() {
       </div>
 
       <GoogleButton label="Se connecter avec Google" redirectTo={next} />
-
-      <p className="mt-6 text-center text-sm text-muted">
-        Pas de compte ?{" "}
-        <Link href="/play/register" className="underline-grow text-accent">
-          Créer un compte
-        </Link>
-      </p>
     </div>
   );
 }

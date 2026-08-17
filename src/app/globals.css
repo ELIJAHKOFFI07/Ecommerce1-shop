@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
    Palette — style commerce clair, repris du projet shirt-shop.
@@ -16,16 +20,14 @@
    sombre ne donne que 3,68:1, sous le seuil de 4,5:1. Elle bascule donc avec
    le thème, contrairement à un `text-white` codé en dur.
    --------------------------------------------------------------------------- */
-:root {
-  --background: #ffffff;
-  --foreground: #111827; /* gray-900 — 17,7:1 */
+:root { /* gray-900 — 17,7:1 */
   --surface: #ffffff;
   --surface-2: #f9fafb; /* gray-50 */
-  --border: #e5e7eb; /* gray-200 */
-  --muted: #6b7280; /* gray-500 — 4,8:1 */
-  --accent: #2563eb; /* blue-600 — 5,2:1 en texte comme en fond */
+  --border: oklch(0.922 0 0); /* gray-200 */
+  --muted: oklch(0.97 0 0); /* gray-500 — 4,8:1 */
+  --accent: oklch(0.97 0 0); /* blue-600 — 5,2:1 en texte comme en fond */
   --accent-dark: #1d4ed8; /* blue-700 */
-  --on-accent: #ffffff; /* 5,2:1 sur l'accent */
+  --on-accent: #ffffff; /* 5,2:1 sur l'accent */ --background: oklch(1 0 0); --foreground: oklch(0.145 0 0); --card: oklch(1 0 0); --card-foreground: oklch(0.145 0 0); --popover: oklch(1 0 0); --popover-foreground: oklch(0.145 0 0); --primary: oklch(0.205 0 0); --primary-foreground: oklch(0.985 0 0); --secondary: oklch(0.97 0 0); --secondary-foreground: oklch(0.205 0 0); --muted-foreground: oklch(0.556 0 0); --accent-foreground: oklch(0.205 0 0); --destructive: oklch(0.577 0.245 27.325); --input: oklch(0.922 0 0); --ring: oklch(0.708 0 0); --chart-1: oklch(0.87 0 0); --chart-2: oklch(0.556 0 0); --chart-3: oklch(0.439 0 0); --chart-4: oklch(0.371 0 0); --chart-5: oklch(0.269 0 0); --radius: 0.625rem; --sidebar: oklch(0.985 0 0); --sidebar-foreground: oklch(0.145 0 0); --sidebar-primary: oklch(0.205 0 0); --sidebar-primary-foreground: oklch(0.985 0 0); --sidebar-accent: oklch(0.97 0 0); --sidebar-accent-foreground: oklch(0.205 0 0); --sidebar-border: oklch(0.922 0 0); --sidebar-ring: oklch(0.708 0 0);
 }
 
 /* Mode sombre (data-theme="dark" posé sur <html> par le sélecteur). */
@@ -125,13 +127,42 @@
   --color-accent: var(--accent);
   --color-accent-dark: var(--accent-dark);
   --color-on-accent: var(--on-accent);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 /* ---------------------------------------------------------------------------
@@ -398,4 +429,371 @@ video,
 canvas,
 svg {
   max-width: 100%;
+}
+
+/* ===========================================================================
+   PALETTE « DreamTeamShop » — style néo-brutal chaud (accueil public).
+
+   Palette reprise de la maquette `dreamOnSteroid/index.html`. Toutes les
+   classes des composants d'accueil (bg-cream, text-ink, bg-orange, …) pointent
+   vers ces variables : les modifier ici rethème toute la page en un endroit.
+
+   Les couleurs sont définies en clair dans `:root`, exposées à Tailwind via le
+   bloc `@theme inline`, et redéfinies en mode sombre via `:root[data-theme="dark"]`.
+   ---------------------------------------------------------------------------
+   Couleurs
+   ---------------------------------------------------------------------------
+   ink   : texte & aplats sombres (quasi noir chaud)
+   cream : fond de page
+   paper : surface des cartes
+   orange / deep / soft
+   vert  / deep / soft
+   sun   : jaune d'accent (marqueurs, code de retrait, roue)
+   --------------------------------------------------------------------------- */
+:root {
+  --ink: #17110b;
+  --cream: #fff6ec;
+  --paper: #fffbf4;
+  --orange: #ff6b00;
+  --orange-deep: #e04e00;
+  --orange-soft: #ffe3cb;
+  --vert: #009e60;
+  --vert-deep: #006b42;
+  --vert-soft: #d9f3e6;
+  --sun: #ffc700;
+}
+
+/* Mode sombre : on inverse les surfaces et le texte. `ink` devient la teinte
+   claire (texte + ombres portées) tandis que cream/paper passent sur des
+   bruns profonds. */
+:root[data-theme="dark"] {
+  --ink: #f3e7d3;
+  --cream: #140d07;
+  --paper: #1d150d;
+  --orange: #ff7d1a;
+  --orange-deep: #ff8c33;
+  --orange-soft: #3a2410;
+  --vert: #2bd089;
+  --vert-deep: #19c47a;
+  --vert-soft: #103025;
+  --sun: #ffd23d;
+}
+
+/* Exposition à Tailwind : chaque entrée génère une classe (bg-ink, text-cream,
+   border-orange, shadow-hard, rounded-blob, font-display…) pilotée par les
+   variables ci-dessus — comme le bloc existant pour background/foreground. */
+@theme inline {
+  --color-ink: var(--ink);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-orange: var(--orange);
+  --color-orange-deep: var(--orange-deep);
+  --color-orange-soft: var(--orange-soft);
+  --color-vert: var(--vert);
+  --color-vert-deep: var(--vert-deep);
+  --color-vert-soft: var(--vert-soft);
+  --color-sun: var(--sun);
+
+  --font-display: var(--font-bricolage);
+  --font-body: var(--font-inter);
+
+  --shadow-hard: 6px 6px 0 0 var(--ink);
+  --shadow-hard-sm: 4px 4px 0 0 var(--ink);
+  --shadow-hard-orange: 8px 8px 0 0 var(--orange);
+
+  --radius-blob: 2.5rem;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+/* ---------------------------------------------------------------------------
+   Accueil public — utilitaires & animations (repris de la maquette).
+   --------------------------------------------------------------------------- */
+
+/* Sélection de texte */
+::selection {
+  background: var(--orange);
+  color: #fff;
+}
+
+/* ---- Bandeau défilant ---- */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ---- Masquer la barre de défilement (nav horizontale du header) ---- */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---- Mot surligné façon marqueur ---- */
+.marker {
+  position: relative;
+  white-space: nowrap;
+}
+.marker > span {
+  position: relative;
+  z-index: 1;
+}
+.marker::after {
+  content: "";
+  position: absolute;
+  left: -0.06em;
+  right: -0.06em;
+  bottom: 0.08em;
+  height: 0.42em;
+  background: var(--sun);
+  border-radius: 0.2em;
+  z-index: 0;
+  transform: skew(-8deg) rotate(-1deg);
+}
+.marker.orange::after {
+  background: var(--orange);
+}
+.marker.vert::after {
+  background: var(--vert-soft);
+}
+
+/* ---- Blob / arche du héros ---- */
+.hero-arch {
+  border-radius: 999px 999px 2.5rem 2.5rem;
+}
+
+/* ---- Motif wax discret ---- */
+.wax-pattern {
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 107, 0, 0.1) 0 8px, transparent 9px),
+    radial-gradient(circle at 70% 60%, rgba(0, 158, 96, 0.1) 0 8px, transparent 9px),
+    radial-gradient(circle at 45% 85%, rgba(255, 199, 0, 0.12) 0 6px, transparent 7px);
+  background-size: 140px 140px;
+}
+
+/* ---- Apparition au défilement ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Flottement des cartes du héros ---- */
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translateY(-12px) rotate(var(--r, 0deg));
+  }
+}
+.floaty {
+  animation: floaty 5s ease-in-out infinite;
+}
+.floaty-slow {
+  animation: floaty 7s ease-in-out infinite;
+}
+
+/* ---- Roue de la chance ---- */
+#wheel {
+  transition: transform 5s cubic-bezier(0.12, 0.72, 0.08, 1);
+}
+.wheel-seg {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---- Chat de négociation ---- */
+.bubble {
+  max-width: 80%;
+  padding: 0.7rem 1rem;
+  border-radius: 1.2rem;
+  line-height: 1.4;
+  font-size: 0.9rem;
+}
+.bubble-me {
+  background: var(--ink);
+  color: var(--cream);
+  border-bottom-right-radius: 0.25rem;
+  margin-left: auto;
+}
+.bubble-vendor {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-bottom-left-radius: 0.25rem;
+}
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ink);
+  opacity: 0.4;
+  animation: blink 1s infinite;
+}
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---- Cartes à ombre dure ---- */
+.card-hover {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.35s;
+}
+.card-hover:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 0 var(--ink);
+}
+.heart-btn.active svg {
+  fill: var(--orange);
+  stroke: var(--orange);
+}
+
+/* ---- FAQ ---- */
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.faq-item.open .faq-panel {
+  grid-template-rows: 1fr;
+}
+.faq-item.open .faq-chevron {
+  transform: rotate(180deg);
+}
+.faq-chevron {
+  transition: transform 0.3s;
+}
+
+/* ---- Impulsion (pastille « live » du héros) ---- */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 18px rgba(255, 107, 0, 0);
+  }
+}
+.pulse-ring {
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+/* ---- Réduire les animations ---- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .marquee-track {
+    animation: none;
+  }
+  .floaty,
+  .floaty-slow,
+  .pulse-ring {
+    animation: none;
+  }
+}
+
+.dark {
+ --background: oklch(0.145 0 0);
+ --foreground: oklch(0.985 0 0);
+ --card: oklch(0.205 0 0);
+ --card-foreground: oklch(0.985 0 0);
+ --popover: oklch(0.205 0 0);
+ --popover-foreground: oklch(0.985 0 0);
+ --primary: oklch(0.922 0 0);
+ --primary-foreground: oklch(0.205 0 0);
+ --secondary: oklch(0.269 0 0);
+ --secondary-foreground: oklch(0.985 0 0);
+ --muted: oklch(0.269 0 0);
+ --muted-foreground: oklch(0.708 0 0);
+ --accent: oklch(0.269 0 0);
+ --accent-foreground: oklch(0.985 0 0);
+ --destructive: oklch(0.704 0.191 22.216);
+ --border: oklch(1 0 0 / 10%);
+ --input: oklch(1 0 0 / 15%);
+ --ring: oklch(0.556 0 0);
+ --chart-1: oklch(0.87 0 0);
+ --chart-2: oklch(0.556 0 0);
+ --chart-3: oklch(0.439 0 0);
+ --chart-4: oklch(0.371 0 0);
+ --chart-5: oklch(0.269 0 0);
+ --sidebar: oklch(0.205 0 0);
+ --sidebar-foreground: oklch(0.985 0 0);
+ --sidebar-primary: oklch(0.488 0.243 264.376);
+ --sidebar-primary-foreground: oklch(0.985 0 0);
+ --sidebar-accent: oklch(0.269 0 0);
+ --sidebar-accent-foreground: oklch(0.985 0 0);
+ --sidebar-border: oklch(1 0 0 / 10%);
+ --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Wheel picker custom : fade progressif sur les bords de la liste défilante */
+.wheel-picker {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 10%,
+    black 30%,
+    black 70%,
+    transparent 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 10%,
+    black 30%,
+    black 70%,
+    transparent 90%,
+    transparent 100%
+  );
 }

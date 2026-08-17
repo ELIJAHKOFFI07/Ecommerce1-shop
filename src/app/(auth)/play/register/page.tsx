@@ -122,12 +122,6 @@ export default function RegisterPage() {
           {loading ? "Création…" : "Créer mon compte"}
         </button>
       </form>
-      <p className="mt-6 text-center text-sm text-muted">
-        Déjà inscrit ?{" "}
-        <Link href="/play/login" className="text-accent">
-          Se connecter
-        </Link>
-      </p>
     </div>
   );
 }

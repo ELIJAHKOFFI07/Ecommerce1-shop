@@ -7,6 +7,7 @@ import { createClient } from "@/lib/backend/client";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
 import { ProductGridSkeleton } from "@/components/Skeleton";
+import { CategoryWheelPicker } from "@/components/play/CategoryWheelPicker";
 
 type Sort = "recent" | "price_asc" | "price_desc" | "popular";
 
@@ -18,6 +19,11 @@ function SearchInner() {
   );
   const [sort, setSort] = useState<Sort>("recent");
   const [categories, setCategories] = useState<Category[]>([]);
+  // L'URL de la vitrine passe un `slug` (`?category=mode`), mais la vitrine
+  // ne connaît pas les id UUID. On résout ici slug -> id réel pour le filtre.
+  const [resolvedCategoryId, setResolvedCategoryId] = useState<string | null>(
+    null,
+  );
   const [products, setProducts] = useState<Product[]>([]);
   // true dès le départ : la recherche part au montage. À false, le premier
   // rendu affichait « Aucun résultat » avant même la première requête.
@@ -28,8 +34,15 @@ function SearchInner() {
       .from("categories")
       .select("*")
       .order("position")
-      .then(({ data }) => setCategories((data as Category[]) ?? []));
-  }, []);
+      .then(({ data }) => {
+        const cats = (data as Category[]) ?? [];
+        setCategories(cats);
+        const match = categoryId
+          ? cats.find((c) => c.id === categoryId || c.slug === categoryId)
+          : null;
+        setResolvedCategoryId(match ? match.id : null);
+      });
+  }, [categoryId]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -38,7 +51,7 @@ function SearchInner() {
       .select("*, product_images(url, position), shops(*)")
       .eq("status", "active");
     if (query.trim()) q = q.ilike("title", `%${query.trim()}%`);
-    if (categoryId) q = q.eq("category_id", categoryId);
+    if (resolvedCategoryId) q = q.eq("category_id", resolvedCategoryId);
     switch (sort) {
       case "price_asc":
         q = q.order("price", { ascending: true });
@@ -60,7 +73,7 @@ function SearchInner() {
       });
     }, 250);
     return () => clearTimeout(handle);
-  }, [query, categoryId, sort]);
+  }, [query, resolvedCategoryId, sort]);
 
   return (
     <div>
@@ -80,28 +93,17 @@ function SearchInner() {
           pastilles horizontales, plus adaptées au pouce. */}
       <div className="grid gap-6 lg:grid-cols-[15rem_1fr] lg:items-start">
         <aside className="space-y-5 lg:sticky lg:top-20">
-          <div>
+           <div>
             <h2 className="mb-2 text-xs uppercase tracking-wide text-muted">
               Catégories
             </h2>
-            <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start">
-              <FilterChip
-                active={categoryId === null}
-                onClick={() => setCategoryId(null)}
-              >
-                Tout
-              </FilterChip>
-              {categories.map((cat) => (
-                <FilterChip
-                  key={cat.id}
-                  active={categoryId === cat.id}
-                  onClick={() => setCategoryId(cat.id)}
-                >
-                  {cat.name}
-                </FilterChip>
-              ))}
-            </div>
+            <CategoryWheelPicker
+              categories={categories}
+              value={resolvedCategoryId}
+              onChange={setCategoryId}
+            />
           </div>
+
 
           <div>
             <h2 className="mb-2 text-xs uppercase tracking-wide text-muted">
