@@ -80,7 +80,7 @@ export function AuctionBlock({ product }: { product: Product }) {
       <div className="mt-4">
         <button
           onClick={create}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
+          className="card-hard-sm press inline-flex items-center gap-1.5 rounded-full bg-surface px-3.5 py-1.5 text-sm font-display font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           <Gavel className="h-4 w-4 text-accent" /> Mettre aux enchères
         </button>
@@ -92,16 +92,16 @@ export function AuctionBlock({ product }: { product: Product }) {
   const leading = myId != null && auction.current_bidder === myId;
 
   return (
-    <div className="mt-4 rounded-xl border border-accent bg-accent/[0.08] p-4">
-      <div className="flex items-center justify-between">
-        <p className="flex items-center gap-2 font-bold">
+    <div className="card-hard rounded-3xl bg-surface p-4">
+      <div className="flex items-center justify-between gap-2">
+        <p className="flex items-center gap-2 font-display text-sm font-extrabold">
           <Gavel className="h-4 w-4 text-accent" /> Enchère en cours
         </p>
-        <span className="text-xs font-semibold">
+        <span className="rounded-full border-2 border-border bg-sun px-2.5 py-0.5 text-[11px] font-bold">
           {auctionRemainingLabel(auction.ends_at)}
         </span>
       </div>
-      <p className="mt-2 text-lg font-bold text-accent">
+      <p className="mt-2.5 text-lg font-extrabold text-accent">
         {auction.current_bid == null
           ? `Prix de départ : ${formatFcfa(auction.starting_price)}`
           : `Meilleure offre : ${formatFcfa(auction.current_bid)} · ${auction.bids_count} enchère(s)`}
@@ -110,18 +110,18 @@ export function AuctionBlock({ product }: { product: Product }) {
         <p className="mt-1 text-xs text-green-400">Vous menez cette enchère 🏆</p>
       )}
       {!isOwner && (
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           <input
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             min={minNextBid(auction)}
-            className="w-36 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
+            className="card-hard-sm w-32 rounded-full bg-surface px-3 py-1.5 text-sm outline-none transition-all focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[4px_4px_0_0_var(--accent)]"
           />
           <button
             onClick={bid}
             disabled={busy}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
+            className="card-hard-sm press inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-sm font-display font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40"
           >
             <Gavel className="h-4 w-4" />
             Enchérir (min {formatFcfa(minNextBid(auction))})

@@ -154,6 +154,14 @@ export function ProductActions({ product }: { product: Product }) {
     window.open(`https://wa.me/?text=${text}`, "_blank", "noopener");
   };
 
+  /// Pastille d'action au trait cartoon : elle « se plaque » au survol,
+  /// comme les pastilles de tri de la page recherche. Posée nue sur la page,
+  /// sans carte autour — le produit porte déjà assez de cadres.
+  const actionBtn = (active = false) =>
+    `card-hard-sm press inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-display font-bold transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+      active ? "bg-foreground text-background" : "bg-surface text-muted hover:text-foreground"
+    }`;
+
   return (
     <div className="mt-4 space-y-3">
       {viewers > 1 && (
@@ -166,33 +174,20 @@ export function ProductActions({ product }: { product: Product }) {
       <div className="flex flex-wrap gap-2">
         {myId !== product.seller_id && (
           <>
-            <button
-              onClick={makeOffer}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
-            >
-              <Handshake className="h-4 w-4" /> Proposer un prix
+            <button onClick={makeOffer} className={actionBtn()}>
+              <Handshake className="h-3.5 w-3.5" /> Proposer un prix
             </button>
-            <button
-              onClick={contactSeller}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
-            >
-              <MessageCircle className="h-4 w-4" /> Contacter le vendeur
+            <button onClick={contactSeller} className={actionBtn()}>
+              <MessageCircle className="h-3.5 w-3.5" /> Contacter le vendeur
             </button>
           </>
         )}
 
-        <button
-          onClick={toggleAlert}
-          className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
-            hasAlert
-              ? "border-accent bg-accent/10 text-accent"
-              : "border-border hover:border-accent"
-          }`}
-        >
+        <button onClick={toggleAlert} className={actionBtn(hasAlert)}>
           {hasAlert ? (
-            <BellRing className="h-4 w-4" />
+            <BellRing className="h-3.5 w-3.5" />
           ) : (
-            <Bell className="h-4 w-4" />
+            <Bell className="h-3.5 w-3.5" />
           )}
           {hasAlert ? "Alerte activée" : "Alerte baisse de prix"}
         </button>
@@ -202,12 +197,12 @@ export function ProductActions({ product }: { product: Product }) {
             onClick={() =>
               myId ? setPickerOpen((o) => !o) : (window.location.href = "/play/login")
             }
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
+            className={actionBtn()}
           >
-            <BookmarkPlus className="h-4 w-4" /> Ajouter à une liste
+            <BookmarkPlus className="h-3.5 w-3.5" /> Ajouter à une liste
           </button>
           {pickerOpen && (
-            <div className="absolute left-0 top-full z-20 mt-1 w-56 overflow-hidden rounded-lg border border-border bg-surface shadow-lg">
+            <div className="card-hard-sm absolute left-0 top-full z-20 mt-2 w-56 overflow-hidden rounded-2xl bg-surface">
               {wishlists.map((w) => (
                 <button
                   key={w.id}
@@ -219,7 +214,7 @@ export function ProductActions({ product }: { product: Product }) {
               ))}
               <button
                 onClick={createAndAdd}
-                className="block w-full border-t border-border px-3 py-2 text-left text-sm text-accent hover:bg-surface-2"
+                className="block w-full border-t-2 border-border px-3 py-2 text-left text-sm text-accent hover:bg-surface-2"
               >
                 + Nouvelle liste
               </button>
@@ -227,11 +222,8 @@ export function ProductActions({ product }: { product: Product }) {
           )}
         </div>
 
-        <button
-          onClick={shareWhatsApp}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm hover:border-accent"
-        >
-          <Share2 className="h-4 w-4" /> WhatsApp
+        <button onClick={shareWhatsApp} className={actionBtn()}>
+          <Share2 className="h-3.5 w-3.5" /> WhatsApp
         </button>
 
         <button
@@ -245,18 +237,16 @@ export function ProductActions({ product }: { product: Product }) {
             setCompareCount(next.length);
             flash(`Comparateur : ${next.length} produit(s).`);
           }}
-          className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
-            inCompare ? "border-accent bg-accent/10 text-accent" : "border-border hover:border-accent"
-          }`}
+          className={actionBtn(inCompare)}
         >
-          <GitCompareArrows className="h-4 w-4" />
+          <GitCompareArrows className="h-3.5 w-3.5" />
           {inCompare ? "Dans le comparateur" : "Comparer"}
         </button>
 
         {compareCount >= 2 && (
           <a
             href="/play/compare"
-            className="inline-flex items-center rounded-lg bg-foreground px-3 py-2 text-sm font-semibold text-background"
+            className="card-hard-sm press inline-flex items-center rounded-full bg-foreground px-3 py-1.5 text-xs font-display font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
           >
             Voir la comparaison ({compareCount})
           </a>

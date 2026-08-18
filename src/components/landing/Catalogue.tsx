@@ -155,7 +155,7 @@ export function Catalogue({
         </div>
         <a
           href="/play/search"
-          className="inline-flex items-center gap-2 border-b-4 border-orange pb-1 font-display text-lg font-bold transition-colors hover:text-orange"
+          className="underline-grow inline-flex items-center gap-2 font-display text-lg font-bold transition-colors hover:text-orange"
         >
           Tout explorer
           <span aria-hidden>→</span>

@@ -61,27 +61,33 @@ export function ProductQna({
 
   const isOwner = myId != null && myId === sellerId;
 
+  const inputCls =
+    "card-hard-sm w-full rounded-full bg-surface px-3 py-1.5 text-sm outline-none transition-all focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[4px_4px_0_0_var(--accent)]";
+  const btnInk =
+    "card-hard-sm press shrink-0 rounded-full bg-foreground px-3.5 py-1.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40";
+  const btnPaper =
+    "card-hard-sm press shrink-0 rounded-full bg-surface px-3 py-1.5 text-sm font-display font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40";
+
   return (
-    <section className="mt-10">
-      <h2 className="flex items-center gap-2 text-lg font-semibold">
-        <HelpCircle className="h-5 w-5 text-accent" /> Questions & réponses
+    <section className="card-hard rounded-3xl bg-surface p-4 sm:p-5">
+      <h2 className="flex items-center gap-2.5 font-display text-lg font-extrabold tracking-tight">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border-2 border-border bg-sun text-foreground">
+          <HelpCircle className="h-3.5 w-3.5" />
+        </span>
+        Questions & réponses
       </h2>
 
       {myId && !isOwner && (
-        <div className="mt-4 flex gap-2">
+        <div className="mt-4 flex flex-wrap gap-2">
           <input
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && ask()}
             placeholder="Ex : Livrez-vous à Bouaké ?"
             maxLength={300}
-            className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
+            className={inputCls}
           />
-          <button
-            onClick={ask}
-            disabled={busy || !draft.trim()}
-            className="rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
-          >
+          <button onClick={ask} disabled={busy || !draft.trim()} className={btnInk}>
             Demander
           </button>
         </div>
@@ -92,7 +98,7 @@ export function ProductQna({
           Aucune question pour le moment. Soyez le premier !
         </p>
       ) : (
-        <ul className="mt-4 space-y-4">
+        <ul className="mt-5 space-y-5">
           {questions.map((q) => (
             <li key={q.id}>
               <div className="flex gap-2">
@@ -107,13 +113,13 @@ export function ProductQna({
               </div>
 
               {q.answer ? (
-                <div className="ml-6 mt-2 flex gap-2 rounded-lg bg-accent/[0.08] p-3">
+                <div className="ml-6 mt-2 flex gap-2 rounded-2xl bg-surface-2 p-3">
                   <Store className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                   <p className="text-sm">{q.answer}</p>
                 </div>
               ) : (
                 isOwner && (
-                  <div className="ml-6 mt-2 flex gap-2">
+                  <div className="ml-6 mt-2 flex flex-wrap gap-2">
                     <input
                       value={answerDrafts[q.id] ?? ""}
                       onChange={(e) =>
@@ -121,12 +127,12 @@ export function ProductQna({
                       }
                       onKeyDown={(e) => e.key === "Enter" && answer(q.id)}
                       placeholder="Votre réponse…"
-                      className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm outline-none focus:border-accent"
+                      className={inputCls}
                     />
                     <button
                       onClick={() => answer(q.id)}
                       disabled={busy}
-                      className="rounded-lg border border-border px-3 py-1.5 text-sm hover:border-accent disabled:opacity-40"
+                      className={btnPaper}
                     >
                       Répondre
                     </button>

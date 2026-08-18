@@ -43,20 +43,20 @@ export function PriceHistory({ productId }: { productId: string }) {
   const [lastX, lastY] = points.split(" ").pop()!.split(",");
 
   return (
-    <div className="mt-4 rounded-xl border border-border p-4">
-      <div className="flex items-center justify-between">
-        <p className="flex items-center gap-2 text-sm font-bold">
+    <div className="card-hard-sm rounded-3xl bg-surface p-4">
+      <div className="flex items-center justify-between gap-2">
+        <p className="flex items-center gap-2 font-display text-sm font-extrabold">
           <TrendingDown className="h-4 w-4 text-accent" /> Historique du prix
         </p>
         {isLowest && (
-          <span className="rounded-md bg-green-500/15 px-2 py-0.5 text-[11px] font-bold text-green-400">
+          <span className="rounded-full border-2 border-border bg-sun px-2.5 py-0.5 text-[11px] font-bold">
             Prix le plus bas !
           </span>
         )}
       </div>
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="mt-2 h-14 w-full"
+        className="mt-3 h-14 w-full"
         preserveAspectRatio="none"
         role="img"
         aria-label="Courbe d'évolution du prix"
@@ -64,11 +64,11 @@ export function PriceHistory({ productId }: { productId: string }) {
         <polyline
           points={points}
           fill="none"
-          stroke="#E6C15C"
+          stroke="#FFC700"
           strokeWidth="2"
           strokeLinejoin="round"
         />
-        <circle cx={lastX} cy={lastY} r="3.5" fill="#E6C15C" />
+        <circle cx={lastX} cy={lastY} r="3.5" fill="#FFC700" />
       </svg>
       <p className="mt-1 text-xs text-muted">
         Min : {formatFcfa(min)} · Max : {formatFcfa(max)}

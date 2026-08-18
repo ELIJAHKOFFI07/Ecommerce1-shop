@@ -98,8 +98,8 @@ function SearchInner() {
           pas sur la roue des catégories. */}
       <div className="flex flex-wrap items-start gap-4 lg:flex-nowrap">
         <div className="w-full lg:w-[60%]">
-          <div className="card-hard flex items-center gap-2 rounded-full bg-surface px-4 py-2.5 transition-all focus-within:translate-x-0.5 focus-within:translate-y-0.5 focus-within:shadow-[4px_4px_0_0_var(--accent)]">
-            <SearchIcon className="h-4 w-4 shrink-0 text-muted" />
+          <div className="card-hard flex items-center gap-2 rounded-full bg-surface px-4 py-2 transition-all focus-within:translate-x-0.5 focus-within:translate-y-0.5 focus-within:shadow-[4px_4px_0_0_var(--accent)]">
+            <SearchIcon className="h-3.5 w-3.5 shrink-0 text-muted" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -125,7 +125,7 @@ function SearchInner() {
                 key={value}
                 onClick={() => setSort(value)}
                 aria-pressed={sort === value}
-                className={`card-hard-sm press rounded-full px-3.5 py-1.5 text-sm font-medium transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+                className={`card-hard-sm press rounded-full px-3 py-1 text-xs font-medium transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
                   sort === value
                     ? "bg-foreground text-background"
                     : "bg-surface text-muted hover:text-foreground"
