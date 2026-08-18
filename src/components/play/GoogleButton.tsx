@@ -56,7 +56,7 @@ export function GoogleButton({
         type="button"
         onClick={signIn}
         disabled={loading}
-        className={`press card-hard-sm flex w-full items-center justify-center gap-3 rounded-full bg-surface px-6 py-3 font-semibold transition-all hover:translate-x-0.5 hover:translate-y-0.5 ${
+        className={`press card-hard-sm flex w-full items-center justify-center gap-3 rounded-full bg-surface px-6 py-2.5 font-semibold transition-all hover:translate-x-0.5 hover:translate-y-0.5 ${
           tone === "primary"
             ? "hover:border-primary hover:shadow-[4px_4px_0_0_var(--primary)]"
             : "hover:border-secondary hover:shadow-[4px_4px_0_0_var(--secondary)]"

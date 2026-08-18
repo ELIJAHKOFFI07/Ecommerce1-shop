@@ -92,19 +92,19 @@ export default function RegisterPage() {
       featureTitle="Rejoignez la communauté"
       featureText="Achetez, vendez et brillez avec des milliers de membres en Côte d'Ivoire."
     >
-      <div className="stagger space-y-4">
+      <div className="stagger space-y-3">
         {/* Google en premier : le parcours en un clic évite de remplir cinq
             champs, et le compte est créé automatiquement à la première
             connexion. */}
         <GoogleButton label="S'inscrire avec Google" tone="primary" />
 
-        <div className="my-2 flex items-center gap-3 text-xs text-muted">
+        <div className="my-1.5 flex items-center gap-3 text-xs text-muted">
           <span className="h-px flex-1 bg-border" />
           ou avec un e-mail
           <span className="h-px flex-1 bg-border" />
         </div>
 
-        <form onSubmit={submit} className="stagger space-y-4">
+        <form onSubmit={submit} className="stagger space-y-3">
           <input
             required
             value={username}

@@ -58,20 +58,20 @@ function LoginInner() {
       featureTitle="Votre panier vous attend"
       featureText="Retrouvez vos achats, négociations et vendeurs favoris en un clic."
     >
-      <div className="stagger space-y-4">
+      <div className="stagger space-y-3">
         <GoogleButton
           label="Se connecter avec Google"
           redirectTo={next}
           tone="secondary"
         />
 
-        <div className="my-2 flex items-center gap-3 text-xs text-muted">
+        <div className="my-1.5 flex items-center gap-3 text-xs text-muted">
           <span className="h-px flex-1 bg-border" />
           ou
           <span className="h-px flex-1 bg-border" />
         </div>
 
-        <form onSubmit={submit} className="stagger space-y-4">
+        <form onSubmit={submit} className="stagger space-y-3">
           <input
             type="email"
             required

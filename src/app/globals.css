@@ -74,6 +74,11 @@
   /* Surfaces d'appoint (composants play/admin) */
   --surface: #fffbf4;      /* paper */
   --surface-2: #ffe3cb;    /* orange-soft */
+
+  /* Fond des pages d'authentification : volontairement sombre dans les deux
+     thèmes pour faire ressortir la carte crème. Seul le main est couvert,
+     le header garde son fond crème. */
+  --auth-bg: #17110b;      /* encre — marron très foncé */
 }
 
 /* Mode sombre. Sélecteur unifié : l'app pose `data-theme="dark"` sur <html>,
@@ -121,6 +126,8 @@
 
   --surface: #1d150d;
   --surface-2: #3a2410;
+
+  --auth-bg: #0d0905;      /* encore plus sombre pour garder le contraste */
 }
 
 /* Palettes de couleurs : seul l'accent change, les surfaces restent
@@ -202,6 +209,7 @@
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-auth-bg: var(--auth-bg);
   --color-border: var(--border);
   --color-muted: var(--muted);
   --color-accent: var(--accent);

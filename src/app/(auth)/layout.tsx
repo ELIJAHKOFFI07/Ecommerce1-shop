@@ -17,7 +17,7 @@ export default function AuthLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <AuthHeader />
-      <main className="relative flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:px-8">
+      <main className="relative flex flex-1 flex-col justify-center bg-auth-bg px-4 py-6 sm:px-6 lg:px-8">
         <div
           aria-hidden
           className="animate-drift pointer-events-none absolute -left-28 top-24 h-72 w-72 rounded-full bg-primary/10 blur-[110px]"
@@ -28,7 +28,9 @@ export default function AuthLayout({
         />
         {/* Sans clés backend, les formulaires appelleraient createClient() qui
             lève : on affiche SetupNotice comme dans le layout /play. */}
-        {isBackendConfigured() ? children : <SetupNotice />}
+        <div className="mx-auto w-full max-w-6xl">
+          {isBackendConfigured() ? children : <SetupNotice />}
+        </div>
       </main>
     </div>
   );

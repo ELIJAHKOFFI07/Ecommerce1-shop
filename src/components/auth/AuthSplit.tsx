@@ -24,19 +24,19 @@ export const AUTH_IMAGES = {
 /// + ombre dure. Au focus, la bordure et l'ombre prennent la couleur du tone
 /// pour indiquer le champ actif sans dépendre du seul `outline`.
 export const authFieldPrimary =
-  "card-hard-sm w-full rounded-xl bg-surface px-4 py-3 font-medium text-foreground placeholder:text-muted/70 outline-none transition-all focus:border-primary focus:shadow-[4px_4px_0_0_var(--primary)]";
+  "card-hard-sm w-full rounded-xl bg-surface px-3.5 py-2.5 font-medium text-foreground placeholder:text-muted/70 outline-none transition-all focus:border-primary focus:shadow-[4px_4px_0_0_var(--primary)]";
 
 export const authFieldSecondary =
-  "card-hard-sm w-full rounded-xl bg-surface px-4 py-3 font-medium text-foreground placeholder:text-muted/70 outline-none transition-all focus:border-secondary focus:shadow-[4px_4px_0_0_var(--secondary)]";
+  "card-hard-sm w-full rounded-xl bg-surface px-3.5 py-2.5 font-medium text-foreground placeholder:text-muted/70 outline-none transition-all focus:border-secondary focus:shadow-[4px_4px_0_0_var(--secondary)]";
 
 /// Bouton de soumission : aplat dans la couleur du tone, l'ombre dure reprend
 /// cette couleur au survol pendant que le bouton s'enfonce (comme les CTA de
 /// l'accueil public).
 export const authSubmitPrimary =
-  "press card-hard w-full rounded-full bg-primary px-6 py-3.5 font-display text-base font-bold text-primary-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[4px_4px_0_0_var(--primary)] disabled:cursor-not-allowed disabled:opacity-50";
+  "press card-hard w-full rounded-full bg-primary px-6 py-3 font-display text-base font-bold text-primary-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[4px_4px_0_0_var(--primary)] disabled:cursor-not-allowed disabled:opacity-50";
 
 export const authSubmitSecondary =
-  "press card-hard w-full rounded-full bg-secondary px-6 py-3.5 font-display text-base font-bold text-secondary-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[4px_4px_0_0_var(--secondary)] disabled:cursor-not-allowed disabled:opacity-50";
+  "press card-hard w-full rounded-full bg-secondary px-6 py-3 font-display text-base font-bold text-secondary-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[4px_4px_0_0_var(--secondary)] disabled:cursor-not-allowed disabled:opacity-50";
 
 export function AuthSplit({
   tone,
@@ -64,20 +64,20 @@ export function AuthSplit({
   const accent = tone === "primary" ? "text-primary" : "text-secondary";
 
   return (
-    <div className="animate-rise mx-auto w-full max-w-7xl">
-      <div className="card-hard grid overflow-hidden rounded-blob bg-surface lg:grid-cols-[1fr_1.15fr] lg:min-h-[calc(100dvh-8rem)]">
+    <div className="animate-rise mx-auto w-full max-w-6xl">
+      <div className="card-hard-cream grid overflow-hidden rounded-blob bg-surface lg:grid-cols-[1fr_1.15fr] lg:min-h-[calc(100dvh-15rem)]">
         {/* Colonne formulaire : centrée verticalement, largeur lisible. */}
-        <div className="flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
+        <div className="flex flex-col justify-center px-6 py-7 sm:px-10 lg:px-12 lg:py-9">
           <div className="w-full max-w-md">
             <span className="card-hard-sm inline-flex w-fit items-center gap-2 rounded-full bg-paper px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground">
               <span className={`h-2 w-2 rounded-full ${accent}`} aria-hidden />
               {kicker}
             </span>
-            <h1 className="font-display mt-5 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h1 className="font-display mt-4 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
               {title}
             </h1>
             <p className="mt-2 text-muted">{subtitle}</p>
-            <div className="mt-8">{children}</div>
+            <div className="mt-5">{children}</div>
           </div>
         </div>
 
