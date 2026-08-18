@@ -29,7 +29,7 @@ export function FinalCta() {
         </p>
         <div className="relative mt-10 flex flex-wrap justify-center gap-4">
           <CtaButton href="#catalogue" variant="ink" size="lg">
-            Explorer sans compte
+            Explorer
           </CtaButton>
           <CtaButton
             href="#vendre"

@@ -7,6 +7,7 @@ import { createClient } from "@/lib/backend/client";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
 import { CategoryWheel } from "@/components/play/CategoryWheel";
+import { CategoryWheelHorizontal } from "@/components/play/CategoryWheelHorizontal";
 import { ProductGridSkeleton } from "@/components/Skeleton";
 
 type Sort = "recent" | "price_asc" | "price_desc" | "popular";
@@ -111,56 +112,76 @@ function SearchInner() {
         )}
       </div>
 
-      {/* La roue de catégories : la sélection se fait au centre de l'arc. Le
-          tri, lui, vit dans l'en-tête des résultats, là où il concerne la
-          grille — pas au même endroit que le choix de la catégorie. */}
+      {/*
+        Sur mobile, la roue est horizontale en haut (arc doux, comme la
+        version d'origine). Sur grand écran, elle devient un rail vertical
+        défilant collé à gauche de la grille — sticky pendant le défilement.
+      */}
       {categories.length > 0 && (
-        <CategoryWheel
-          items={wheelItems}
-          selectedId={resolvedCategoryId}
-          onSelect={setCategoryId}
-        />
+        <div className="lg:hidden">
+          <CategoryWheelHorizontal
+            items={wheelItems}
+            selectedId={resolvedCategoryId}
+            onSelect={setCategoryId}
+          />
+        </div>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        {!loading && products.length > 0 && (
-          <p className="text-sm text-muted">
-            {products.length} résultat{products.length > 1 ? "s" : ""}
-          </p>
+      <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
+        {categories.length > 0 && (
+          <aside className="hidden lg:sticky lg:top-20 lg:block">
+            <CategoryWheel
+              items={wheelItems}
+              selectedId={resolvedCategoryId}
+              onSelect={setCategoryId}
+            />
+          </aside>
         )}
 
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="hidden text-xs uppercase tracking-wide text-muted sm:inline">
-            Trier
-          </span>
-          {SORT_OPTIONS.map(({ value, label }) => (
-            <button
-              key={value}
-              onClick={() => setSort(value)}
-              aria-pressed={sort === value}
-              className={`card-hard-sm press rounded-full px-3.5 py-1.5 text-sm font-medium transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
-                sort === value
-                  ? "bg-foreground text-background"
-                  : "bg-surface text-muted hover:text-foreground"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+        <div className="min-w-0 space-y-4">
+          {/* Le tri vit dans l'en-tête des résultats : il concerne la grille,
+              pas le choix de la catégorie. */}
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            {!loading && products.length > 0 && (
+              <p className="text-sm text-muted">
+                {products.length} résultat{products.length > 1 ? "s" : ""}
+              </p>
+            )}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="hidden text-xs uppercase tracking-wide text-muted sm:inline">
+                Trier
+              </span>
+              {SORT_OPTIONS.map(({ value, label }) => (
+                <button
+                  key={value}
+                  onClick={() => setSort(value)}
+                  aria-pressed={sort === value}
+                  className={`card-hard-sm press rounded-full px-3.5 py-1.5 text-sm font-medium transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+                    sort === value
+                      ? "bg-foreground text-background"
+                      : "bg-surface text-muted hover:text-foreground"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {loading ? (
+            <ProductGridSkeleton />
+          ) : products.length === 0 ? (
+            <p className="py-16 text-center text-muted">Aucun résultat.</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+              {products.map((p) => (
+                <ProductCard key={p.id} product={p} hard />
+              ))}
+            </div>
+          )}
         </div>
       </div>
-
-      {loading ? (
-        <ProductGridSkeleton />
-      ) : products.length === 0 ? (
-        <p className="py-16 text-center text-muted">Aucun résultat.</p>
-      ) : (
-        <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} hard />
-          ))}
-        </div>
-      )}
     </div>
   );
 }

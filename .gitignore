@@ -55,5 +55,8 @@ SMTP_SETUP.md
 # images test
 /screenshots
 
+# out
+.out/
+
 #Agent config
 AGENTS.md

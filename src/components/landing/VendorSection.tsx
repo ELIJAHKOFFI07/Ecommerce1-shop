@@ -62,7 +62,7 @@ export function VendorSection() {
             <br />
             ta{" "}
             <Marker variant="orange">
-              <span className="text-white">régie</span>
+              <span className="">régie</span>
             </Marker>
             .
           </h2>

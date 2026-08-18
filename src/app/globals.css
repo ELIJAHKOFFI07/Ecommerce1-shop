@@ -597,6 +597,20 @@ svg {
   box-shadow: 8px 8px 0 0 var(--primary);
 }
 
+/* Variantes avec ombre jaune soleil ou crème : utiles sur les aplats foncés
+   (section bonus sur fond vert profond) où l'ombre encre passerait inaperçue. */
+@utility card-hard-sun {
+  border-width: 2px;
+  border-color: var(--border);
+  box-shadow: 6px 6px 0 0 var(--sun);
+}
+
+@utility card-hard-cream {
+  border-width: 2px;
+  border-color: var(--border);
+  box-shadow: 6px 6px 0 0 var(--cream);
+}
+
 body {
   font-family: var(--font-body);
 }

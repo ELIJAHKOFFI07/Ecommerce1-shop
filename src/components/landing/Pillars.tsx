@@ -69,7 +69,7 @@ export function Pillars() {
         <h2 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
           Trois façons de faire
           <br />
-          de <Marker variant="orange"><span className="text-white">bonnes affaires</span></Marker>
+          de <Marker variant="orange"><span>bonnes affaires</span></Marker>
         </h2>
       </Reveal>
 
