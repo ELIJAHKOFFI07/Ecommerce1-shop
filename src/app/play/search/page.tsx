@@ -1,13 +1,22 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon, X } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
+import { CategoryWheel } from "@/components/play/CategoryWheel";
 import { ProductGridSkeleton } from "@/components/Skeleton";
+
 type Sort = "recent" | "price_asc" | "price_desc" | "popular";
+
+const SORT_OPTIONS: { value: Sort; label: string }[] = [
+  { value: "recent", label: "Récents" },
+  { value: "price_asc", label: "Prix croissant" },
+  { value: "price_desc", label: "Prix décroissant" },
+  { value: "popular", label: "Populaires" },
+];
 
 function SearchInner() {
   const params = useSearchParams();
@@ -73,114 +82,86 @@ function SearchInner() {
     return () => clearTimeout(handle);
   }, [query, resolvedCategoryId, sort]);
 
+  const wheelItems = useMemo(
+    () => [
+      { id: null as string | null, name: "Tout" },
+      ...categories.map((c) => ({ id: c.id, name: c.name })),
+    ],
+    [categories],
+  );
+
   return (
-    <div>
-      <div className="mb-4 flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5">
-        <SearchIcon className="h-4 w-4 text-muted" />
+    <div className="space-y-6">
+      <div className="card-hard flex items-center gap-2 rounded-full bg-surface px-4 py-2.5 transition-all focus-within:translate-x-0.5 focus-within:translate-y-0.5 focus-within:shadow-[4px_4px_0_0_var(--accent)]">
+        <SearchIcon className="h-4 w-4 shrink-0 text-muted" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher un produit…"
           className="w-full bg-transparent outline-none placeholder:text-muted"
         />
+        {query && (
+          <button
+            onClick={() => setQuery("")}
+            aria-label="Effacer la recherche"
+            className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-surface-2 text-muted transition-colors hover:text-foreground"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
 
-      {/* Sur grand écran, les filtres passent en colonne fixe : ils restent
-          accessibles pendant qu'on fait défiler les résultats, au lieu de
-          disparaître en haut de page. En dessous de `lg`, ils restent des
-          pastilles horizontales, plus adaptées au pouce. */}
-      <div className="grid gap-6 lg:grid-cols-[15rem_1fr] lg:items-start">
-        <aside className="space-y-5 lg:sticky lg:top-20">
-           <div>
-            <h2 className="mb-2 text-xs uppercase tracking-wide text-muted">
-              Catégories
-            </h2>
-            <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start">
-              {[
-                [null, "Tout"],
-                ...categories.map((c) => [c.id, c.name] as [string, string]),
-              ].map(([id, label]) => (
-                <FilterChip
-                  key={id ?? "__all__"}
-                  active={resolvedCategoryId === id}
-                  onClick={() => setCategoryId(id)}
-                >
-                  {label}
-                </FilterChip>
-              ))}
-            </div>
-          </div>
+      {/* La roue de catégories : la sélection se fait au centre de l'arc. Le
+          tri, lui, vit dans l'en-tête des résultats, là où il concerne la
+          grille — pas au même endroit que le choix de la catégorie. */}
+      {categories.length > 0 && (
+        <CategoryWheel
+          items={wheelItems}
+          selectedId={resolvedCategoryId}
+          onSelect={setCategoryId}
+        />
+      )}
 
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        {!loading && products.length > 0 && (
+          <p className="text-sm text-muted">
+            {products.length} résultat{products.length > 1 ? "s" : ""}
+          </p>
+        )}
 
-          <div>
-            <h2 className="mb-2 text-xs uppercase tracking-wide text-muted">
-              Trier par
-            </h2>
-            <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start">
-              {(
-                [
-                  ["recent", "Récents"],
-                  ["price_asc", "Prix croissant"],
-                  ["price_desc", "Prix décroissant"],
-                  ["popular", "Populaires"],
-                ] as [Sort, string][]
-              ).map(([value, label]) => (
-                <FilterChip
-                  key={value}
-                  active={sort === value}
-                  onClick={() => setSort(value)}
-                >
-                  {label}
-                </FilterChip>
-              ))}
-            </div>
-          </div>
-        </aside>
-
-        <div>
-          {!loading && products.length > 0 && (
-            <p className="mb-3 text-sm text-muted">
-              {products.length} résultat{products.length > 1 ? "s" : ""}
-            </p>
-          )}
-
-          {loading ? (
-            <ProductGridSkeleton />
-          ) : products.length === 0 ? (
-            <p className="py-12 text-center text-muted">Aucun résultat.</p>
-          ) : (
-            <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-              {products.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          )}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="hidden text-xs uppercase tracking-wide text-muted sm:inline">
+            Trier
+          </span>
+          {SORT_OPTIONS.map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => setSort(value)}
+              aria-pressed={sort === value}
+              className={`card-hard-sm press rounded-full px-3.5 py-1.5 text-sm font-medium transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+                sort === value
+                  ? "bg-foreground text-background"
+                  : "bg-surface text-muted hover:text-foreground"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
-    </div>
-  );
-}
 
-function FilterChip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`press rounded-full px-3 py-1.5 text-sm transition-colors lg:w-full lg:text-left ${
-        active
-          ? "bg-foreground font-medium text-background"
-          : "bg-surface-2 text-muted hover:text-foreground"
-      }`}
-    >
-      {children}
-    </button>
+      {loading ? (
+        <ProductGridSkeleton />
+      ) : products.length === 0 ? (
+        <p className="py-16 text-center text-muted">Aucun résultat.</p>
+      ) : (
+        <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+          {products.map((p) => (
+            <ProductCard key={p.id} product={p} hard />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 

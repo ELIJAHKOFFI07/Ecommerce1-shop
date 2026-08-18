@@ -5,12 +5,22 @@ import { formatFcfa } from "@/lib/types";
 
 /// Vignette produit.
 ///
-/// Pas de cadre : l'image carrée posée sur `surface-2` fait office de carte,
-/// le texte vit dessous sur le fond de page. C'est la grammaire des deux
-/// projets de référence — une bordure autour de chaque vignette, répétée
+/// Pas de cadre par défaut : l'image carrée posée sur `surface-2` fait office
+/// de carte, le texte vit dessous sur le fond de page. C'est la grammaire des
+/// deux projets de référence — une bordure autour de chaque vignette, répétée
 /// vingt fois sur une grille, alourdit la page sans rien apporter puisque
 /// l'image délimite déjà la zone cliquable.
-export function ProductCard({ product }: { product: Product }) {
+///
+/// `hard` enveloppe la vignette dans le cadre néo-brutal (`card-hard` +
+/// `card-hover`, trait encre + ombre dure) pour les grilles où chaque carte
+/// doit porter le trait cartoon — la page de recherche.
+export function ProductCard({
+  product,
+  hard = false,
+}: {
+  product: Product;
+  hard?: boolean;
+}) {
   const cover = product.product_images?.[0]?.url;
   const hasDiscount =
     product.compare_at_price != null && product.compare_at_price > product.price;
@@ -19,7 +29,12 @@ export function ProductCard({ product }: { product: Product }) {
     : 0;
 
   return (
-    <Link href={`/play/product/${product.id}`} className="press group block">
+    <Link
+      href={`/play/product/${product.id}`}
+      className={`press group block ${
+        hard ? "card-hard card-hover rounded-3xl bg-surface p-3" : ""
+      }`}
+    >
       <div className="relative mb-3 aspect-square overflow-hidden rounded-2xl bg-surface-2">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -41,24 +56,26 @@ export function ProductCard({ product }: { product: Product }) {
         )}
       </div>
 
-      <p className="line-clamp-2 text-sm font-medium text-foreground lg:text-base">
-        {product.title}
-      </p>
-      <div className="mt-1 flex items-baseline gap-2">
-        <span className="text-sm font-semibold text-foreground lg:text-base">
-          {formatFcfa(product.price)}
-        </span>
-        {hasDiscount && (
-          <span className="text-xs text-muted line-through">
-            {formatFcfa(product.compare_at_price!)}
+      <div className={hard ? "px-1 pb-1" : undefined}>
+        <p className="line-clamp-2 text-sm font-medium text-foreground lg:text-base">
+          {product.title}
+        </p>
+        <div className="mt-1 flex items-baseline gap-2">
+          <span className="text-sm font-semibold text-foreground lg:text-base">
+            {formatFcfa(product.price)}
           </span>
+          {hasDiscount && (
+            <span className="text-xs text-muted line-through">
+              {formatFcfa(product.compare_at_price!)}
+            </span>
+          )}
+        </div>
+        {product.city && (
+          <p className="mt-1 flex items-center gap-1 text-xs text-muted">
+            <MapPin className="h-3 w-3" /> {product.city}
+          </p>
         )}
       </div>
-      {product.city && (
-        <p className="mt-1 flex items-center gap-1 text-xs text-muted">
-          <MapPin className="h-3 w-3" /> {product.city}
-        </p>
-      )}
     </Link>
   );
 }
