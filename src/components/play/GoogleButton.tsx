@@ -2,18 +2,23 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/backend/client";
+import type { AuthTone } from "@/components/auth/AuthSplit";
 
 /// Connexion et inscription via Google.
 ///
 /// Côté Supabase, `signInWithOAuth` couvre les deux cas : le compte est créé
 /// à la première connexion, puis simplement retrouvé ensuite. Seul le libellé
-/// change donc entre les deux pages.
+/// change donc entre les deux pages. Le `tone` teinte la bordure au survol
+/// pour rester cohérent avec la page (primary = inscription, secondary =
+/// connexion).
 export function GoogleButton({
   label = "Continuer avec Google",
   redirectTo = "/play/account",
+  tone = "secondary",
 }: {
   label?: string;
   redirectTo?: string;
+  tone?: AuthTone;
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +56,11 @@ export function GoogleButton({
         type="button"
         onClick={signIn}
         disabled={loading}
-        className="press flex w-full items-center justify-center gap-3 rounded-full border border-border bg-surface py-3 font-semibold transition-colors hover:border-accent disabled:opacity-60"
+        className={`press card-hard-sm flex w-full items-center justify-center gap-3 rounded-full bg-surface px-6 py-3 font-semibold transition-all hover:translate-x-0.5 hover:translate-y-0.5 ${
+          tone === "primary"
+            ? "hover:border-primary hover:shadow-[4px_4px_0_0_var(--primary)]"
+            : "hover:border-secondary hover:shadow-[4px_4px_0_0_var(--secondary)]"
+        } disabled:opacity-60`}
       >
         <GoogleMark />
         {loading ? "Redirection…" : label}

@@ -8,7 +8,9 @@ import { Sparkles } from "lucide-react";
 ///
 /// Volontairement minimaliste : le nom de l'app à gauche, un seul lien à
 /// droite qui bascule vers l'autre formulaire. Aucune navigation du site,
-/// aucun footer — le contexte de l'app n'a pas de place ici.
+/// aucun footer — le contexte de l'app n'a pas de place ici. Le lien reprend
+/// le tone de la page courante (primary = inscription, secondary = connexion)
+/// pour que les deux formulaires se distinguent au premier coup d'œil.
 export function AuthHeader() {
   const pathname = usePathname();
   const isRegister = pathname === "/play/register";
@@ -26,7 +28,11 @@ export function AuthHeader() {
 
         <Link
           href={isRegister ? "/play/login" : "/play/register"}
-          className="press shrink-0 rounded-full border border-border px-4 py-2 text-sm transition-colors hover:bg-surface-2"
+          className={`press shrink-0 rounded-full border-2 px-4 py-2 text-sm font-semibold transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0_0_var(--foreground)] ${
+            isRegister
+              ? "border-primary bg-primary/10 text-primary hover:bg-primary/20"
+              : "border-secondary bg-secondary/10 text-secondary hover:bg-secondary/20"
+          }`}
         >
           {isRegister
             ? "Déjà inscrit ? Se connecter"

@@ -5,6 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/backend/client";
 import { GoogleButton } from "@/components/play/GoogleButton";
 import { HeaderSkeleton, Skeleton } from "@/components/Skeleton";
+import {
+  AuthSplit,
+  AUTH_IMAGES,
+  authFieldSecondary,
+  authSubmitSecondary,
+} from "@/components/auth/AuthSplit";
 
 function LoginInner() {
   const router = useRouter();
@@ -40,50 +46,55 @@ function LoginInner() {
     else router.push(next);
   }
 
-  const field =
-    "w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none transition-colors focus:border-accent";
-
   return (
-    <div className="animate-rise mx-auto max-w-sm py-10">
-      <h1 className="text-2xl font-medium tracking-tight">Connexion</h1>
-      <p className="mt-1 text-sm text-muted">
-        Content de vous revoir sur DreamTeamShop.
-      </p>
-
-      <form onSubmit={submit} className="mt-6 space-y-4">
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          className={field}
+    <AuthSplit
+      tone="secondary"
+      image={AUTH_IMAGES.login}
+      imageAlt="Ambiance shopping chaleureuse DreamTeamShop"
+      kicker="Bienvenue de retour"
+      title="Connexion"
+      subtitle="Content de vous revoir sur DreamTeamShop."
+      badge="Content de vous revoir"
+      featureTitle="Votre panier vous attend"
+      featureText="Retrouvez vos achats, négociations et vendeurs favoris en un clic."
+    >
+      <div className="stagger space-y-4">
+        <GoogleButton
+          label="Se connecter avec Google"
+          redirectTo={next}
+          tone="secondary"
         />
-        <input
-          type="password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Mot de passe"
-          className={field}
-        />
-        {error && <p className="text-sm text-red-400">{error}</p>}
-        <button
-          disabled={loading}
-          className="press w-full rounded-full bg-foreground py-3 font-semibold text-background disabled:opacity-50"
-        >
-          {loading ? "Connexion…" : "Se connecter"}
-        </button>
-      </form>
 
-      <div className="my-5 flex items-center gap-3 text-xs text-muted">
-        <span className="h-px flex-1 bg-border" />
-        ou
-        <span className="h-px flex-1 bg-border" />
+        <div className="my-2 flex items-center gap-3 text-xs text-muted">
+          <span className="h-px flex-1 bg-border" />
+          ou
+          <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <form onSubmit={submit} className="stagger space-y-4">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className={authFieldSecondary}
+          />
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Mot de passe"
+            className={authFieldSecondary}
+          />
+          {error && <p className="text-sm font-medium text-red-400">{error}</p>}
+          <button disabled={loading} className={authSubmitSecondary}>
+            {loading ? "Connexion…" : "Se connecter"}
+          </button>
+        </form>
       </div>
-
-      <GoogleButton label="Se connecter avec Google" redirectTo={next} />
-    </div>
+    </AuthSplit>
   );
 }
 
@@ -91,7 +102,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-sm space-y-4 py-10">
+        <div className="mx-auto w-full max-w-md space-y-4 py-10">
           <HeaderSkeleton />
           <Skeleton className="h-12 w-full" />
           <Skeleton className="h-12 w-full" />

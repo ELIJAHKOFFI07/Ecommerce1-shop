@@ -2,8 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { PartyPopper } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { GoogleButton } from "@/components/play/GoogleButton";
+import {
+  AuthSplit,
+  AUTH_IMAGES,
+  authFieldPrimary,
+  authSubmitPrimary,
+} from "@/components/auth/AuthSplit";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -41,87 +48,106 @@ export default function RegisterPage() {
 
   if (done) {
     return (
-      <div className="mx-auto max-w-sm py-16 text-center">
-        <p className="text-lg font-semibold">Compte créé 🎉</p>
-        <p className="mt-2 text-muted">
-          Vérifiez votre email pour confirmer, puis connectez-vous.
-        </p>
-        <Link
-          href="/play/login"
-          className="mt-6 inline-block rounded-full bg-foreground px-6 py-2.5 font-semibold text-background"
-        >
-          Se connecter
-        </Link>
-      </div>
+      <AuthSplit
+        tone="primary"
+        image={AUTH_IMAGES.register}
+        imageAlt="Nouveau départ sur DreamTeamShop"
+        kicker="Bienvenue à bord"
+        title="Compte créé"
+        subtitle="Une dernière étape avant de profiter de DreamTeamShop."
+        badge="100 points de bienvenue"
+        featureTitle="Rejoignez la communauté"
+        featureText="Achetez, vendez et brillez avec des milliers de membres en Côte d'Ivoire."
+      >
+        <div className="animate-rise text-center">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-primary/10">
+            <PartyPopper className="h-8 w-8 text-primary" />
+          </div>
+          <p className="font-display mt-4 text-lg font-bold text-foreground">
+            Compte créé
+          </p>
+          <p className="mt-2 text-sm text-muted">
+            Vérifiez votre email pour confirmer, puis connectez-vous.
+          </p>
+          <Link
+            href="/play/login"
+            className={`${authSubmitPrimary} mt-6 inline-flex items-center justify-center`}
+          >
+            Se connecter
+          </Link>
+        </div>
+      </AuthSplit>
     );
   }
 
   return (
-    <div className="animate-rise mx-auto max-w-sm py-10">
-      <h1 className="text-2xl font-medium tracking-tight">Créer un compte</h1>
-      <p className="mt-1 text-sm text-muted">
-        Gratuit, et vous gagnez 100 points avec un code de parrainage.
-      </p>
+    <AuthSplit
+      tone="primary"
+      image={AUTH_IMAGES.register}
+      imageAlt="Nouveau départ sur DreamTeamShop"
+      kicker="Rejoignez la team"
+      title="Créer un compte"
+      subtitle="Gratuit, et vous gagnez 100 points avec un code de parrainage."
+      badge="100 points de bienvenue"
+      featureTitle="Rejoignez la communauté"
+      featureText="Achetez, vendez et brillez avec des milliers de membres en Côte d'Ivoire."
+    >
+      <div className="stagger space-y-4">
+        {/* Google en premier : le parcours en un clic évite de remplir cinq
+            champs, et le compte est créé automatiquement à la première
+            connexion. */}
+        <GoogleButton label="S'inscrire avec Google" tone="primary" />
 
-      {/* Google en premier : le parcours en un clic évite de remplir cinq
-          champs, et le compte est créé automatiquement à la première
-          connexion. */}
-      <div className="mt-6">
-        <GoogleButton label="S'inscrire avec Google" />
+        <div className="my-2 flex items-center gap-3 text-xs text-muted">
+          <span className="h-px flex-1 bg-border" />
+          ou avec un e-mail
+          <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <form onSubmit={submit} className="stagger space-y-4">
+          <input
+            required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Nom d'utilisateur"
+            className={authFieldPrimary}
+          />
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className={authFieldPrimary}
+          />
+          <input
+            type="password"
+            required
+            minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Mot de passe (8 caractères min.)"
+            className={authFieldPrimary}
+          />
+          <input
+            type="tel"
+            value={whatsapp}
+            onChange={(e) => setWhatsapp(e.target.value)}
+            placeholder="Numéro WhatsApp (ex : +225 07 00 00 00 00)"
+            className={authFieldPrimary}
+          />
+          <input
+            value={referral}
+            onChange={(e) => setReferral(e.target.value)}
+            placeholder="Code de parrainage (optionnel)"
+            className={`${authFieldPrimary} uppercase`}
+          />
+          {error && <p className="text-sm font-medium text-red-400">{error}</p>}
+          <button disabled={loading} className={authSubmitPrimary}>
+            {loading ? "Création…" : "Créer mon compte"}
+          </button>
+        </form>
       </div>
-
-      <div className="my-5 flex items-center gap-3 text-xs text-muted">
-        <span className="h-px flex-1 bg-border" />
-        ou avec un e-mail
-        <span className="h-px flex-1 bg-border" />
-      </div>
-
-      <form onSubmit={submit} className="space-y-4">
-        <input
-          required
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Nom d'utilisateur"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
-        />
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
-        />
-        <input
-          type="password"
-          required
-          minLength={8}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Mot de passe (8 caractères min.)"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
-        />
-        <input
-          type="tel"
-          value={whatsapp}
-          onChange={(e) => setWhatsapp(e.target.value)}
-          placeholder="Numéro WhatsApp (ex : +225 07 00 00 00 00)"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent"
-        />
-        <input
-          value={referral}
-          onChange={(e) => setReferral(e.target.value)}
-          placeholder="Code de parrainage (optionnel)"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 uppercase outline-none focus:border-accent"
-        />
-        {error && <p className="text-sm text-red-400">{error}</p>}
-        <button
-          disabled={loading}
-          className="press w-full rounded-full bg-foreground py-3 font-semibold text-background disabled:opacity-50"
-        >
-          {loading ? "Création…" : "Créer mon compte"}
-        </button>
-      </form>
-    </div>
+    </AuthSplit>
   );
 }
