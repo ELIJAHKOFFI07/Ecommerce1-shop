@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { Star } from "lucide-react";
 
 /// Layout à deux colonnes des pages d'authentification.
@@ -63,9 +64,21 @@ export function AuthSplit({
 }) {
   const accent = tone === "primary" ? "text-primary" : "text-secondary";
 
+  /// Lien de bascule : à l'intérieur de la carte (pas dans l'en-tête) pour
+  /// rester à portée du formulaire sur mobile. La couleur annonce la page de
+  /// destination — orange pour l'inscription, vert pour la connexion.
+  const isRegister = tone === "primary";
+  const switchHref = isRegister ? "/play/login" : "/play/register";
+  const switchLabel = isRegister
+    ? "Déjà inscrit ? Se connecter"
+    : "Pas de compte ? Inscrivez-vous";
+  const switchClass = isRegister
+    ? "text-secondary"
+    : "text-primary";
+
   return (
     <div className="animate-rise mx-auto w-full max-w-6xl">
-      <div className="card-hard-cream grid overflow-hidden rounded-blob bg-surface lg:grid-cols-[1fr_1.15fr] lg:min-h-[calc(100dvh-15rem)]">
+      <div className="card-hard lg:card-hard-cream grid overflow-hidden rounded-blob bg-surface lg:grid-cols-[1fr_1.15fr] lg:min-h-[calc(100dvh-15rem)]">
         {/* Colonne formulaire : centrée verticalement, largeur lisible. */}
         <div className="flex flex-col justify-center px-6 py-7 sm:px-10 lg:px-12 lg:py-9">
           <div className="w-full max-w-md">
@@ -78,6 +91,15 @@ export function AuthSplit({
             </h1>
             <p className="mt-2 text-muted">{subtitle}</p>
             <div className="mt-5">{children}</div>
+
+            <div className="mt-5 text-right">
+              <Link
+                href={switchHref}
+                className={`press underline-grow text-sm font-semibold ${switchClass}`}
+              >
+                {switchLabel}
+              </Link>
+            </div>
           </div>
         </div>
 

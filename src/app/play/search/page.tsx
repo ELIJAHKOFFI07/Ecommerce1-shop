@@ -93,23 +93,49 @@ function SearchInner() {
 
   return (
     <div className="space-y-6">
-      <div className="card-hard flex items-center gap-2 rounded-full bg-surface px-4 py-2.5 transition-all focus-within:translate-x-0.5 focus-within:translate-y-0.5 focus-within:shadow-[4px_4px_0_0_var(--accent)]">
-        <SearchIcon className="h-4 w-4 shrink-0 text-muted" />
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher un produit…"
-          className="w-full bg-transparent outline-none placeholder:text-muted"
-        />
-        {query && (
-          <button
-            onClick={() => setQuery("")}
-            aria-label="Effacer la recherche"
-            className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-surface-2 text-muted transition-colors hover:text-foreground"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
-        )}
+      {/* Barre de recherche (60 %) + tri (40 %), côte à côte sur grand écran.
+          Le tri vit à côté de la recherche : il porte sur ce qu'on filtre,
+          pas sur la roue des catégories. */}
+      <div className="flex flex-wrap items-start gap-4 lg:flex-nowrap">
+        <div className="w-full lg:w-[60%]">
+          <div className="card-hard flex items-center gap-2 rounded-full bg-surface px-4 py-2.5 transition-all focus-within:translate-x-0.5 focus-within:translate-y-0.5 focus-within:shadow-[4px_4px_0_0_var(--accent)]">
+            <SearchIcon className="h-4 w-4 shrink-0 text-muted" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Rechercher un produit…"
+              className="w-full bg-transparent outline-none placeholder:text-muted"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery("")}
+                aria-label="Effacer la recherche"
+                className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-surface-2 text-muted transition-colors hover:text-foreground"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="w-full lg:w-[40%]">
+          <div className="flex flex-wrap items-center gap-2">
+            {SORT_OPTIONS.map(({ value, label }) => (
+              <button
+                key={value}
+                onClick={() => setSort(value)}
+                aria-pressed={sort === value}
+                className={`card-hard-sm press rounded-full px-3.5 py-1.5 text-sm font-medium transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+                  sort === value
+                    ? "bg-foreground text-background"
+                    : "bg-surface text-muted hover:text-foreground"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/*
@@ -139,35 +165,11 @@ function SearchInner() {
         )}
 
         <div className="min-w-0 space-y-4">
-          {/* Le tri vit dans l'en-tête des résultats : il concerne la grille,
-              pas le choix de la catégorie. */}
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-            {!loading && products.length > 0 && (
-              <p className="text-sm text-muted">
-                {products.length} résultat{products.length > 1 ? "s" : ""}
-              </p>
-            )}
-
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="hidden text-xs uppercase tracking-wide text-muted sm:inline">
-                Trier
-              </span>
-              {SORT_OPTIONS.map(({ value, label }) => (
-                <button
-                  key={value}
-                  onClick={() => setSort(value)}
-                  aria-pressed={sort === value}
-                  className={`card-hard-sm press rounded-full px-3.5 py-1.5 text-sm font-medium transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
-                    sort === value
-                      ? "bg-foreground text-background"
-                      : "bg-surface text-muted hover:text-foreground"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
+          {!loading && products.length > 0 && (
+            <p className="text-sm text-muted">
+              {products.length} résultat{products.length > 1 ? "s" : ""}
+            </p>
+          )}
 
           {loading ? (
             <ProductGridSkeleton />

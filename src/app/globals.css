@@ -502,7 +502,7 @@ body {
   bottom: -2px;
   height: 1.5px;
   width: 100%;
-  background: var(--foreground);
+  background: currentColor;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);

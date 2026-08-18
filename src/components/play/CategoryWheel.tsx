@@ -167,7 +167,7 @@ export function CategoryWheel({
           </span>
           Catégories
         </p>
-        <p className="text-[11px] text-muted">Défilez pour changer</p>
+        <p className="text-[11px] text-muted">Défilez ou appuyez pour changer</p>
       </div>
 
       <div className="relative">

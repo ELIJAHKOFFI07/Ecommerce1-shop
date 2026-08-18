@@ -51,9 +51,9 @@ function LoginInner() {
       tone="secondary"
       image={AUTH_IMAGES.login}
       imageAlt="Ambiance shopping chaleureuse DreamTeamShop"
-      kicker="Bienvenue de retour"
+      kicker="De retour parmis nous "
       title="Connexion"
-      subtitle="Content de vous revoir sur DreamTeamShop."
+      subtitle="Nous sommes heureux de vous retrouver chez nous."
       badge="Content de vous revoir"
       featureTitle="Votre panier vous attend"
       featureText="Retrouvez vos achats, négociations et vendeurs favoris en un clic."
