@@ -30,7 +30,7 @@ export function Bonus() {
   return (
     <section
       id="bonus"
-      className="relative overflow-hidden border-y-2 border-ink bg-vert-deep py-16 text-white sm:py-24"
+      className="relative overflow-hidden border-y-2 border-border bg-vert-deep py-16 text-white sm:py-24"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-10"

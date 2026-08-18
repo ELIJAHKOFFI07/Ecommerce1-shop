@@ -5,7 +5,7 @@ import { CtaButton } from "./Primitives";
 export function FinalCta() {
   return (
     <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
-      <Reveal className="relative overflow-hidden rounded-blob border-2 border-ink bg-orange px-6 py-16 text-center shadow-hard sm:p-20">
+      <Reveal className="card-hard relative overflow-hidden rounded-blob bg-orange px-6 py-16 text-center sm:p-20">
         <div
           className="pointer-events-none absolute inset-0 opacity-15"
           style={{

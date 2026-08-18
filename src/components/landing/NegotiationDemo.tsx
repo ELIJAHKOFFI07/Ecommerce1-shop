@@ -76,7 +76,7 @@ export function NegotiationDemo() {
 
   return (
     <Reveal>
-      <div className="mx-auto w-full max-w-md overflow-hidden rounded-blob border-2 border-ink bg-paper shadow-hard">
+      <div className="card-hard mx-auto w-full max-w-md overflow-hidden rounded-blob bg-paper">
         <div className="flex items-center gap-3 bg-ink px-5 py-4 text-cream">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -124,7 +124,7 @@ export function NegotiationDemo() {
           )}
         </div>
 
-        <div className="border-t-2 border-ink/10 p-4">
+        <div className="border-t-2 border-border/10 p-4">
           <p className="mb-2.5 text-xs font-bold uppercase tracking-wider text-ink/50">
             Propose ton prix (essaye !)
           </p>
@@ -134,7 +134,7 @@ export function NegotiationDemo() {
                 key={offer}
                 type="button"
                 onClick={() => handleOffer(offer)}
-                className="rounded-full border-2 border-ink bg-paper px-4 py-2 font-display text-sm font-bold shadow-hard-sm transition-colors hover:bg-sun"
+                className="card-hard-sm rounded-full bg-paper px-4 py-2 font-display text-sm font-bold transition-colors hover:bg-sun"
               >
                 {fmt(offer)} F
               </button>

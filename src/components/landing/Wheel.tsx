@@ -44,7 +44,7 @@ export function Wheel() {
         <div
           id="wheel"
           ref={wheelRef}
-          className="relative h-full w-full overflow-hidden rounded-full border-4 border-ink shadow-hard"
+          className="relative h-full w-full overflow-hidden rounded-full border-4 border-border shadow-hard"
           style={{ background: WHEEL_GRADIENT }}
         >
           <span className="absolute left-1/2 top-[8%] -translate-x-1/2 font-display text-xs font-extrabold text-white sm:text-sm">
@@ -66,7 +66,7 @@ export function Wheel() {
             −5%
           </span>
         </div>
-        <div className="absolute inset-0 z-10 m-auto grid h-16 w-16 place-items-center rounded-full border-4 border-ink bg-paper">
+        <div className="absolute inset-0 z-10 m-auto grid h-16 w-16 place-items-center rounded-full border-4 border-border bg-paper">
           <ShoppingBag className="h-7 w-7 text-orange" strokeWidth={2.4} />
         </div>
       </div>
@@ -75,7 +75,7 @@ export function Wheel() {
         type="button"
         onClick={spin}
         disabled={spinning}
-        className="mt-8 rounded-full border-2 border-ink bg-sun px-8 py-4 font-display text-lg font-extrabold text-ink shadow-hard transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="card-hard mt-8 rounded-full bg-sun px-8 py-4 font-display text-lg font-extrabold text-ink transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none disabled:cursor-not-allowed disabled:opacity-50"
       >
         Tourner la roue
       </button>

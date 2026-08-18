@@ -64,7 +64,7 @@ export function ShowcaseCarousel({ children }: { children: ReactNode }) {
         <button
           type="button"
           onClick={() => scroll("left")}
-          className="grid h-9 w-9 place-items-center rounded-full border border-ink/20 bg-white text-ink/40 transition-colors hover:bg-ink hover:text-white"
+          className="grid h-9 w-9 place-items-center rounded-full border border-border/20 bg-white text-ink/40 transition-colors hover:bg-ink hover:text-white"
           aria-label="Précédent"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -72,7 +72,7 @@ export function ShowcaseCarousel({ children }: { children: ReactNode }) {
         <button
           type="button"
           onClick={() => scroll("right")}
-          className="grid h-9 w-9 place-items-center rounded-full border border-ink bg-ink text-white transition-colors hover:bg-orange"
+          className="grid h-9 w-9 place-items-center rounded-full border border-border bg-ink text-white transition-colors hover:bg-orange"
           aria-label="Suivant"
         >
           <ChevronRight className="h-4 w-4" />

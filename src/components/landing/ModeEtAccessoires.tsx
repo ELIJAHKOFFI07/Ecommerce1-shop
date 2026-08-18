@@ -159,7 +159,7 @@ function Stars({ rating }: { rating: number }) {
 
 function ProductCard({ product }: { product: ModeProduct }) {
   return (
-    <div className="card-hover group w-[260px] shrink-0 overflow-hidden rounded-3xl border-2 border-ink bg-paper shadow-hard-sm sm:w-[280px]">
+    <div className="card-hover card-hard-sm group w-[260px] shrink-0 overflow-hidden rounded-3xl bg-paper sm:w-[280px]">
       <div className="relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

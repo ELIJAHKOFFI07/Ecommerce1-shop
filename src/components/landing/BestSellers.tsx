@@ -182,7 +182,7 @@ function Stars({ rating }: { rating: number }) {
 
 function ProductCard({ product }: { product: BestSellerProduct }) {
   return (
-    <div className="card-hover group w-[260px] shrink-0 overflow-hidden rounded-3xl border-2 border-ink bg-paper shadow-hard-sm sm:w-[280px]">
+    <div className="card-hover card-hard-sm group w-[260px] shrink-0 overflow-hidden rounded-3xl bg-paper sm:w-[280px]">
       <div className="relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -193,7 +193,7 @@ function ProductCard({ product }: { product: BestSellerProduct }) {
       </div>
       <div className="p-4">
         <div className="mb-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink bg-vert px-2.5 py-1 font-display text-xs font-extrabold text-white">
+          <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-border bg-vert px-2.5 py-1 font-display text-xs font-extrabold text-white">
             <CircleCheck className="h-3.5 w-3.5" />
             Baisse de prix
           </span>
@@ -228,7 +228,7 @@ function ProductCard({ product }: { product: BestSellerProduct }) {
             <Info className="h-3 w-3" />
           </p>
         )}
-        <button className="mt-3 w-full rounded-full border-2 border-ink bg-paper px-4 py-2.5 font-display text-sm font-bold transition-colors hover:bg-ink hover:text-cream">
+        <button className="mt-3 w-full rounded-full border-2 border-border bg-paper px-4 py-2.5 font-display text-sm font-bold transition-colors hover:bg-ink hover:text-cream">
           + Ajouter au panier
         </button>
       </div>

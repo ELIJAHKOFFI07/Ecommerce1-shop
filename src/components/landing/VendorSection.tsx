@@ -31,7 +31,7 @@ export function VendorSection() {
     <section id="vendre" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
       <div className="grid items-center gap-12 lg:grid-cols-2">
         <Reveal className="relative">
-          <div className="rotate-[1.5deg] overflow-hidden rounded-blob border-2 border-ink shadow-hard">
+          <div className="card-hard rotate-[1.5deg] overflow-hidden rounded-blob">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={ASSETS.seller}
@@ -41,7 +41,7 @@ export function VendorSection() {
           </div>
           <FloatingCard
             rotation={-3}
-            className="-bottom-6 -left-2 rounded-2xl border-2 border-ink bg-paper px-5 py-4 shadow-hard-sm sm:left-6"
+            className="card-hard-sm -bottom-6 -left-2 rounded-2xl bg-paper px-5 py-4 sm:left-6"
           >
             <p className="text-[10px] font-bold uppercase tracking-widest text-ink/50">
               Portefeuille vendeur
@@ -75,7 +75,7 @@ export function VendorSection() {
             {FEATURES.map((feature) => (
               <li
                 key={feature.title}
-                className="flex items-start gap-4 rounded-2xl border-2 border-ink bg-paper p-4 shadow-hard-sm"
+                className="card-hard-sm flex items-start gap-4 rounded-2xl bg-paper p-4"
               >
                 <IconBadge tone={feature.tone} size="md" className="rounded-xl">
                   {feature.icon}

@@ -33,7 +33,7 @@ export function EtBienPlus() {
           <a
             key={cat.slug}
             href={`/play/search?category=${cat.slug}`}
-            className="card-hover flex items-center justify-between gap-2 rounded-2xl border-2 border-ink bg-paper p-4 font-display font-bold transition-colors hover:bg-orange-soft"
+            className="card-hover flex items-center justify-between gap-2 rounded-2xl border-2 border-border bg-paper p-4 font-display font-bold transition-colors hover:bg-orange-soft"
           >
             <span>{cat.label}</span>
             <span aria-hidden className="text-ink/40">

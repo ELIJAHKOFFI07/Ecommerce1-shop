@@ -54,7 +54,7 @@ export function Faq() {
             <Reveal
               key={item.question}
               delay={index * 0.05}
-              className="overflow-hidden rounded-2xl border-2 border-ink bg-paper shadow-hard-sm"
+              className="card-hard-sm overflow-hidden rounded-2xl bg-paper"
             >
               <div className={open ? "faq-item open" : "faq-item"}>
                 <button

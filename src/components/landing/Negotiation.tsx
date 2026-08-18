@@ -21,7 +21,7 @@ export function Negotiation() {
   return (
     <section
       id="negocier"
-      className="wax-pattern border-y-2 border-ink bg-orange-soft/60 py-16 sm:py-24"
+      className="wax-pattern border-y-2 border-border bg-orange-soft/60 py-16 sm:py-24"
     >
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
         <Reveal>
@@ -41,7 +41,7 @@ export function Negotiation() {
           <ul className="mt-8 space-y-4">
             {CHECKS.map((check, i) => (
               <li key={i} className="flex items-start gap-3">
-                <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 border-ink bg-orange">
+                <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 border-border bg-orange">
                   <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                 </span>
                 <p className="font-semibold">{check}</p>

@@ -45,7 +45,7 @@ export function CategoryShowcase({
       </Reveal>
 
       <Reveal>
-        <div className="overflow-hidden rounded-3xl border-2 border-ink bg-cream shadow-hard">
+        <div className="card-hard overflow-hidden rounded-3xl bg-cream">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
             <div className="min-w-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -42,7 +42,7 @@ const UTILITY_LINKS = [
 /// sans toucher à la structure du header.
 function SkeletonCard() {
   return (
-    <div className="animate-pulse rounded-2xl border-2 border-ink bg-paper">
+    <div className="animate-pulse rounded-2xl border-2 border-border bg-paper">
       <div className="aspect-square w-full bg-ink/10" />
       <div className="space-y-1.5 p-3">
         <div className="h-2.5 w-3/4 rounded-full bg-ink/15" />
@@ -98,7 +98,7 @@ export function Navbar() {
             : { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
         }
       >
-        <header className="border-b-2 border-ink/10 bg-cream/90 backdrop-blur-md">
+        <header className="border-b-2 border-border/10 bg-cream/90 backdrop-blur-md">
       {/* ---- Rangée 1 : logo, recherche, actions ---- */}
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:h-[4.5rem] sm:px-6 lg:gap-6">
         <button
@@ -106,7 +106,7 @@ export function Navbar() {
           onClick={() => setMenuOpen(true)}
           aria-label="Ouvrir le menu"
           aria-expanded={menuOpen}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-ink bg-paper shadow-hard-sm lg:hidden"
+          className="card-hard-sm grid h-11 w-11 shrink-0 place-items-center rounded-full bg-paper lg:hidden"
         >
           <Menu className="h-5 w-5" strokeWidth={2.5} />
         </button>
@@ -115,7 +115,7 @@ export function Navbar() {
           href="/"
           className="flex shrink-0 items-center gap-2 font-display text-xl font-extrabold tracking-tight sm:text-2xl"
         >
-          <span className="grid h-9 w-9 rotate-[-6deg] place-items-center rounded-xl border-2 border-ink bg-orange shadow-hard-sm sm:h-10 sm:w-10">
+          <span className="card-hard-sm grid h-9 w-9 rotate-[-6deg] place-items-center rounded-xl bg-orange sm:h-10 sm:w-10">
             <ShoppingBag className="h-5 w-5 text-white" strokeWidth={2.4} />
           </span>
           DreamTeam<span className="text-orange">Shop</span>
@@ -123,7 +123,7 @@ export function Navbar() {
 
         <Link
           href="/play/search"
-          className="hidden flex-1 items-center gap-2 rounded-full border-2 border-ink bg-paper px-5 py-2.5 text-sm text-ink/50 shadow-hard-sm transition-colors hover:bg-paper/70 lg:flex lg:max-w-xl"
+          className="card-hard-sm hidden flex-1 items-center gap-2 rounded-full bg-paper px-5 py-2.5 text-sm text-ink/50 transition-colors hover:bg-paper/70 lg:flex lg:max-w-xl"
         >
           <Search className="h-4 w-4 shrink-0" strokeWidth={2.5} />
           Rechercher un produit…
@@ -143,7 +143,7 @@ export function Navbar() {
 
         <Link
           href="/play/sell"
-          className="hidden items-center gap-2 rounded-full border-2 border-ink bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream shadow-hard-sm transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange hover:text-ink hover:shadow-none sm:inline-flex"
+          className="card-hard-sm hidden items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange hover:text-ink hover:shadow-none sm:inline-flex"
         >
           <Store className="h-4 w-4" strokeWidth={2.5} />
           Vendre
@@ -152,7 +152,7 @@ export function Navbar() {
         <Link
           href="/play/account"
           aria-label="Mon compte"
-          className="hidden h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-ink bg-paper shadow-hard-sm transition-colors hover:bg-orange-soft sm:grid"
+          className="card-hard-sm hidden h-11 w-11 shrink-0 place-items-center rounded-full bg-paper transition-colors hover:bg-orange-soft sm:grid"
         >
           <User className="h-5 w-5" strokeWidth={2.4} />
         </Link>
@@ -160,7 +160,7 @@ export function Navbar() {
         <Link
           href="/play/cart"
           aria-label="Panier"
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-ink bg-paper shadow-hard-sm transition-colors hover:bg-orange-soft"
+          className="card-hard-sm grid h-11 w-11 shrink-0 place-items-center rounded-full bg-paper transition-colors hover:bg-orange-soft"
         >
           <ShoppingCart className="h-5 w-5" strokeWidth={2.4} />
         </Link>
@@ -170,14 +170,14 @@ export function Navbar() {
       <div className="flex items-center gap-2.5 px-4 pb-3 sm:px-6 lg:hidden">
         <Link
           href="/play/sell"
-          className="inline-flex shrink-0 items-center gap-2 rounded-full border-2 border-ink bg-ink px-4 py-2.5 font-display text-sm font-bold text-cream"
+          className="inline-flex shrink-0 items-center gap-2 rounded-full border-2 border-border bg-ink px-4 py-2.5 font-display text-sm font-bold text-cream"
         >
           <Store className="h-4 w-4" strokeWidth={2.5} />
           Vendre
         </Link>
         <Link
           href="/play/search"
-          className="flex min-w-0 flex-1 items-center gap-2 rounded-full border-2 border-ink bg-paper px-4 py-2.5 text-sm text-ink/50"
+          className="flex min-w-0 flex-1 items-center gap-2 rounded-full border-2 border-border bg-paper px-4 py-2.5 text-sm text-ink/50"
         >
           <Search className="h-4 w-4 shrink-0" strokeWidth={2.5} />
           Rechercher…
@@ -185,7 +185,7 @@ export function Navbar() {
       </div>
 
       {/* ---- Rangée 2 : catégories + menus déroulants (desktop) ---- */}
-      <nav className="relative hidden border-t-2 border-ink/10 lg:block">
+      <nav className="relative hidden border-t-2 border-border/10 lg:block">
         <div className="scrollbar-hide mx-auto flex max-w-7xl items-stretch gap-1 overflow-x-auto px-4 sm:px-6">
           {CATEGORIES.map((cat) => (
             <Link
@@ -227,7 +227,7 @@ export function Navbar() {
               className="absolute inset-x-0 top-full z-50"
             >
               <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                <div className="border-x-2 border-b-2 border-ink bg-paper p-5 shadow-hard">
+                <div className="border-x-2 border-b-2 border-border bg-paper p-5 shadow-hard">
                   <p className="mb-4 font-display text-sm font-extrabold uppercase tracking-widest text-ink/50">
                     {activeCat}
                   </p>
@@ -259,14 +259,14 @@ export function Navbar() {
             onClick={() => setMenuOpen(false)}
             aria-hidden="true"
           />
-          <div className="absolute inset-y-0 left-0 flex w-[min(20rem,85vw)] flex-col border-r-2 border-ink bg-cream shadow-hard">
-            <div className="flex items-center justify-between border-b-2 border-ink/10 px-5 py-4">
+          <div className="absolute inset-y-0 left-0 flex w-[min(20rem,85vw)] flex-col border-r-2 border-border bg-cream shadow-hard">
+            <div className="flex items-center justify-between border-b-2 border-border/10 px-5 py-4">
               <Link
                 href="/"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-2 font-display text-xl font-extrabold tracking-tight"
               >
-                <span className="grid h-9 w-9 rotate-[-6deg] place-items-center rounded-xl border-2 border-ink bg-orange shadow-hard-sm">
+                <span className="card-hard-sm grid h-9 w-9 rotate-[-6deg] place-items-center rounded-xl bg-orange">
                   <ShoppingBag className="h-5 w-5 text-white" strokeWidth={2.4} />
                 </span>
                 DreamTeam<span className="text-orange">Shop</span>
@@ -275,7 +275,7 @@ export function Navbar() {
                 type="button"
                 onClick={() => setMenuOpen(false)}
                 aria-label="Fermer le menu"
-                className="grid h-10 w-10 place-items-center rounded-full border-2 border-ink bg-paper shadow-hard-sm"
+                className="card-hard-sm grid h-10 w-10 place-items-center rounded-full bg-paper"
               >
                 <X className="h-5 w-5" strokeWidth={2.5} />
               </button>
@@ -291,7 +291,7 @@ export function Navbar() {
                     <Link
                       href={cat.href}
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 border-b border-ink/10 py-3 font-display text-lg font-bold transition-colors hover:text-orange"
+                      className="flex items-center gap-2 border-b border-border/10 py-3 font-display text-lg font-bold transition-colors hover:text-orange"
                     >
                       {cat.highlight && (
                         <Zap className="h-4 w-4 text-orange" strokeWidth={2.5} />
@@ -311,7 +311,7 @@ export function Navbar() {
                     <Link
                       href={link.href}
                       onClick={() => setMenuOpen(false)}
-                      className="border-b border-ink/10 py-3 text-sm font-semibold text-ink/70 transition-colors hover:text-orange"
+                      className="border-b border-border/10 py-3 text-sm font-semibold text-ink/70 transition-colors hover:text-orange"
                     >
                       {link.label}
                     </Link>
@@ -320,11 +320,11 @@ export function Navbar() {
               </ul>
             </div>
 
-            <div className="border-t-2 border-ink/10 p-4">
+            <div className="border-t-2 border-border/10 p-4">
               <Link
                 href="/play/sell"
                 onClick={() => setMenuOpen(false)}
-                className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-ink bg-orange px-5 py-3 font-display font-bold text-white shadow-hard-sm"
+                className="card-hard-sm flex w-full items-center justify-center gap-2 rounded-full bg-orange px-5 py-3 font-display font-bold text-white"
               >
                 <Store className="h-5 w-5" strokeWidth={2.5} />
                 Vendre

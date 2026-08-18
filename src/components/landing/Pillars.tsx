@@ -40,7 +40,7 @@ function PillarCard({
     <Reveal
       delay={delay}
       as="article"
-      className={`card-hover relative overflow-hidden rounded-blob border-2 border-ink p-8 ${PILLAR_TONES[tone]}`}
+      className={`card-hover relative overflow-hidden rounded-blob border-2 border-border p-8 ${PILLAR_TONES[tone]}`}
     >
       <span className={`absolute -right-3 -top-3 select-none font-display text-[7rem] font-extrabold leading-none ${ghostTone}`}>
         {index}

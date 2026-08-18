@@ -46,7 +46,7 @@ export function IconBadge({
 }) {
   return (
     <span
-      className={`${ICON_BADGE_SIZES[size]} ${ICON_BADGE_TONES[tone]} grid place-items-center border-2 border-ink shrink-0 ${className}`}
+      className={`${ICON_BADGE_SIZES[size]} ${ICON_BADGE_TONES[tone]} grid place-items-center border-2 border-border shrink-0 ${className}`}
     >
       {children}
     </span>
@@ -82,7 +82,7 @@ export function Pill({
     size === "sm" ? "px-3.5 py-1.5 text-sm" : "px-5 py-2.5 text-base";
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border-2 border-ink font-display font-bold ${PILL_TONES[tone]} ${sizing} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border-2 border-border font-display font-bold ${PILL_TONES[tone]} ${sizing} ${className}`}
     >
       {children}
     </span>
@@ -127,7 +127,7 @@ export function CtaButton({
   return (
     <Link
       href={href}
-      className={`inline-flex items-center gap-2 rounded-full border-2 border-ink font-display font-bold shadow-hard transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none ${CTA_VARIANTS[variant]} ${CTA_SIZES[size]} ${className}`}
+      className={`card-hard inline-flex items-center gap-2 rounded-full font-display font-bold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none ${CTA_VARIANTS[variant]} ${CTA_SIZES[size]} ${className}`}
     >
       {children}
       {withArrow && <ArrowRight className="h-5 w-5" strokeWidth={2.5} />}

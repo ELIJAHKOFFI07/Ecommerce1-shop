@@ -32,7 +32,7 @@ const FEATURES = [
 /// Section confiance : quatre engagements clés.
 export function Trust() {
   return (
-    <section id="confiance" className="border-y-2 border-ink bg-paper py-16 sm:py-24">
+    <section id="confiance" className="border-y-2 border-border bg-paper py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="mx-auto mb-12 max-w-2xl text-center">
           <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-vert">
@@ -63,7 +63,7 @@ export function Trust() {
               <Reveal
                 key={feature.title}
                 delay={i * 0.07}
-                className="rounded-3xl border-2 border-ink bg-cream p-6 shadow-hard-sm"
+                className="card-hard-sm rounded-3xl bg-cream p-6"
               >
                 <span
                   className={`mb-4 grid h-12 w-12 place-items-center rounded-xl ${toneClass}`}

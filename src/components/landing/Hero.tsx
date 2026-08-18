@@ -20,7 +20,7 @@ export function Hero() {
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16 lg:grid-cols-[1.15fr_1fr]">
         <div>
           <Reveal>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border-2 border-ink bg-paper px-4 py-1.5 text-sm font-bold shadow-hard-sm">
+            <div className="card-hard-sm mb-6 inline-flex items-center gap-2 rounded-full bg-paper px-4 py-1.5 text-sm font-bold">
               <span className="pulse-ring h-2 w-2 rounded-full bg-vert" />
               La marketplace sociale de Côte d&apos;Ivoire
             </div>
@@ -71,7 +71,7 @@ export function Hero() {
 
         {/* Visuel héro */}
         <Reveal className="relative mx-auto w-full max-w-md">
-          <div className="hero-arch relative overflow-hidden border-2 border-ink bg-gradient-to-b from-orange to-orange-deep shadow-hard">
+          <div className="card-hard hero-arch relative overflow-hidden bg-gradient-to-b from-orange to-orange-deep">
             <div
               className="absolute inset-0 opacity-20"
               style={{
@@ -88,9 +88,9 @@ export function Hero() {
             />
           </div>
 
-          <FloatingCard rotation={-4} className="-left-4 top-10 z-20 rounded-2xl border-2 border-ink bg-paper px-4 py-3 shadow-hard-sm sm:-left-10">
+          <FloatingCard rotation={-4} className="card-hard-sm -left-4 top-10 z-20 rounded-2xl bg-paper px-4 py-3 sm:-left-10">
             <div className="flex items-center gap-3">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-ink bg-vert-soft">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-border bg-vert-soft">
                 <Check className="h-5 w-5 text-vert-deep" strokeWidth={2.6} />
               </span>
               <div>
@@ -107,7 +107,7 @@ export function Hero() {
           <FloatingCard
             variant="floaty-slow"
             rotation={3}
-            className="-right-3 bottom-24 z-20 rounded-2xl border-2 border-ink bg-ink px-4 py-3 text-cream shadow-hard-orange sm:-right-8"
+            className="card-hard-orange -right-3 bottom-24 z-20 rounded-2xl bg-ink px-4 py-3 text-cream sm:-right-8"
           >
             <p className="text-[11px] font-bold uppercase tracking-widest text-cream/60">
               Code de retrait
@@ -120,7 +120,7 @@ export function Hero() {
           <FloatingCard
             rotation={-2}
             delay={1.2}
-            className="bottom-4 left-2 z-20 rounded-2xl border-2 border-ink bg-sun px-4 py-2.5 shadow-hard-sm sm:-left-6"
+            className="card-hard-sm bottom-4 left-2 z-20 rounded-2xl bg-sun px-4 py-2.5 sm:-left-6"
           >
             <p className="font-display text-sm font-extrabold">
               VENTE FLASH{" "}

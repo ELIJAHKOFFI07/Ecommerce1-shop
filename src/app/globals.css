@@ -564,11 +564,37 @@ svg {
   --font-display: var(--font-bricolage);
   --font-body: var(--font-inter);
 
-  --shadow-hard: 6px 6px 0 0 var(--ink);
-  --shadow-hard-sm: 4px 4px 0 0 var(--ink);
-  --shadow-hard-orange: 8px 8px 0 0 var(--orange);
+  --shadow-hard: 6px 6px 0 0 var(--foreground);
+  --shadow-hard-sm: 4px 4px 0 0 var(--foreground);
+  --shadow-hard-orange: 8px 8px 0 0 var(--primary);
 
   --radius-blob: 2.5rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Trait cartoon en une classe : bordure encre 2px + ombre dure.
+   Remplace le trio `border-2 border-ink shadow-hard*` répété sur chaque carte
+   et bouton de l'accueil — une seule classe, toujours la même couleur de
+   bordure (--border = encre), l'ombre portée suit --foreground / --primary.
+   Comme les autres utilitaires Tailwind, elles supportent les variantes
+   (hover:card-hard…) et peuvent être neutralisées (hover:shadow-none).
+   --------------------------------------------------------------------------- */
+@utility card-hard {
+  border-width: 2px;
+  border-color: var(--border);
+  box-shadow: 6px 6px 0 0 var(--foreground);
+}
+
+@utility card-hard-sm {
+  border-width: 2px;
+  border-color: var(--border);
+  box-shadow: 4px 4px 0 0 var(--foreground);
+}
+
+@utility card-hard-orange {
+  border-width: 2px;
+  border-color: var(--border);
+  box-shadow: 8px 8px 0 0 var(--primary);
 }
 
 body {
@@ -744,7 +770,7 @@ body {
 }
 .card-hover:hover {
   transform: translate(-3px, -3px);
-  box-shadow: 8px 8px 0 0 var(--ink);
+  box-shadow: 8px 8px 0 0 var(--foreground);
 }
 .heart-btn.active svg {
   fill: var(--orange);

@@ -60,10 +60,10 @@ function AuctionTimerSmall() {
 /* ------------------------------------------------------------------ */
 
 const BADGE_TONES: Record<BadgeTone, string> = {
-  orange: "bg-orange text-white border-ink",
+  orange: "bg-orange text-white border-border",
   ink: "bg-ink text-sun border-sun",
-  vert: "bg-vert text-white border-ink",
-  sun: "bg-sun text-ink border-ink",
+  vert: "bg-vert text-white border-border",
+  sun: "bg-sun text-ink border-border",
 };
 
 const TAG_TONES: Record<TagTone, string> = {
@@ -82,7 +82,7 @@ function ProductCard({
   return (
     <Reveal
       delay={delay}
-      className="card-hover group overflow-hidden rounded-3xl border-2 border-ink bg-paper shadow-hard-sm"
+      className="card-hover card-hard-sm group overflow-hidden rounded-3xl bg-paper"
     >
       <div className="relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,7 +98,7 @@ function ProductCard({
             {product.badge.label}
           </span>
         )}
-        <HeartButton className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border-2 border-ink bg-paper" />
+        <HeartButton className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border-2 border-border bg-paper" />
       </div>
 
       <div className="p-4">

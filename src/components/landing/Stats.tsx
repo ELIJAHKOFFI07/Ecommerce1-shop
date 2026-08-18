@@ -58,7 +58,7 @@ function StatCard({
   }, [value, staticText, suffix]);
 
   return (
-    <Reveal delay={delay} className="rounded-3xl border-2 border-border bg-card p-6 text-center shadow-hard-sm">
+    <Reveal delay={delay} className="card-hard-sm rounded-3xl bg-card p-6 text-center">
       <p className={`font-display text-4xl font-extrabold sm:text-5xl ${valueClassName ?? "text-foreground"}`}>
         <span ref={ref}>{display}</span>
         {staticSub !== undefined && (

@@ -53,7 +53,7 @@ export function AuctionCard() {
           alt="Montre chronographe or"
           className="aspect-square w-full object-cover"
         />
-        <span className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full border-2 border-ink bg-orange px-3 py-1.5 font-display text-xs font-extrabold uppercase tracking-wider text-white">
+        <span className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full border-2 border-border bg-orange px-3 py-1.5 font-display text-xs font-extrabold uppercase tracking-wider text-white">
           <span className="inline-block h-2 w-2 animate-ping rounded-full bg-white" />
           Enchère en cours
         </span>
@@ -91,7 +91,7 @@ export function AuctionCard() {
           <button
             type="button"
             onClick={handleBid}
-            className="rounded-full border-2 border-sun bg-sun px-5 py-3 font-display text-sm font-extrabold text-ink transition-all hover:border-ink hover:bg-orange hover:text-white"
+            className="rounded-full border-2 border-sun bg-sun px-5 py-3 font-display text-sm font-extrabold text-ink transition-all hover:border-border hover:bg-orange hover:text-white"
           >
             {placed ? "Offre placée !" : "+ 2 500 F"}
           </button>
