@@ -7,8 +7,6 @@ import { createClient } from "@/lib/backend/client";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
 import { ProductGridSkeleton } from "@/components/Skeleton";
-import { CategoryWheelPicker } from "@/components/play/CategoryWheelPicker";
-
 type Sort = "recent" | "price_asc" | "price_desc" | "popular";
 
 function SearchInner() {
@@ -97,11 +95,20 @@ function SearchInner() {
             <h2 className="mb-2 text-xs uppercase tracking-wide text-muted">
               Catégories
             </h2>
-            <CategoryWheelPicker
-              categories={categories}
-              value={resolvedCategoryId}
-              onChange={setCategoryId}
-            />
+            <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start">
+              {[
+                [null, "Tout"],
+                ...categories.map((c) => [c.id, c.name] as [string, string]),
+              ].map(([id, label]) => (
+                <FilterChip
+                  key={id ?? "__all__"}
+                  active={resolvedCategoryId === id}
+                  onClick={() => setCategoryId(id)}
+                >
+                  {label}
+                </FilterChip>
+              ))}
+            </div>
           </div>
 
 
