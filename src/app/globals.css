@@ -5,42 +5,122 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
-   Palette — style commerce clair, repris du projet shirt-shop.
+   THEME « DreamTeamShop » — style néo-brutal chaud (maquette dreamOnSteroid).
 
-   Fond blanc, échelle de gris pour le texte, un seul accent bleu. Ces
-   variables pilotent bg-accent / text-accent / bg-surface / border-border
-   utilisés dans toute l'application : les redéfinir suffit à changer
-   l'habillage complet, sans toucher aux composants.
+   Toute la palette est exprimée via les tokens shadcn (background, foreground,
+   primary, secondary, accent, border, …), comme dans la structure de
+   global.example.css : les composants n'utilisent que les utilitaires Tailwind
+   correspondants (bg-background, text-foreground, bg-card, bg-primary,
+   bg-secondary, bg-accent, border-border, …). Changer ces variables rethème
+   toute l'application en un endroit.
 
-   Sans elles, Tailwind v4 ignore silencieusement ces classes — aucune erreur,
-   simplement aucun style appliqué.
+   Valeurs sources : cream (fond), ink (texte), paper (surface cartes),
+   orange (CTA principal), vert (secondaire), sun (accent jaune des badges et
+   marqueurs). Le trait cartoon (bordures et ombres dures) porte `--border` et
+   `--foreground` : border-border + shadow-hard/shadow-hard-sm suffisent donc à
+   habiller une carte ou un bouton façon néo-brutal.
 
-   `--on-accent` est la couleur du texte POSÉ SUR l'accent (libellés de
-   bouton). Elle ne peut pas être figée : blanc sur le bleu clair du mode
-   sombre ne donne que 3,68:1, sous le seuil de 4,5:1. Elle bascule donc avec
-   le thème, contrairement à un `text-white` codé en dur.
+   `--on-accent` est la couleur du texte POSÉ SUR l'accent. Elle bascule avec
+   le thème pour rester lisible sur les accents clairs du mode sombre.
    --------------------------------------------------------------------------- */
-:root { /* gray-900 — 17,7:1 */
-  --surface: #ffffff;
-  --surface-2: #f9fafb; /* gray-50 */
-  --border: oklch(0.922 0 0); /* gray-200 */
-  --muted: oklch(0.97 0 0); /* gray-500 — 4,8:1 */
-  --accent: oklch(0.97 0 0); /* blue-600 — 5,2:1 en texte comme en fond */
-  --accent-dark: #1d4ed8; /* blue-700 */
-  --on-accent: #ffffff; /* 5,2:1 sur l'accent */ --background: oklch(1 0 0); --foreground: oklch(0.145 0 0); --card: oklch(1 0 0); --card-foreground: oklch(0.145 0 0); --popover: oklch(1 0 0); --popover-foreground: oklch(0.145 0 0); --primary: oklch(0.205 0 0); --primary-foreground: oklch(0.985 0 0); --secondary: oklch(0.97 0 0); --secondary-foreground: oklch(0.205 0 0); --muted-foreground: oklch(0.556 0 0); --accent-foreground: oklch(0.205 0 0); --destructive: oklch(0.577 0.245 27.325); --input: oklch(0.922 0 0); --ring: oklch(0.708 0 0); --chart-1: oklch(0.87 0 0); --chart-2: oklch(0.556 0 0); --chart-3: oklch(0.439 0 0); --chart-4: oklch(0.371 0 0); --chart-5: oklch(0.269 0 0); --radius: 0.625rem; --sidebar: oklch(0.985 0 0); --sidebar-foreground: oklch(0.145 0 0); --sidebar-primary: oklch(0.205 0 0); --sidebar-primary-foreground: oklch(0.985 0 0); --sidebar-accent: oklch(0.97 0 0); --sidebar-accent-foreground: oklch(0.205 0 0); --sidebar-border: oklch(0.922 0 0); --sidebar-ring: oklch(0.708 0 0);
+:root {
+  /* Fond, texte et surfaces */
+  --background: #fff6ec;   /* cream */
+  --foreground: #17110b;   /* ink */
+  --card: #fffbf4;         /* paper */
+  --card-foreground: #17110b;
+  --popover: #fffbf4;
+  --popover-foreground: #17110b;
+
+  /* Couleurs de marque */
+  --primary: #ff6b00;              /* orange — CTA principal */
+  --primary-foreground: #ffffff;
+  --secondary: #009e60;            /* vert */
+  --secondary-foreground: #ffffff;
+  --accent: #ff6b00;               /* orange — accent d'app (focus, succès) */
+  --accent-foreground: #ffffff;
+  --accent-dark: #e04e00;          /* orange foncé (hover) */
+  --on-accent: #ffffff;
+
+  /* Neutres chauds : texte secondaire et aplats discrets */
+  --muted: #8a7a68;                /* brun chaud — 4,8:1 sur cream */
+  --muted-foreground: #8a7a68;
+
+  --destructive: oklch(0.577 0.245 27.325);
+
+  /* Trait cartoon : toutes les bordures portent l'encre */
+  --border: #17110b;
+  --input: #17110b;
+  --ring: #ff6b00;
+  --radius: 1rem;
+
+  /* Graphiques (back-office) */
+  --chart-1: #ff6b00;
+  --chart-2: #009e60;
+  --chart-3: #ffc700;
+  --chart-4: #9085e9;
+  --chart-5: #e0708f;
+
+  /* Sidebar */
+  --sidebar: #fffbf4;
+  --sidebar-foreground: #17110b;
+  --sidebar-primary: #ff6b00;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ffe3cb;
+  --sidebar-accent-foreground: #17110b;
+  --sidebar-border: #17110b;
+  --sidebar-ring: #ff6b00;
+
+  /* Surfaces d'appoint (composants play/admin) */
+  --surface: #fffbf4;      /* paper */
+  --surface-2: #ffe3cb;    /* orange-soft */
 }
 
-/* Mode sombre (data-theme="dark" posé sur <html> par le sélecteur). */
-:root[data-theme="dark"] {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-  --surface: #171717; /* neutral-900 */
-  --surface-2: #262626; /* neutral-800 */
-  --border: #333333;
-  --muted: #a3a3a3; /* neutral-400 — 7,1:1 */
-  --accent: #3b82f6; /* blue-500 — 4,9:1 sur la surface sombre */
-  --accent-dark: #60a5fa;
-  --on-accent: #0a0a0a; /* 5,0:1 sur l'accent clair */
+/* Mode sombre. Sélecteur unifié : l'app pose `data-theme="dark"` sur <html>,
+   et shadcn utilise la classe `.dark` — les deux reçoivent les mêmes valeurs. */
+:root[data-theme="dark"],
+.dark {
+  --background: #140d07;   /* cream sombre */
+  --foreground: #f3e7d3;   /* ink clair */
+  --card: #1d150d;         /* paper sombre */
+  --card-foreground: #f3e7d3;
+  --popover: #1d150d;
+  --popover-foreground: #f3e7d3;
+
+  --primary: #ff7d1a;      /* orange clair — texte foncé dessus */
+  --primary-foreground: #140d07;
+  --secondary: #2bd089;    /* vert clair */
+  --secondary-foreground: #140d07;
+  --accent: #ff7d1a;
+  --accent-foreground: #140d07;
+  --accent-dark: #ff8c33;
+  --on-accent: #140d07;
+
+  --muted: #c9b8a6;        /* brun clair — 6,9:1 sur fond sombre */
+  --muted-foreground: #c9b8a6;
+
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: #f3e7d3;
+  --input: #f3e7d3;
+  --ring: #ff7d1a;
+
+  --chart-1: #ff7d1a;
+  --chart-2: #2bd089;
+  --chart-3: #ffd23d;
+  --chart-4: #a78bfa;
+  --chart-5: #fb7185;
+
+  --sidebar: #1d150d;
+  --sidebar-foreground: #f3e7d3;
+  --sidebar-primary: #ff7d1a;
+  --sidebar-primary-foreground: #140d07;
+  --sidebar-accent: #3a2410;
+  --sidebar-accent-foreground: #f3e7d3;
+  --sidebar-border: #f3e7d3;
+  --sidebar-ring: #ff7d1a;
+
+  --surface: #1d150d;
+  --surface-2: #3a2410;
 }
 
 /* Palettes de couleurs : seul l'accent change, les surfaces restent
@@ -414,7 +494,7 @@ body {
   bottom: -2px;
   height: 1.5px;
   width: 100%;
-  background: var(--gold);
+  background: var(--foreground);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
@@ -432,48 +512,35 @@ svg {
 }
 
 /* ===========================================================================
-   PALETTE « DreamTeamShop » — style néo-brutal chaud (accueil public).
+   ALIAS NÉO-BRUTAL → tokens shadcn (accueil public).
 
-   Palette reprise de la maquette `dreamOnSteroid/index.html`. Toutes les
-   classes des composants d'accueil (bg-cream, text-ink, bg-orange, …) pointent
-   vers ces variables : les modifier ici rethème toute la page en un endroit.
+   Les noms de la maquette (ink, cream, paper, orange, vert, sun) sont conservés
+   pour la migration progressive des composants, mais pointent désormais vers
+   les tokens shadcn définis en tête de fichier : c'est la même couleur, une
+   seule source de vérité. `bg-ink`, `bg-cream`, `bg-orange`, `bg-sun`… restent
+   donc utilisables, tout en étant identiques à `bg-foreground`, `bg-background`,
+   `bg-primary`, `bg-accent`…
 
-   Les couleurs sont définies en clair dans `:root`, exposées à Tailwind via le
-   bloc `@theme inline`, et redéfinies en mode sombre via `:root[data-theme="dark"]`.
-   ---------------------------------------------------------------------------
-   Couleurs
-   ---------------------------------------------------------------------------
-   ink   : texte & aplats sombres (quasi noir chaud)
-   cream : fond de page
-   paper : surface des cartes
-   orange / deep / soft
-   vert  / deep / soft
-   sun   : jaune d'accent (marqueurs, code de retrait, roue)
+   `sun` (jaune) n'a pas d'équivalent direct dans les tokens shadcn : il reste
+   un token dédié de l'identité néo-brutal (marqueurs, roue, code de retrait).
    --------------------------------------------------------------------------- */
 :root {
-  --ink: #17110b;
-  --cream: #fff6ec;
-  --paper: #fffbf4;
-  --orange: #ff6b00;
-  --orange-deep: #e04e00;
-  --orange-soft: #ffe3cb;
-  --vert: #009e60;
-  --vert-deep: #006b42;
-  --vert-soft: #d9f3e6;
+  --ink: var(--foreground);
+  --cream: var(--background);
+  --paper: var(--card);
+  --orange: var(--primary);
+  --orange-deep: var(--accent-dark);
+  --orange-soft: var(--surface-2);
+  --vert: var(--secondary);
+  --vert-deep: #006b42;          /* vert soutenu pour texte/icônes sur fond clair */
+  --vert-soft: #d9f3e6;          /* aplat vert très pâle (motif wax, marqueurs) */
   --sun: #ffc700;
 }
 
-/* Mode sombre : on inverse les surfaces et le texte. `ink` devient la teinte
-   claire (texte + ombres portées) tandis que cream/paper passent sur des
-   bruns profonds. */
+/* Mode sombre : seules les teintes sans équivalent shadcn sont redéfinies,
+   les alias suivent automatiquement les tokens. */
 :root[data-theme="dark"] {
-  --ink: #f3e7d3;
-  --cream: #140d07;
-  --paper: #1d150d;
-  --orange: #ff7d1a;
-  --orange-deep: #ff8c33;
   --orange-soft: #3a2410;
-  --vert: #2bd089;
   --vert-deep: #19c47a;
   --vert-soft: #103025;
   --sun: #ffd23d;
@@ -730,39 +797,7 @@ body {
   }
 }
 
-.dark {
- --background: oklch(0.145 0 0);
- --foreground: oklch(0.985 0 0);
- --card: oklch(0.205 0 0);
- --card-foreground: oklch(0.985 0 0);
- --popover: oklch(0.205 0 0);
- --popover-foreground: oklch(0.985 0 0);
- --primary: oklch(0.922 0 0);
- --primary-foreground: oklch(0.205 0 0);
- --secondary: oklch(0.269 0 0);
- --secondary-foreground: oklch(0.985 0 0);
- --muted: oklch(0.269 0 0);
- --muted-foreground: oklch(0.708 0 0);
- --accent: oklch(0.269 0 0);
- --accent-foreground: oklch(0.985 0 0);
- --destructive: oklch(0.704 0.191 22.216);
- --border: oklch(1 0 0 / 10%);
- --input: oklch(1 0 0 / 15%);
- --ring: oklch(0.556 0 0);
- --chart-1: oklch(0.87 0 0);
- --chart-2: oklch(0.556 0 0);
- --chart-3: oklch(0.439 0 0);
- --chart-4: oklch(0.371 0 0);
- --chart-5: oklch(0.269 0 0);
- --sidebar: oklch(0.205 0 0);
- --sidebar-foreground: oklch(0.985 0 0);
- --sidebar-primary: oklch(0.488 0.243 264.376);
- --sidebar-primary-foreground: oklch(0.985 0 0);
- --sidebar-accent: oklch(0.269 0 0);
- --sidebar-accent-foreground: oklch(0.985 0 0);
- --sidebar-border: oklch(1 0 0 / 10%);
- --sidebar-ring: oklch(0.556 0 0);
-}
+
 
 @layer base {
   * {

@@ -58,14 +58,14 @@ function StatCard({
   }, [value, staticText, suffix]);
 
   return (
-    <Reveal delay={delay} className="rounded-3xl border-2 border-ink bg-paper p-6 text-center shadow-hard-sm">
-      <p className={`font-display text-4xl font-extrabold sm:text-5xl ${valueClassName ?? "text-ink"}`}>
+    <Reveal delay={delay} className="rounded-3xl border-2 border-border bg-card p-6 text-center shadow-hard-sm">
+      <p className={`font-display text-4xl font-extrabold sm:text-5xl ${valueClassName ?? "text-foreground"}`}>
         <span ref={ref}>{display}</span>
         {staticSub !== undefined && (
           <span className="align-top text-2xl">{staticSub}</span>
         )}
       </p>
-      <p className="mt-1 font-semibold text-ink/60">{label}</p>
+      <p className="mt-1 font-semibold text-muted-foreground">{label}</p>
     </Reveal>
   );
 }
@@ -86,26 +86,26 @@ export function Stats({
         <StatCard
           value={products}
           label="produits en ligne"
-          valueClassName="text-orange"
+          valueClassName="text-primary"
         />
         <StatCard
           value={shops}
           label="boutiques actives"
           delay={0.08}
-          valueClassName="text-vert"
+          valueClassName="text-secondary"
         />
         <StatCard
           value={cities}
           label="villes couvertes"
           delay={0.16}
-          valueClassName="text-ink"
+          valueClassName="text-foreground"
         />
         <StatCard
           staticText="4,8"
           staticSub="/5"
           label="note moyenne des avis"
           delay={0.24}
-          valueClassName="text-orange-deep"
+          valueClassName="text-accent-dark"
         />
       </div>
     </section>

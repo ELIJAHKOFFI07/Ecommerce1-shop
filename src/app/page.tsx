@@ -70,7 +70,7 @@ export default async function Home() {
       : SAMPLE_PRODUCTS;
 
   return (
-    <div className="flex min-h-screen flex-col bg-cream text-ink">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <AnnouncementBar />
       <Navbar />
       <main className="flex-1">

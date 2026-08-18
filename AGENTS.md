@@ -205,6 +205,17 @@ src/
   npx eslint src
   npx next build
   ```
+- **Ne jamais lancer `npx next build` pendant que `npm run dev` tourne** :
+  les deux processus écrivent dans le même dossier `.next` et le build
+  corrompt le cache du dev server (manifests de routes invalides → 404 sur
+  toutes les routes). Constaté en session : le simple redémarrage ne suffit
+  pas, il faut `rm -rf .next` avant de relancer `npm run dev`.
+- **Le watcher Turbopack peut manquer une modification de `globals.css`** :
+  le dev server continue alors de servir l'ancienne palette compilée (le
+  fichier `src_app_globals_css_*.single.css` garde son ancien timestamp).
+  Symptômes : couleurs/bordures fausses alors que la source est bonne, et
+  `touch` ne force rien (le cache se base sur le contenu). Vérifier le
+  timestamp du CSS compilé ; en cas de doute, `rm -rf .next` + redémarrage.
 - **Pas de suite de tests automatisés** dans le projet
   (`Aucune convention de test clairement établie dans la codebase`).
 - **ESLint** : config `eslint-config-next` (core-web-vitals + typescript),
