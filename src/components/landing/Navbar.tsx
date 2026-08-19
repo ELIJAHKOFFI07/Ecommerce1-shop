@@ -42,11 +42,11 @@ const UTILITY_LINKS = [
 /// sans toucher à la structure du header.
 function SkeletonCard() {
   return (
-    <div className="animate-pulse rounded-2xl border-2 border-border bg-paper">
-      <div className="aspect-square w-full bg-ink/10" />
-      <div className="space-y-1.5 p-3">
-        <div className="h-2.5 w-3/4 rounded-full bg-ink/15" />
-        <div className="h-2.5 w-1/2 rounded-full bg-ink/15" />
+    <div className="animate-pulse rounded-xl border border-border bg-paper p-2">
+      <div className="aspect-[4/3] w-full bg-ink/10" />
+      <div className="mt-2 space-y-1.5">
+        <div className="h-2 w-4/5 rounded-full bg-ink/15" />
+        <div className="h-2 w-1/2 rounded-full bg-ink/15" />
       </div>
     </div>
   );
@@ -59,6 +59,7 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const [hidden, setHidden] = useState(false);
+  const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reduceMotion = useReducedMotion();
 
@@ -75,15 +76,38 @@ export function Navbar() {
   // rogné). On passe donc par un état + un petit délai de fermeture qui
   // laisse le temps à la souris de traverser l'espace entre le lien et le
   // panneau sans faire clignoter le menu.
-  const openMenu = (label: string) => {
+  // L'ouverture au survol est volontairement différée (`OPEN_DELAY`) pour
+  // éviter d'afficher le menu quand la souris ne fait que traverser les
+  // liens ; le clic et le focus clavier ouvrent immédiatement.
+  const OPEN_DELAY = 300;
+  const openMenu = (label: string, immediate = false) => {
+    if (openTimer.current) clearTimeout(openTimer.current);
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    setActiveCat(label);
+    if (immediate) {
+      setActiveCat(label);
+      return;
+    }
+    openTimer.current = setTimeout(() => setActiveCat(label), OPEN_DELAY);
+  };
+  const closeMenu = () => {
+    if (openTimer.current) clearTimeout(openTimer.current);
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setActiveCat(null);
+  };
+  const toggleMenu = (label: string) => {
+    if (activeCat === label) {
+      closeMenu();
+    } else {
+      openMenu(label, true);
+    }
   };
   const scheduleClose = () => {
+    if (openTimer.current) clearTimeout(openTimer.current);
     if (closeTimer.current) clearTimeout(closeTimer.current);
     closeTimer.current = setTimeout(() => setActiveCat(null), 120);
   };
   useEffect(() => () => {
+    if (openTimer.current) clearTimeout(openTimer.current);
     if (closeTimer.current) clearTimeout(closeTimer.current);
   }, []);
 
@@ -195,7 +219,11 @@ export function Navbar() {
               aria-expanded={activeCat === cat.label}
               onMouseEnter={() => openMenu(cat.label)}
               onMouseLeave={scheduleClose}
-              onFocus={() => openMenu(cat.label)}
+              onClick={(e) => {
+                e.preventDefault();
+                toggleMenu(cat.label);
+              }}
+              onFocus={() => openMenu(cat.label, true)}
               className={`group flex items-center gap-1.5 whitespace-nowrap px-4 py-3 font-display text-[15px] font-bold transition-colors ${
                 cat.highlight
                   ? "text-orange hover:text-orange-deep"
@@ -204,7 +232,11 @@ export function Navbar() {
             >
               {cat.highlight && <Zap className="h-4 w-4" strokeWidth={2.5} />}
               {cat.label}
-              <ChevronDown className="h-3.5 w-3.5 opacity-50 transition-transform duration-200 group-hover:rotate-180" />
+              <ChevronDown
+                className={`h-3.5 w-3.5 opacity-50 transition-transform duration-200 ${
+                  activeCat === cat.label ? "rotate-180" : ""
+                } group-hover:rotate-180`}
+              />
             </Link>
           ))}
         </div>
@@ -222,16 +254,28 @@ export function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
               transition={{ duration: 0.18, ease: "easeOut" }}
-              onMouseEnter={() => openMenu(activeCat)}
+              onMouseEnter={() => openMenu(activeCat, true)}
               onMouseLeave={scheduleClose}
               className="absolute inset-x-0 top-full z-50"
             >
               <div className="mx-auto max-w-7xl px-4 sm:px-6">
                 <div className="border-x-2 border-b-2 border-border bg-paper p-5 shadow-hard">
-                  <p className="mb-4 font-display text-sm font-extrabold uppercase tracking-widest text-ink/50">
-                    {activeCat}
-                  </p>
-                  <div className="grid grid-cols-3 gap-4 lg:grid-cols-4">
+                  <div className="mb-4 flex items-center justify-between">
+                    <p className="font-display text-sm font-extrabold uppercase tracking-widest text-ink/50">
+                      {activeCat}
+                    </p>
+                    <Link
+                      href={
+                        CATEGORIES.find((c) => c.label === activeCat)?.href ??
+                        "/play/search"
+                      }
+                      onClick={closeMenu}
+                      className="font-display text-sm font-bold text-orange transition-colors hover:text-orange-deep"
+                    >
+                      Voir tout →
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
                     {Array.from({
                       length: CATEGORIES.find((c) => c.label === activeCat)
                         ?.skeletonCards ?? 3,

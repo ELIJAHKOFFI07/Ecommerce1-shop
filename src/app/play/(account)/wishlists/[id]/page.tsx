@@ -47,14 +47,16 @@ export default function WishlistDetailPage({
     <div>
       <Link
         href="/play/wishlists"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted hover:text-foreground"
+        className="card-hard-sm mb-4 inline-flex items-center gap-1.5 rounded-full bg-paper px-3.5 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
       >
-        <ArrowLeft className="h-4 w-4" /> Mes listes
+        <ArrowLeft className="h-4 w-4" strokeWidth={2.5} /> Mes listes
       </Link>
-      <h1 className="text-2xl font-medium tracking-tight">{wishlist?.name ?? "Liste"}</h1>
+      <h1 className="font-display text-2xl font-extrabold tracking-tight lg:text-3xl">
+        {wishlist?.name ?? "Liste"}
+      </h1>
 
       {products.length === 0 ? (
-        <p className="py-16 text-center text-muted">
+        <p className="py-16 text-center font-semibold text-ink/60">
           Liste vide. Ajoutez des produits depuis leur fiche.
         </p>
       ) : (

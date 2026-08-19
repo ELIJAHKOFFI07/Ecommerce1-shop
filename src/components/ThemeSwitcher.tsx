@@ -36,22 +36,22 @@ export function ThemeSwitcher() {
   };
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+    <div className="card-hard rounded-2xl bg-paper p-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold">Thème de couleur</p>
+        <p className="font-display text-sm font-bold text-ink">Thème de couleur</p>
         <button
           onClick={toggleMode}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs hover:border-accent"
+          className="card-hard-sm inline-flex items-center gap-1.5 rounded-full bg-paper px-3 py-1.5 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
         >
           {mode === "dark" ? (
-            <Moon className="h-3.5 w-3.5" />
+            <Moon className="h-3.5 w-3.5" strokeWidth={2.5} />
           ) : (
-            <Sun className="h-3.5 w-3.5" />
+            <Sun className="h-3.5 w-3.5" strokeWidth={2.5} />
           )}
           {mode === "dark" ? "Sombre" : "Clair"}
         </button>
       </div>
-      <p className="mt-1 text-xs text-muted">
+      <p className="mt-1 text-xs font-semibold text-ink/60">
         Choisissez la palette qui habille toute l&apos;app.
       </p>
       <div className="mt-3 flex flex-wrap gap-3">
@@ -73,7 +73,7 @@ export function ThemeSwitcher() {
                 <span className="text-xs font-bold text-background">✓</span>
               )}
             </span>
-            <span className="text-[10px] text-muted">{p.label}</span>
+            <span className="text-[10px] font-semibold text-ink/60">{p.label}</span>
           </button>
         ))}
       </div>

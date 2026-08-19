@@ -61,10 +61,10 @@ function PasswordInner() {
   if (!profile) {
     return (
       <div className="py-16 text-center">
-        <p className="text-lg font-medium">Connexion requise</p>
+        <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-foreground px-6 py-2.5 font-semibold text-background"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -73,53 +73,59 @@ function PasswordInner() {
   }
 
   const field =
-    "w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent";
+    "w-full rounded-xl border-2 border-border bg-cream px-4 py-3 text-sm font-semibold text-ink outline-none placeholder:text-ink/40 focus:border-orange";
 
   return (
     <div className="mx-auto max-w-sm">
-      <KeyRound className="mx-auto h-8 w-8 text-accent" />
-      <h1 className="mt-4 text-center text-2xl font-medium tracking-tight">
-        {forced ? "Choisissez un nouveau mot de passe" : "Changer mon mot de passe"}
-      </h1>
+      <div className="card-hard rounded-3xl bg-paper p-6 sm:p-8">
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+          <KeyRound className="h-6 w-6" strokeWidth={2.5} />
+        </span>
+        <h1 className="mt-4 text-center font-display text-2xl font-extrabold tracking-tight">
+          {forced
+            ? "Choisissez un nouveau mot de passe"
+            : "Changer mon mot de passe"}
+        </h1>
 
-      {forced && (
-        <p className="mt-2 rounded-xl border border-accent/40 bg-accent/10 p-3 text-center text-sm">
-          Votre mot de passe a été réinitialisé par un administrateur. Vous
-          devez en choisir un nouveau pour continuer.
-        </p>
-      )}
+        {forced && (
+          <p className="card-hard-sm mt-4 rounded-2xl bg-sun p-3 text-center text-sm font-semibold text-ink">
+            Votre mot de passe a été réinitialisé par un administrateur. Vous
+            devez en choisir un nouveau pour continuer.
+          </p>
+        )}
 
-      <form onSubmit={submit} className="mt-6 space-y-4">
-        <input
-          type="password"
-          required
-          minLength={8}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Nouveau mot de passe (8 caractères min.)"
-          className={field}
-        />
-        <input
-          type="password"
-          required
-          value={confirm}
-          onChange={(e) => setConfirm(e.target.value)}
-          placeholder="Confirmer le mot de passe"
-          className={field}
-        />
-        {error && <p className="text-sm text-red-400">{error}</p>}
-        <button
-          disabled={saving}
-          className="w-full rounded-full bg-foreground py-3 font-semibold text-background disabled:opacity-50"
-        >
-          {saving ? "Enregistrement…" : "Enregistrer"}
-        </button>
-      </form>
+        <form onSubmit={submit} className="mt-6 space-y-4">
+          <input
+            type="password"
+            required
+            minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Nouveau mot de passe (8 caractères min.)"
+            className={field}
+          />
+          <input
+            type="password"
+            required
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            placeholder="Confirmer le mot de passe"
+            className={field}
+          />
+          {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
+          <button
+            disabled={saving}
+            className="card-hard-sm w-full rounded-full bg-ink py-3 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+          >
+            {saving ? "Enregistrement…" : "Enregistrer"}
+          </button>
+        </form>
+      </div>
 
       {!forced && (
         <Link
           href="/play/account"
-          className="mt-4 block text-center text-sm text-muted hover:text-accent"
+          className="mt-4 block text-center text-sm font-bold text-ink/60 hover:text-orange"
         >
           Annuler
         </Link>

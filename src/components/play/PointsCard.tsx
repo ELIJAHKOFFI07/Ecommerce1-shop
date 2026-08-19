@@ -47,25 +47,29 @@ export function PointsCard({
   };
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
-      <Star className="h-5 w-5 shrink-0 text-accent" />
+    <div className="card-hard flex items-center gap-3 rounded-2xl bg-paper p-4 sm:gap-4 sm:p-5">
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+        <Star className="h-5 w-5" strokeWidth={2.5} />
+      </span>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium">{points} points fidélité</p>
-        <p className="text-xs text-muted">
+        <p className="font-display text-base font-bold text-ink">
+          {points} points fidélité
+        </p>
+        <p className="text-xs font-semibold text-ink/60">
           ≈ {formatFcfa(points * POINTS_FCFA_PER_POINT)} en coupons
         </p>
         {result && (
-          <p className="mt-1 text-xs text-accent">
+          <p className="mt-1 text-xs font-semibold text-vert-deep">
             Coupon créé : <span className="font-mono font-bold">{result}</span> —
             utilisez-le au paiement.
           </p>
         )}
-        {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
+        {error && <p className="mt-1 text-xs font-semibold text-red-600">{error}</p>}
       </div>
       <button
         onClick={redeem}
         disabled={busy || points < POINTS_MIN_REDEEM}
-        className="rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
+        className="card-hard-sm shrink-0 rounded-full bg-ink px-4 py-2 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
       >
         Convertir
       </button>

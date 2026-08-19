@@ -1,6 +1,7 @@
 "use client";
 
 import { CircleCheck, Info } from "lucide-react";
+import { formatFcfa } from "@/lib/types";
 import { CategoryShowcase } from "./CategoryShowcase";
 import { ShowcaseCarousel } from "./ShowcaseCarousel";
 
@@ -14,11 +15,10 @@ interface BestSellerProduct {
   condition: string;
   rating: number;
   reviews: number;
-  price: string;
-  decimals: string;
-  originalPrice?: string;
-  savings?: string;
-  lowestPrice?: string;
+  price: number;
+  originalPrice?: number;
+  savings?: number;
+  lowestPrice?: number;
   image: string;
 }
 
@@ -29,11 +29,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "Très bon état",
     rating: 4.6,
     reviews: 827,
-    price: "127",
-    decimals: "00",
-    originalPrice: "139",
-    savings: "12,00",
-    lowestPrice: "139,00",
+    price: 83300,
+    originalPrice: 91200,
+    savings: 7900,
+    lowestPrice: 91200,
     image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=400&h=400&fit=crop",
   },
   {
@@ -42,11 +41,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "État correct · 32 Go · Rouge/Bleu",
     rating: 4.1,
     reviews: 704,
-    price: "179",
-    decimals: "00",
-    originalPrice: "189",
-    savings: "10,00",
-    lowestPrice: "189,00",
+    price: 117400,
+    originalPrice: 124000,
+    savings: 6600,
+    lowestPrice: 124000,
     image: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?w=400&h=400&fit=crop",
   },
   {
@@ -55,11 +53,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "État correct · 500 Go",
     rating: 4.5,
     reviews: 408,
-    price: "302",
-    decimals: "00",
-    originalPrice: "335",
-    savings: "33,00",
-    lowestPrice: "335,00",
+    price: 198100,
+    originalPrice: 219700,
+    savings: 21600,
+    lowestPrice: 219700,
     image: "https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=400&h=400&fit=crop",
   },
   {
@@ -68,11 +65,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "Excellent état · 256 Go",
     rating: 4.8,
     reviews: 1203,
-    price: "849",
-    decimals: "00",
-    originalPrice: "999",
-    savings: "150,00",
-    lowestPrice: "999,00",
+    price: 557000,
+    originalPrice: 655300,
+    savings: 98300,
+    lowestPrice: 655300,
     image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop",
   },
   {
@@ -81,11 +77,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "Très bon état · 128 Go",
     rating: 4.7,
     reviews: 567,
-    price: "549",
-    decimals: "00",
-    originalPrice: "699",
-    savings: "150,00",
-    lowestPrice: "699,00",
+    price: 360100,
+    originalPrice: 458500,
+    savings: 98400,
+    lowestPrice: 458500,
     image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop",
   },
   {
@@ -94,11 +89,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "Excellent état · 128 Go",
     rating: 4.4,
     reviews: 892,
-    price: "459",
-    decimals: "00",
-    originalPrice: "599",
-    savings: "140,00",
-    lowestPrice: "599,00",
+    price: 301100,
+    originalPrice: 392900,
+    savings: 91800,
+    lowestPrice: 392900,
     image: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=400&fit=crop",
   },
   {
@@ -107,11 +101,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "Neuf scellé",
     rating: 4.9,
     reviews: 1540,
-    price: "65",
-    decimals: "00",
-    originalPrice: "75",
-    savings: "10,00",
-    lowestPrice: "75,00",
+    price: 42600,
+    originalPrice: 49200,
+    savings: 6600,
+    lowestPrice: 49200,
     image: "https://images.unsplash.com/photo-1606144842614-216246940583?w=400&h=400&fit=crop",
   },
   {
@@ -120,11 +113,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "Très bon état · 40 mm",
     rating: 4.6,
     reviews: 634,
-    price: "189",
-    decimals: "00",
-    originalPrice: "249",
-    savings: "60,00",
-    lowestPrice: "249,00",
+    price: 124000,
+    originalPrice: 163300,
+    savings: 39300,
+    lowestPrice: 163300,
     image: "https://images.unsplash.com/photo-1546868871-af0de0ae72be?w=400&h=400&fit=crop",
   },
   {
@@ -133,11 +125,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "Bon état · 128 Go",
     rating: 4.3,
     reviews: 321,
-    price: "349",
-    decimals: "00",
-    originalPrice: "449",
-    savings: "100,00",
-    lowestPrice: "449,00",
+    price: 228900,
+    originalPrice: 294500,
+    savings: 65600,
+    lowestPrice: 294500,
     image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop",
   },
   {
@@ -146,11 +137,10 @@ const PRODUCTS: BestSellerProduct[] = [
     condition: "Excellent état",
     rating: 4.8,
     reviews: 2100,
-    price: "229",
-    decimals: "00",
-    originalPrice: "349",
-    savings: "120,00",
-    lowestPrice: "349,00",
+    price: 150200,
+    originalPrice: 228900,
+    savings: 78700,
+    lowestPrice: 228900,
     image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400&h=400&fit=crop",
   },
 ];
@@ -208,23 +198,22 @@ function ProductCard({ product }: { product: BestSellerProduct }) {
         </div>
         <div className="mt-2 flex items-baseline gap-2">
           <span className="font-display text-lg font-extrabold text-orange-deep">
-            {product.price}
+            {formatFcfa(product.price)}
           </span>
-          <sup className="text-sm font-bold text-orange-deep">.{product.decimals} €</sup>
           {product.originalPrice && (
             <span className="text-sm font-semibold text-ink/40 line-through">
-              {product.originalPrice},00 €
+              {formatFcfa(product.originalPrice)}
             </span>
           )}
         </div>
         {product.savings && (
           <p className="mt-1 text-xs font-bold text-[#1a8c4e]">
-            Économisez {product.savings} €
+            Économisez {formatFcfa(product.savings)}
           </p>
         )}
         {product.lowestPrice && (
           <p className="mt-0.5 flex items-center gap-1 text-xs text-ink/40">
-            Prix le plus bas : {product.lowestPrice} €
+            Prix le plus bas : {formatFcfa(product.lowestPrice)}
             <Info className="h-3 w-3" />
           </p>
         )}

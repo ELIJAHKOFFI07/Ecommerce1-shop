@@ -41,15 +41,19 @@ export function PageHeader({
         <button
           onClick={goBack}
           aria-label="Retour"
-          className="press mt-0.5 shrink-0 rounded-full border border-border p-2 text-muted transition-colors hover:border-accent hover:text-accent"
+          className="card-hard-sm mt-0.5 shrink-0 rounded-full bg-paper p-2.5 text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
         </button>
 
         <div className="min-w-0">
-          <h1 className="text-2xl font-medium tracking-tight lg:text-3xl">{title}</h1>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight lg:text-3xl">
+            {title}
+          </h1>
           {subtitle && (
-            <p className="mt-1 text-sm text-muted lg:text-base">{subtitle}</p>
+            <p className="mt-1 text-sm font-semibold text-ink/60 lg:text-base">
+              {subtitle}
+            </p>
           )}
         </div>
       </div>

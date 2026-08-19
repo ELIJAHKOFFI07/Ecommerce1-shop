@@ -75,27 +75,30 @@ export default function ReferralPage() {
       <PageHeader title="Parrainage" subtitle="Votre filleul gagne 100 points à l&apos;inscription, et vous 200 points dès sa première commande livrée." />
 
       {profile?.referral_code ? (
-        <div className="mt-6 rounded-xl border border-border bg-surface p-6 text-center">
-          <p className="text-sm text-muted">Votre code</p>
-          <p className="mt-2 text-3xl font-bold tracking-[0.2em] text-accent">
+        <div className="card-hard mt-6 rounded-2xl bg-paper p-6 text-center">
+          <p className="font-display text-sm font-bold text-ink/60">Votre code</p>
+          <p className="mt-2 font-display text-3xl font-extrabold tracking-[0.2em] text-orange">
             {profile.referral_code}
           </p>
           <button
             onClick={copy}
-            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm hover:border-accent"
+            className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
           >
-            <Copy className="h-4 w-4" /> {copied ? "Copié !" : "Copier"}
+            <Copy className="h-4 w-4" strokeWidth={2.5} />{" "}
+            {copied ? "Copié !" : "Copier"}
           </button>
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-border bg-surface p-6 text-center">
-          <Gift className="mx-auto h-8 w-8 text-accent" />
-          <p className="mt-3 text-sm text-muted">
+        <div className="card-hard mt-6 rounded-2xl bg-paper p-6 text-center">
+          <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+            <Gift className="h-6 w-6" strokeWidth={2.5} />
+          </span>
+          <p className="mt-3 text-sm font-semibold text-ink/60">
             Connectez-vous pour obtenir votre code de parrainage.
           </p>
           <Link
             href="/play/login"
-            className="mt-4 inline-block rounded-lg bg-foreground px-5 py-2.5 text-sm font-semibold text-background"
+            className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
           >
             Se connecter
           </Link>
@@ -105,10 +108,12 @@ export default function ReferralPage() {
       {profile && !profile.referred_by && (
         <form
           onSubmit={redeem}
-          className="mt-4 rounded-xl border border-border bg-surface p-6"
+          className="card-hard mt-4 rounded-2xl bg-paper p-6"
         >
-          <h2 className="font-semibold">Vous avez été parrainé ?</h2>
-          <p className="mt-1 text-xs text-muted">
+          <h2 className="font-display text-lg font-extrabold text-ink">
+            Vous avez été parrainé ?
+          </h2>
+          <p className="mt-1 text-xs font-semibold text-ink/60">
             Saisissez le code de votre parrain pour gagner 100 points.
           </p>
           <div className="mt-3 flex gap-2">
@@ -116,57 +121,65 @@ export default function ReferralPage() {
               value={sponsorCode}
               onChange={(e) => setSponsorCode(e.target.value.toUpperCase())}
               placeholder="CODE PARRAIN"
-              className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm tracking-[0.15em]"
+              className="flex-1 rounded-xl border-2 border-border bg-cream px-3 py-2.5 text-sm font-semibold tracking-[0.15em] text-ink outline-none placeholder:text-ink/40 focus:border-orange"
             />
             <button
               type="submit"
               disabled={redeeming || !sponsorCode.trim()}
-              className="rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-50"
+              className="card-hard-sm shrink-0 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
             >
               {redeeming ? "…" : "Valider"}
             </button>
           </div>
           {redeemMessage && (
-            <p className="mt-3 text-sm text-muted">{redeemMessage}</p>
+            <p className="mt-3 text-sm font-semibold text-ink/60">
+              {redeemMessage}
+            </p>
           )}
         </form>
       )}
 
       {myRank != null && (
-        <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-accent bg-accent/10 p-4 font-semibold">
-          <Trophy className="h-5 w-5 text-accent" /> Votre rang : #{myRank}
+        <div className="card-hard mt-4 flex items-center justify-center gap-2 rounded-2xl bg-sun p-4 font-display text-base font-extrabold text-ink">
+          <Trophy className="h-5 w-5" strokeWidth={2.5} /> Votre rang : #{myRank}
         </div>
       )}
 
-      <h2 className="mt-10 text-lg font-semibold">Classement des parrains</h2>
+      <h2 className="mt-10 font-display text-lg font-extrabold text-ink">
+        Classement des parrains
+      </h2>
       {leaderboard.length === 0 ? (
-        <p className="py-10 text-center text-muted">
+        <p className="py-10 text-center font-semibold text-ink/60">
           Aucun classement pour le moment. Soyez le premier à parrainer !
         </p>
       ) : (
-        <ul className="mt-4 space-y-2">
+        <ul className="mt-4 space-y-3">
           {leaderboard.map((entry, i) => {
             const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
             return (
               <li
                 key={entry.user_id}
-                className="flex items-center gap-3 rounded-xl border border-border bg-surface p-3"
+                className="card-hard flex items-center gap-3 rounded-2xl bg-paper p-3"
               >
-                <span className="w-8 text-center">{medal}</span>
+                <span className="w-8 shrink-0 text-center font-display font-bold text-ink">
+                  {medal}
+                </span>
                 {entry.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={entry.avatar_url}
                     alt={entry.username}
-                    className="h-8 w-8 rounded-full object-cover"
+                    className="h-9 w-9 shrink-0 rounded-full border-2 border-border object-cover"
                   />
                 ) : (
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/20 text-xs font-bold text-accent">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-border bg-orange font-display text-sm font-extrabold text-white">
                     {entry.username.charAt(0).toUpperCase()}
                   </span>
                 )}
-                <span className="flex-1 truncate">{entry.username}</span>
-                <span className="text-sm font-bold">
+                <span className="min-w-0 flex-1 truncate font-display text-sm font-bold text-ink">
+                  {entry.username}
+                </span>
+                <span className="shrink-0 font-display text-sm font-extrabold text-ink/70">
                   {entry.referrals_count} filleul(s)
                 </span>
               </li>

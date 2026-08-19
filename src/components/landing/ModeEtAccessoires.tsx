@@ -2,6 +2,7 @@
 
 import { ShowcaseCarousel } from "./ShowcaseCarousel";
 import { CategoryShowcase } from "./CategoryShowcase";
+import { formatFcfa } from "@/lib/types";
 
 /* ------------------------------------------------------------------ */
 /* Données produits (mode & accessoires)                               */
@@ -12,9 +13,8 @@ interface ModeProduct {
   title: string;
   rating: number;
   reviews: number;
-  price: string;
-  decimals: string;
-  originalPrice?: string;
+  price: number;
+  originalPrice?: number;
   image: string;
 }
 
@@ -24,9 +24,8 @@ const PRODUCTS: ModeProduct[] = [
     title: "Chemise en pagne Wax",
     rating: 4.8,
     reviews: 312,
-    price: "14 500",
-    decimals: "00",
-    originalPrice: "17 000",
+    price: 14500,
+    originalPrice: 17000,
     image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=400&fit=crop",
   },
   {
@@ -34,9 +33,8 @@ const PRODUCTS: ModeProduct[] = [
     title: "Robe fluide à motifs",
     rating: 4.7,
     reviews: 258,
-    price: "18 900",
-    decimals: "00",
-    originalPrice: "22 400",
+    price: 18900,
+    originalPrice: 22400,
     image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop",
   },
   {
@@ -44,8 +42,7 @@ const PRODUCTS: ModeProduct[] = [
     title: "Pantalon taille haute",
     rating: 4.5,
     reviews: 174,
-    price: "11 200",
-    decimals: "00",
+    price: 11200,
     image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=400&fit=crop",
   },
   {
@@ -53,9 +50,8 @@ const PRODUCTS: ModeProduct[] = [
     title: "Blazer structuré",
     rating: 4.6,
     reviews: 143,
-    price: "27 800",
-    decimals: "00",
-    originalPrice: "31 500",
+    price: 27800,
+    originalPrice: 31500,
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
   },
   {
@@ -63,8 +59,7 @@ const PRODUCTS: ModeProduct[] = [
     title: "Pagne Wax Uniwax",
     rating: 4.9,
     reviews: 521,
-    price: "16 400",
-    decimals: "00",
+    price: 16400,
     image: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=400&h=400&fit=crop",
   },
   {
@@ -72,9 +67,8 @@ const PRODUCTS: ModeProduct[] = [
     title: "Top en maille",
     rating: 4.6,
     reviews: 198,
-    price: "9 800",
-    decimals: "00",
-    originalPrice: "12 000",
+    price: 9800,
+    originalPrice: 12000,
     image: "https://images.unsplash.com/photo-1434389677669-e08b4cda3a30?w=400&h=400&fit=crop",
   },
   {
@@ -82,9 +76,8 @@ const PRODUCTS: ModeProduct[] = [
     title: "Sac à main cuir",
     rating: 4.8,
     reviews: 402,
-    price: "24 900",
-    decimals: "00",
-    originalPrice: "29 500",
+    price: 24900,
+    originalPrice: 29500,
     image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=400&fit=crop",
   },
   {
@@ -92,8 +85,7 @@ const PRODUCTS: ModeProduct[] = [
     title: "Sac bandoulière",
     rating: 4.7,
     reviews: 289,
-    price: "19 500",
-    decimals: "00",
+    price: 19500,
     image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop",
   },
   {
@@ -101,9 +93,8 @@ const PRODUCTS: ModeProduct[] = [
     title: "Montre classique",
     rating: 4.9,
     reviews: 356,
-    price: "32 000",
-    decimals: "00",
-    originalPrice: "38 000",
+    price: 32000,
+    originalPrice: 38000,
     image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=400&fit=crop",
   },
   {
@@ -111,8 +102,7 @@ const PRODUCTS: ModeProduct[] = [
     title: "Lunettes de soleil",
     rating: 4.6,
     reviews: 214,
-    price: "7 900",
-    decimals: "00",
+    price: 7900,
     image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop",
   },
   {
@@ -120,9 +110,8 @@ const PRODUCTS: ModeProduct[] = [
     title: "Baskets tendance",
     rating: 4.7,
     reviews: 467,
-    price: "21 500",
-    decimals: "00",
-    originalPrice: "25 000",
+    price: 21500,
+    originalPrice: 25000,
     image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop",
   },
   {
@@ -130,8 +119,7 @@ const PRODUCTS: ModeProduct[] = [
     title: "Sandales artisanales",
     rating: 4.5,
     reviews: 176,
-    price: "13 800",
-    decimals: "00",
+    price: 13800,
     image: "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=400&h=400&fit=crop",
   },
 ];
@@ -178,12 +166,11 @@ function ProductCard({ product }: { product: ModeProduct }) {
         </div>
         <div className="mt-2 flex items-baseline gap-2">
           <span className="font-display text-lg font-extrabold text-orange-deep">
-            {product.price}
+            {formatFcfa(product.price)}
           </span>
-          <sup className="text-sm font-bold text-orange-deep">.{product.decimals} €</sup>
           {product.originalPrice && (
             <span className="text-sm font-semibold text-ink/40 line-through">
-              {product.originalPrice},00 €
+              {formatFcfa(product.originalPrice)}
             </span>
           )}
         </div>

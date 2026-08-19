@@ -6,6 +6,7 @@ import { Bell, CheckCheck } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { relativeTime, type AppNotification } from "@/lib/types";
 import { HeaderSkeleton, ListSkeleton } from "@/components/Skeleton";
+import { PageHeader } from "@/components/play/PageHeader";
 
 /// Icône par type de notification émis par les RPC serveur
 /// (order, offer, auction, message, price_drop).
@@ -96,13 +97,15 @@ export default function NotificationsPage() {
   if (!connected) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
-        <Bell className="mx-auto h-8 w-8 text-accent" />
-        <p className="mt-3 text-sm text-muted">
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+          <Bell className="h-6 w-6" strokeWidth={2.5} />
+        </span>
+        <p className="mt-3 text-sm font-semibold text-ink/60">
           Connectez-vous pour voir vos notifications.
         </p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-foreground px-5 py-2.5 text-sm font-semibold text-background"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -114,20 +117,23 @@ export default function NotificationsPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-medium tracking-tight">Notifications</h1>
-        {unread > 0 && (
-          <button
-            onClick={markAllRead}
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-sm hover:border-accent"
-          >
-            <CheckCheck className="h-4 w-4" /> Tout marquer comme lu
-          </button>
-        )}
-      </div>
+      <PageHeader
+        title="Notifications"
+        action={
+          unread > 0 ? (
+            <button
+              onClick={markAllRead}
+              className="card-hard-sm inline-flex items-center gap-2 rounded-full bg-paper px-3.5 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
+            >
+              <CheckCheck className="h-4 w-4" strokeWidth={2.5} /> Tout marquer
+              comme lu
+            </button>
+          ) : undefined
+        }
+      />
 
       {notifications.length === 0 ? (
-        <p className="py-20 text-center text-muted">
+        <p className="py-20 text-center font-semibold text-ink/60">
           Aucune notification pour le moment.
         </p>
       ) : (
@@ -135,17 +141,19 @@ export default function NotificationsPage() {
           {notifications.map((n) => (
             <li
               key={n.id}
-              className={`flex gap-3 rounded-xl border p-3 ${
-                n.read_at
-                  ? "border-border bg-surface"
-                  : "border-accent bg-accent/10"
+              className={`card-hard flex gap-3 rounded-2xl p-3 ${
+                n.read_at ? "bg-paper" : "bg-orange-soft"
               }`}
             >
-              <span className="text-xl">{TYPE_EMOJI[n.type] ?? "🔔"}</span>
-              <span className="flex-1">
-                <span className="block text-sm font-semibold">{n.title}</span>
-                <span className="block text-sm text-muted">{n.body}</span>
-                <span className="mt-1 block text-xs text-muted">
+              <span className="text-xl leading-none">{TYPE_EMOJI[n.type] ?? "🔔"}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-sm font-bold text-ink">
+                  {n.title}
+                </span>
+                <span className="block text-sm font-semibold text-ink/60">
+                  {n.body}
+                </span>
+                <span className="mt-1 block text-xs font-semibold text-ink/60">
                   {relativeTime(n.created_at)}
                 </span>
               </span>

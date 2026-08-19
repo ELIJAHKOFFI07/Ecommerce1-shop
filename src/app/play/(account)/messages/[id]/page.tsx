@@ -96,14 +96,14 @@ export default function ConversationPage({
     <div className="mx-auto flex max-w-2xl flex-col">
       <Link
         href="/play/messages"
-        className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-accent"
+        className="card-hard-sm inline-flex w-fit items-center gap-1.5 rounded-full bg-paper px-3.5 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
       >
-        <ArrowLeft className="h-4 w-4" /> Messages
+        <ArrowLeft className="h-4 w-4" strokeWidth={2.5} /> Messages
       </Link>
 
       <div className="mt-4 min-h-[50vh] space-y-2">
         {messages.length === 0 ? (
-          <p className="py-16 text-center text-muted">
+          <p className="py-16 text-center font-semibold text-ink/60">
             Aucun message. Dites bonjour !
           </p>
         ) : (
@@ -115,10 +115,8 @@ export default function ConversationPage({
                 className={`flex ${mine ? "justify-end" : "justify-start"}`}
               >
                 <span
-                  className={`max-w-[75%] whitespace-pre-wrap rounded-2xl px-4 py-2 text-sm ${
-                    mine
-                      ? "bg-foreground text-background"
-                      : "border border-border bg-surface"
+                  className={`whitespace-pre-wrap ${
+                    mine ? "bubble bubble-me" : "bubble bubble-vendor"
                   }`}
                 >
                   {m.content}
@@ -130,22 +128,22 @@ export default function ConversationPage({
         <div ref={bottomRef} />
       </div>
 
-      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+      {error && <p className="mt-2 text-sm font-semibold text-red-600">{error}</p>}
 
       <form onSubmit={send} className="sticky bottom-16 mt-4 flex gap-2 md:bottom-4">
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Votre message…"
-          className="flex-1 rounded-full border border-border bg-surface px-4 py-2.5 text-sm"
+          className="flex-1 rounded-full border-2 border-border bg-paper px-4 py-2.5 text-sm font-semibold text-ink outline-none placeholder:text-ink/40 focus:border-orange"
         />
         <button
           type="submit"
           disabled={sending || !draft.trim()}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-foreground text-background disabled:opacity-50"
+          className="card-hard-sm grid h-10 w-10 shrink-0 place-items-center rounded-full bg-orange text-white transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
           aria-label="Envoyer"
         >
-          <Send className="h-4 w-4" />
+          <Send className="h-4 w-4" strokeWidth={2.5} />
         </button>
       </form>
     </div>

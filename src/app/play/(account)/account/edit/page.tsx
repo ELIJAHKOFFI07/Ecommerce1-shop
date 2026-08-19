@@ -108,10 +108,10 @@ export default function EditProfilePage() {
   if (!profile) {
     return (
       <div className="py-16 text-center">
-        <p className="text-lg font-medium">Connexion requise</p>
+        <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-full bg-foreground px-6 py-2.5 font-semibold text-background"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -120,26 +120,32 @@ export default function EditProfilePage() {
   }
 
   const field =
-    "w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-accent";
+    "w-full rounded-xl border-2 border-border bg-cream px-4 py-3 text-sm font-semibold text-ink outline-none placeholder:text-ink/40 focus:border-orange";
+  const label = "mb-1 block text-sm font-bold text-ink/70";
   const shown = preview ?? avatarUrl;
 
   return (
     <div className="mx-auto max-w-lg">
       <Link
         href="/play/account"
-        className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-accent"
+        className="card-hard-sm inline-flex items-center gap-1.5 rounded-full bg-paper px-3.5 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
       >
-        <ArrowLeft className="h-4 w-4" /> Mon compte
+        <ArrowLeft className="h-4 w-4" strokeWidth={2.5} /> Mon compte
       </Link>
 
-      <h1 className="mt-4 text-2xl font-medium tracking-tight">Modifier mon profil</h1>
+      <h1 className="mt-4 font-display text-2xl font-extrabold tracking-tight lg:text-3xl">
+        Modifier mon profil
+      </h1>
 
-      <form onSubmit={save} className="mt-6 space-y-4">
+      <form
+        onSubmit={save}
+        className="card-hard mt-6 space-y-4 rounded-2xl bg-paper p-5 sm:p-6"
+      >
         <div className="flex flex-col items-center gap-3">
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="group relative h-24 w-24 overflow-hidden rounded-full border border-border bg-surface-2"
+            className="group relative h-24 w-24 overflow-hidden rounded-full border-2 border-border bg-orange-soft"
             aria-label="Changer la photo de profil"
           >
             {shown ? (
@@ -150,11 +156,11 @@ export default function EditProfilePage() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="flex h-full w-full items-center justify-center text-3xl font-bold text-accent">
+              <span className="flex h-full w-full items-center justify-center font-display text-3xl font-extrabold text-orange">
                 {(fullName || username || "?")[0]?.toUpperCase()}
               </span>
             )}
-            <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1 bg-black/60 py-1 text-[10px] text-white">
+            <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1 bg-black/60 py-1 text-[10px] font-semibold text-white">
               <Camera className="h-3 w-3" /> Modifier
             </span>
           </button>
@@ -168,7 +174,7 @@ export default function EditProfilePage() {
         </div>
 
         <label className="block">
-          <span className="mb-1 block text-sm text-muted">Nom complet</span>
+          <span className={label}>Nom complet</span>
           <input
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
@@ -178,9 +184,7 @@ export default function EditProfilePage() {
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm text-muted">
-            Pseudo (visible publiquement)
-          </span>
+          <span className={label}>Pseudo (visible publiquement)</span>
           <input
             required
             value={username}
@@ -191,7 +195,7 @@ export default function EditProfilePage() {
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm text-muted">Téléphone</span>
+          <span className={label}>Téléphone</span>
           <input
             type="tel"
             value={phone}
@@ -202,7 +206,7 @@ export default function EditProfilePage() {
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm text-muted">WhatsApp</span>
+          <span className={label}>WhatsApp</span>
           <input
             type="tel"
             value={whatsapp}
@@ -213,7 +217,7 @@ export default function EditProfilePage() {
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm text-muted">Ville</span>
+          <span className={label}>Ville</span>
           <input
             value={city}
             onChange={(e) => setCity(e.target.value)}
@@ -223,7 +227,7 @@ export default function EditProfilePage() {
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm text-muted">Bio</span>
+          <span className={label}>Bio</span>
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
@@ -235,14 +239,16 @@ export default function EditProfilePage() {
 
         <PushToggle />
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
         {success && (
-          <p className="text-sm text-green-500">Profil mis à jour.</p>
+          <p className="text-sm font-semibold text-vert-deep">
+            Profil mis à jour.
+          </p>
         )}
 
         <button
           disabled={saving}
-          className="w-full rounded-full bg-foreground py-3 font-semibold text-background disabled:opacity-50"
+          className="card-hard-sm w-full rounded-full bg-ink py-3 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
         >
           {saving ? "Enregistrement…" : "Enregistrer"}
         </button>

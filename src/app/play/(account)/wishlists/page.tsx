@@ -56,10 +56,10 @@ export default function WishlistsPage() {
   if (authed === false) {
     return (
       <div className="py-20 text-center">
-        <p className="text-muted">Connectez-vous pour créer des listes.</p>
+        <p className="font-semibold text-ink/60">Connectez-vous pour créer des listes.</p>
         <Link
           href="/play/login"
-          className="mt-4 inline-block rounded-lg bg-foreground px-5 py-2.5 font-semibold text-background"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -77,41 +77,45 @@ export default function WishlistsPage() {
           onChange={(e) => setNewName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && create()}
           placeholder="Ex : Idées cadeaux"
-          className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
+          className="flex-1 rounded-xl border-2 border-border bg-paper px-3 py-2.5 text-sm font-semibold text-ink outline-none placeholder:text-ink/40 focus:border-orange"
         />
         <button
           onClick={create}
           disabled={creating || !newName.trim()}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background disabled:opacity-40"
+          className="card-hard-sm inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
         >
-          <Plus className="h-4 w-4" /> Créer
+          <Plus className="h-4 w-4" strokeWidth={2.5} /> Créer
         </button>
       </div>
 
       {wishlists.length === 0 ? (
-        <p className="py-16 text-center text-muted">
+        <p className="py-16 text-center font-semibold text-ink/60">
           Aucune liste pour le moment.
         </p>
       ) : (
-        <ul className="mt-6 space-y-2">
+        <ul className="mt-6 space-y-3">
           {wishlists.map((w) => (
             <li
               key={w.id}
-              className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4"
+              className="card-hard flex items-center gap-3 rounded-2xl bg-paper p-4"
             >
-              <Bookmark className="h-5 w-5 shrink-0 text-accent" />
-              <Link href={`/play/wishlists/${w.id}`} className="flex-1">
-                <p className="font-medium">{w.name}</p>
-                <p className="text-xs text-muted">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+                <Bookmark className="h-5 w-5" strokeWidth={2.5} />
+              </span>
+              <Link href={`/play/wishlists/${w.id}`} className="min-w-0 flex-1">
+                <p className="truncate font-display text-base font-bold text-ink">
+                  {w.name}
+                </p>
+                <p className="text-xs font-semibold text-ink/60">
                   {w.wishlist_items?.length ?? 0} article(s)
                 </p>
               </Link>
               <button
                 onClick={() => remove(w.id)}
-                className="rounded-lg p-2 text-muted hover:text-red-400"
+                className="card-hard-sm grid h-9 w-9 shrink-0 place-items-center rounded-full bg-paper text-ink/70 transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:text-red-600 hover:shadow-none"
                 aria-label={`Supprimer ${w.name}`}
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-4 w-4" strokeWidth={2.5} />
               </button>
             </li>
           ))}
