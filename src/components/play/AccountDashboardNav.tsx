@@ -46,7 +46,7 @@ export function AccountDashboardNav({
   }, []);
 
   const links = [
-    { href: "/play/account", label: "Accueil", icon: Home },
+    { href: "/play/account", label: "Profile", icon: Home },
     ...SECTIONS.flatMap((section) =>
       visibleLinks(section.links, { canSell, isAdmin }),
     ),

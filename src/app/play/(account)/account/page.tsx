@@ -14,7 +14,6 @@ import {
 import { ROLE_LABELS, roleOf } from "@/lib/roles";
 import { createClient } from "@/lib/backend/client";
 import { PointsCard } from "@/components/play/PointsCard";
-import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import type { Profile } from "@/lib/types";
 import { ListSkeleton, Skeleton } from "@/components/Skeleton";
 
@@ -140,13 +139,21 @@ export default function AccountPage() {
             </p>
           </div>
 
-          <Link
-            href="/play/account/edit"
-            className="card-hard-sm inline-flex shrink-0 items-center gap-2 rounded-full bg-paper px-5 py-2.5 font-display text-sm font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
-          >
-            <UserPen className="h-4 w-4" strokeWidth={2.5} />
-            Modifier mon profil
-          </Link>
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+            <Link
+              href="/play/account/edit"
+              className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-paper px-5 py-2.5 font-display text-sm font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
+            >
+              <UserPen className="h-4 w-4" strokeWidth={2.5} />
+              Modifier mon profil
+            </Link>
+            <button
+              onClick={signOut}
+              className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-paper px-5 py-2.5 font-display text-sm font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:text-red-600 hover:shadow-none"
+            >
+              <LogOut className="h-4 w-4" strokeWidth={2.5} /> Se déconnecter
+            </button>
+          </div>
         </div>
       </div>
 
@@ -168,22 +175,12 @@ export default function AccountPage() {
         ))}
       </div>
 
-      {/* ---- Points, thème, déconnexion ---- */}
-      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+      {/* ---- Points de fidélité ---- */}
+      <div className="max-w-sm">
         <PointsCard
           points={profile?.loyalty_points ?? 0}
           onRedeemed={refreshProfile}
         />
-
-        <div className="space-y-4">
-          <ThemeSwitcher />
-          <button
-            onClick={signOut}
-            className="card-hard-sm flex w-full items-center justify-center gap-2 rounded-full bg-paper px-5 py-3 font-display text-sm font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:text-red-600 hover:shadow-none"
-          >
-            <LogOut className="h-4 w-4" strokeWidth={2.5} /> Se déconnecter
-          </button>
-        </div>
       </div>
     </div>
   );

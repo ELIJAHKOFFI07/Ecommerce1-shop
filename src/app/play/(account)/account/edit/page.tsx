@@ -91,6 +91,12 @@ export default function EditProfilePage() {
     }
   }
 
+  function removeAvatar() {
+    setAvatarFile(null);
+    setAvatarUrl(null);
+    if (fileRef.current) fileRef.current.value = "";
+  }
+
   if (loading) {
     return (
       <div className="mx-auto max-w-lg space-y-6">
@@ -125,7 +131,7 @@ export default function EditProfilePage() {
   const shown = preview ?? avatarUrl;
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-2xl">
       <Link
         href="/play/account"
         className="card-hard-sm inline-flex items-center gap-1.5 rounded-full bg-paper px-3.5 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
@@ -139,13 +145,14 @@ export default function EditProfilePage() {
 
       <form
         onSubmit={save}
-        className="card-hard mt-6 space-y-4 rounded-2xl bg-paper p-5 sm:p-6"
+        className="card-hard mt-6 rounded-2xl bg-paper p-5 sm:p-8"
       >
-        <div className="flex flex-col items-center gap-3">
+        {/* ---- Photo de profil ---- */}
+        <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="group relative h-24 w-24 overflow-hidden rounded-full border-2 border-border bg-orange-soft"
+            className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full border-2 border-border bg-orange-soft shadow-hard"
             aria-label="Changer la photo de profil"
           >
             {shown ? (
@@ -156,12 +163,12 @@ export default function EditProfilePage() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="flex h-full w-full items-center justify-center font-display text-3xl font-extrabold text-orange">
+              <span className="flex h-full w-full items-center justify-center font-display text-4xl font-extrabold text-orange">
                 {(fullName || username || "?")[0]?.toUpperCase()}
               </span>
             )}
-            <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1 bg-black/60 py-1 text-[10px] font-semibold text-white">
-              <Camera className="h-3 w-3" /> Modifier
+            <span className="absolute -bottom-1 -right-1 grid h-10 w-10 place-items-center rounded-full border-2 border-border bg-ink text-cream">
+              <Camera className="h-4 w-4" strokeWidth={2.5} />
             </span>
           </button>
           <input
@@ -171,87 +178,127 @@ export default function EditProfilePage() {
             onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
             className="hidden"
           />
+
+          <div className="flex flex-1 flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+            <div>
+              <p className="font-display text-base font-bold text-ink">
+                Photo de profil
+              </p>
+              <p className="mt-0.5 text-xs font-semibold text-ink/60">
+                JPG ou PNG · 5 Mo max. Elle apparaît sur vos annonces et vos
+                messages.
+              </p>
+            </div>
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+              >
+                <Camera className="h-4 w-4" strokeWidth={2.5} />
+                Changer la photo
+              </button>
+              {shown && (
+                <button
+                  type="button"
+                  onClick={removeAvatar}
+                  className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-paper px-5 py-2.5 font-display text-sm font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:text-red-600 hover:shadow-none"
+                >
+                  Retirer
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
-        <label className="block">
-          <span className={label}>Nom complet</span>
-          <input
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="Votre nom"
-            className={field}
-          />
-        </label>
+        {/* ---- Champs en deux colonnes ---- */}
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className={label}>Nom complet</span>
+            <input
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Votre nom"
+              className={field}
+            />
+          </label>
 
-        <label className="block">
-          <span className={label}>Pseudo (visible publiquement)</span>
-          <input
-            required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="pseudo"
-            className={field}
-          />
-        </label>
+          <label className="block">
+            <span className={label}>Pseudo (visible publiquement)</span>
+            <input
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="pseudo"
+              className={field}
+            />
+          </label>
 
-        <label className="block">
-          <span className={label}>Téléphone</span>
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="07 00 00 00 00"
-            className={field}
-          />
-        </label>
+          <label className="block">
+            <span className={label}>Téléphone</span>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="07 00 00 00 00"
+              className={field}
+            />
+          </label>
 
-        <label className="block">
-          <span className={label}>WhatsApp</span>
-          <input
-            type="tel"
-            value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
-            placeholder="+225 07 00 00 00 00"
-            className={field}
-          />
-        </label>
+          <label className="block">
+            <span className={label}>WhatsApp</span>
+            <input
+              type="tel"
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              placeholder="+225 07 00 00 00 00"
+              className={field}
+            />
+          </label>
 
-        <label className="block">
-          <span className={label}>Ville</span>
-          <input
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder="Abidjan"
-            className={field}
-          />
-        </label>
+          <label className="block">
+            <span className={label}>Ville</span>
+            <input
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Abidjan"
+              className={field}
+            />
+          </label>
 
-        <label className="block">
-          <span className={label}>Bio</span>
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            rows={3}
-            placeholder="Quelques mots sur vous"
-            className={field}
-          />
-        </label>
+          <label className="block sm:col-span-2">
+            <span className={label}>Bio</span>
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              rows={3}
+              placeholder="Quelques mots sur vous"
+              className={field}
+            />
+          </label>
 
-        <PushToggle />
+          <div className="sm:col-span-2">
+            <PushToggle />
+          </div>
 
-        {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
-        {success && (
-          <p className="text-sm font-semibold text-vert-deep">
-            Profil mis à jour.
-          </p>
-        )}
+          {error && (
+            <p className="text-sm font-semibold text-red-600 sm:col-span-2">
+              {error}
+            </p>
+          )}
+          {success && (
+            <p className="text-sm font-semibold text-vert-deep sm:col-span-2">
+              Profil mis à jour.
+            </p>
+          )}
 
-        <button
-          disabled={saving}
-          className="card-hard-sm w-full rounded-full bg-ink py-3 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
-        >
-          {saving ? "Enregistrement…" : "Enregistrer"}
-        </button>
+          <button
+            disabled={saving}
+            className="card-hard-sm w-full rounded-full bg-ink py-3 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 sm:col-span-2"
+          >
+            {saving ? "Enregistrement…" : "Enregistrer"}
+          </button>
+        </div>
       </form>
     </div>
   );

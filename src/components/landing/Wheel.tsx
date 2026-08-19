@@ -13,7 +13,40 @@ const PRIZES = [
   "−5 % chez une boutique partenaire !",
 ];
 
-const WHEEL_GRADIENT = `conic-gradient(var(--orange) 0deg 45deg, var(--cream) 45deg 90deg, var(--sun) 90deg 135deg, var(--cream) 135deg 180deg, var(--vert) 180deg 225deg, var(--cream) 225deg 270deg, var(--orange) 270deg 315deg, var(--cream) 315deg 360deg)`;
+const SLICE = 360 / PRIZES.length;
+
+/// Teinte et couleur de texte de chaque part (6 parts de 60°, alignées sur la
+/// logique de tirage) : une teinte distincte par part — tokens de l'identité
+/// (orange, sun, vert) complétés par la palette Tailwind (bleu, rouge, violet)
+/// pour que les segments voisins ne se ressemblent jamais. Le foreground suit
+/// la teinte (texte clair sur accent vif, encre sur sun).
+const SEGMENTS: { bg: string; fg: string }[] = [
+  { bg: "var(--orange)", fg: "var(--primary-foreground)" },
+  { bg: "var(--color-blue-500)", fg: "white" },
+  { bg: "var(--sun)", fg: "var(--ink)" },
+  { bg: "var(--color-red-500)", fg: "white" },
+  { bg: "var(--vert)", fg: "var(--secondary-foreground)" },
+  { bg: "var(--color-purple-500)", fg: "white" },
+];
+
+/// Libellés courts : valeur en grand caractère, unité réduite et grisée en
+/// dessous.
+const LABELS: { value: string; unit: string }[] = [
+  { value: "500", unit: "pts" },
+  { value: "2 000", unit: "F" },
+  { value: "−10%", unit: "coupon" },
+  { value: "Rejoue", unit: "demain" },
+  { value: "1 000", unit: "pts" },
+  { value: "−5%", unit: "coupon" },
+];
+
+/// Rayon auquel le centre de chaque libellé se pose, en pixels — près du bord
+/// de la roue, entre moyeu et contour.
+const LABEL_RADIUS = 100;
+
+const WHEEL_GRADIENT = `conic-gradient(${SEGMENTS.map(
+  (s, i) => `${s.bg} ${i * SLICE}deg ${(i + 1) * SLICE}deg`,
+).join(", ")})`;
 
 /// Roue de la chance : rotation animée puis révélation du gain.
 export function Wheel() {
@@ -47,24 +80,26 @@ export function Wheel() {
           className="relative h-full w-full overflow-hidden rounded-full border-4 border-border shadow-hard"
           style={{ background: WHEEL_GRADIENT }}
         >
-          <span className="absolute left-1/2 top-[8%] -translate-x-1/2 font-display text-xs font-extrabold text-white sm:text-sm">
-            500 pts
-          </span>
-          <span className="absolute right-[6%] top-[30%] rotate-45 font-display text-xs font-extrabold text-ink sm:text-sm">
-            −10%
-          </span>
-          <span className="absolute bottom-[8%] left-1/2 -translate-x-1/2 rotate-180 font-display text-xs font-extrabold text-white sm:text-sm">
-            1 000 pts
-          </span>
-          <span className="absolute left-[6%] top-[30%] -rotate-45 font-display text-xs font-extrabold text-ink sm:text-sm">
-            Bon 2 000 F
-          </span>
-          <span className="absolute bottom-[30%] right-[8%] -rotate-45 font-display text-xs font-extrabold text-ink sm:text-sm">
-            Rejoue
-          </span>
-          <span className="absolute bottom-[30%] left-[8%] rotate-45 font-display text-xs font-extrabold text-ink sm:text-sm">
-            −5%
-          </span>
+          {PRIZES.map((_, i) => (
+            <span
+              key={i}
+              className="absolute left-1/2 top-1/2 flex w-28 flex-col items-center text-center leading-none"
+              style={{
+                // Centre le libellé sur la roue, le pousse le long du rayon
+                // puis fait orbiter autour du centre : chaque texte se pose
+                // au milieu de sa part.
+                transform: `translate(-50%, -50%) rotate(${i * SLICE + SLICE / 2}deg) translateY(-${LABEL_RADIUS}px)`,
+                color: SEGMENTS[i].fg,
+              }}
+            >
+              <span className="whitespace-nowrap font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+                {LABELS[i].value}
+              </span>
+              <span className="mt-1 whitespace-nowrap font-display text-[10px] font-bold uppercase tracking-widest opacity-70 sm:text-xs">
+                {LABELS[i].unit}
+              </span>
+            </span>
+          ))}
         </div>
         <div className="absolute inset-0 z-10 m-auto grid h-16 w-16 place-items-center rounded-full border-4 border-border bg-paper">
           <ShoppingBag className="h-7 w-7 text-orange" strokeWidth={2.4} />
