@@ -14,12 +14,17 @@ import { formatFcfa } from "@/lib/types";
 /// `hard` enveloppe la vignette dans le cadre néo-brutal (`card-hard` +
 /// `card-hover`, trait encre + ombre dure) pour les grilles où chaque carte
 /// doit porter le trait cartoon — la page de recherche.
+///
+/// `compact` réduit le cadre (`card-hard-sm`, padding et textes plus petits) :
+/// pour les carrousels où l'on veut des cartes denses, ex. la page d'accueil.
 export function ProductCard({
   product,
   hard = false,
+  compact = false,
 }: {
   product: Product;
   hard?: boolean;
+  compact?: boolean;
 }) {
   const cover = product.product_images?.[0]?.url;
   const hasDiscount =
@@ -28,14 +33,22 @@ export function ProductCard({
     ? 100 - Math.floor((product.price * 100) / product.compare_at_price!)
     : 0;
 
+  const frame = compact
+    ? "card-hard-sm rounded-3xl bg-surface p-2"
+    : hard
+      ? "card-hard card-hover rounded-3xl bg-surface p-3"
+      : "";
+
   return (
     <Link
       href={`/play/product/${product.id}`}
-      className={`press group block ${
-        hard ? "card-hard card-hover rounded-3xl bg-surface p-3" : ""
-      }`}
+      className={`press group block ${frame}`}
     >
-      <div className="relative mb-3 aspect-square overflow-hidden rounded-2xl bg-surface-2">
+      <div
+        className={`relative aspect-square overflow-hidden rounded-2xl bg-surface-2 ${
+          compact ? "mb-2" : "mb-3"
+        }`}
+      >
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -56,12 +69,20 @@ export function ProductCard({
         )}
       </div>
 
-      <div className={hard ? "px-1 pb-1" : undefined}>
-        <p className="line-clamp-2 text-sm font-medium text-foreground lg:text-base">
+      <div className={frame ? "px-1 pb-1" : undefined}>
+        <p
+          className={`line-clamp-2 font-medium text-foreground ${
+            compact ? "text-[13px]" : "text-sm lg:text-base"
+          }`}
+        >
           {product.title}
         </p>
         <div className="mt-1 flex items-baseline gap-2">
-          <span className="text-sm font-semibold text-foreground lg:text-base">
+          <span
+            className={`font-semibold text-foreground ${
+              compact ? "text-[13px]" : "text-sm lg:text-base"
+            }`}
+          >
             {formatFcfa(product.price)}
           </span>
           {hasDiscount && (
