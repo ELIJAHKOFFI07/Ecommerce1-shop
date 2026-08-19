@@ -152,7 +152,7 @@ export function Navbar() {
         <Link
           href="/play/account"
           aria-label="Mon compte"
-          className="card-hard-sm hidden h-11 w-11 shrink-0 place-items-center rounded-full bg-paper transition-colors hover:bg-orange-soft sm:grid"
+          className="card-hard-sm grid h-11 w-11 shrink-0 place-items-center rounded-full bg-paper transition-colors hover:bg-orange-soft"
         >
           <User className="h-5 w-5" strokeWidth={2.4} />
         </Link>
