@@ -134,7 +134,7 @@ function Stars({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((s) => (
         <svg
           key={s}
-          className={`h-3.5 w-3.5 ${s <= Math.round(rating) ? "text-ink" : "text-ink/20"}`}
+          className={`h-3.5 w-3.5 ${s <= Math.round(rating) ? "text-foreground" : "text-foreground/20"}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -147,7 +147,7 @@ function Stars({ rating }: { rating: number }) {
 
 function ProductCard({ product }: { product: ModeProduct }) {
   return (
-    <div className="card-hover card-hard-sm group w-[260px] shrink-0 overflow-hidden rounded-3xl bg-paper sm:w-[280px]">
+    <div className="card-hover card-hard-sm group w-[260px] shrink-0 overflow-hidden rounded-3xl bg-card sm:w-[280px]">
       <div className="relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -160,16 +160,16 @@ function ProductCard({ product }: { product: ModeProduct }) {
         <h3 className="font-display font-bold leading-snug">{product.title}</h3>
         <div className="mt-1.5 flex items-center gap-1.5">
           <Stars rating={product.rating} />
-          <span className="text-xs font-semibold text-ink/50">
+          <span className="text-xs font-semibold text-foreground/50">
             {product.rating}/5 ({product.reviews.toLocaleString()})
           </span>
         </div>
         <div className="mt-2 flex items-baseline gap-2">
-          <span className="font-display text-lg font-extrabold text-orange-deep">
+          <span className="font-display text-lg font-extrabold text-accent-dark">
             {formatFcfa(product.price)}
           </span>
           {product.originalPrice && (
-            <span className="text-sm font-semibold text-ink/40 line-through">
+            <span className="text-sm font-semibold text-foreground/40 line-through">
               {formatFcfa(product.originalPrice)}
             </span>
           )}

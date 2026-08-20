@@ -7,9 +7,9 @@ import { IconBadge } from "./Primitives";
 type PillarTone = "paper" | "ink" | "vert";
 
 const PILLAR_TONES: Record<PillarTone, string> = {
-  paper: "bg-paper text-ink shadow-hard-sm",
-  ink: "bg-ink text-cream shadow-hard-orange",
-  vert: "bg-vert text-white shadow-hard-sm",
+  paper: "bg-card text-foreground shadow-hard-sm",
+  ink: "bg-foreground text-background shadow-hard-orange",
+  vert: "bg-secondary text-secondary-foreground shadow-hard-sm",
 };
 
 function PillarCard({
@@ -32,9 +32,9 @@ function PillarCard({
   delay?: number;
 }) {
   const bodyTone =
-    tone === "ink" ? "text-cream/70" : tone === "vert" ? "text-white/80" : "text-ink/70";
+    tone === "ink" ? "text-background/70" : tone === "vert" ? "text-secondary-foreground/80" : "text-foreground/70";
   const ghostTone =
-    tone === "ink" ? "text-cream/10" : tone === "vert" ? "text-white/15" : "text-orange-soft";
+    tone === "ink" ? "text-background/10" : tone === "vert" ? "text-secondary-foreground/15" : "text-surface-2";
 
   return (
     <Reveal
@@ -63,7 +63,7 @@ export function Pillars() {
   return (
     <section id="piliers" className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24">
       <Reveal className="mx-auto mb-12 max-w-2xl text-center">
-        <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-orange">
+        <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-primary">
           Comment ça marche
         </p>
         <h2 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
@@ -77,16 +77,16 @@ export function Pillars() {
         <PillarCard
           index={1}
           tone="paper"
-          icon={<ShoppingCart className="h-7 w-7 text-white" />}
+          icon={<ShoppingCart className="h-7 w-7 text-primary-foreground" />}
           title="Achète sans friction"
           body="Parcours tout le catalogue, compare les produits, crée tes wishlists — sans créer de compte. La connexion n'est demandée qu'au moment de commander."
           footnote="Panier conservé même après connexion"
-          footnoteTone="text-orange-deep"
+          footnoteTone="text-accent-dark"
         />
         <PillarCard
           index={2}
           tone="ink"
-          icon={<MessageCircle className="h-7 w-7 text-ink" />}
+          icon={<MessageCircle className="h-7 w-7 text-foreground" />}
           title="Négocie le prix"
           body="Propose ton prix — entre 50 % et 100 % du prix affiché — directement au vendeur. Il accepte, refuse, ou vous en discutez en messagerie instantanée."
           footnote="Discussion en direct avec le vendeur"
@@ -100,7 +100,7 @@ export function Pillars() {
           title="Vends et encaisse"
           body="Ouvre ta boutique, publie tes produits avec photos et variantes, et retire tes gains en Mobile Money depuis ton portefeuille vendeur."
           footnote="Retrait Mobile Money en quelques clics"
-          footnoteTone="text-white"
+          footnoteTone="text-secondary-foreground"
           delay={0.2}
         />
       </div>

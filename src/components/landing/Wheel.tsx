@@ -21,11 +21,11 @@ const SLICE = 360 / PRIZES.length;
 /// pour que les segments voisins ne se ressemblent jamais. Le foreground suit
 /// la teinte (texte clair sur accent vif, encre sur sun).
 const SEGMENTS: { bg: string; fg: string }[] = [
-  { bg: "var(--orange)", fg: "var(--primary-foreground)" },
+  { bg: "var(--primary)", fg: "var(--primary-foreground)" },
   { bg: "var(--color-blue-500)", fg: "white" },
-  { bg: "var(--sun)", fg: "var(--ink)" },
+  { bg: "var(--sun)", fg: "var(--foreground)" },
   { bg: "var(--color-red-500)", fg: "white" },
-  { bg: "var(--vert)", fg: "var(--secondary-foreground)" },
+  { bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
   { bg: "var(--color-purple-500)", fg: "white" },
 ];
 
@@ -101,8 +101,8 @@ export function Wheel() {
             </span>
           ))}
         </div>
-        <div className="absolute inset-0 z-10 m-auto grid h-16 w-16 place-items-center rounded-full border-4 border-border bg-paper">
-          <ShoppingBag className="h-7 w-7 text-orange" strokeWidth={2.4} />
+        <div className="absolute inset-0 z-10 m-auto grid h-16 w-16 place-items-center rounded-full border-4 border-border bg-card">
+          <ShoppingBag className="h-7 w-7 text-primary" strokeWidth={2.4} />
         </div>
       </div>
 
@@ -110,7 +110,7 @@ export function Wheel() {
         type="button"
         onClick={spin}
         disabled={spinning}
-        className="card-hard mt-8 rounded-full bg-sun px-8 py-4 font-display text-lg font-extrabold text-ink transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="card-hard mt-8 rounded-full bg-sun px-8 py-4 font-display text-lg font-extrabold text-foreground transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none disabled:cursor-not-allowed disabled:opacity-50"
       >
         Tourner la roue
       </button>

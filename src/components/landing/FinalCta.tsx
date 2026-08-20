@@ -5,7 +5,7 @@ import { CtaButton } from "./Primitives";
 export function FinalCta() {
   return (
     <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
-      <Reveal className="card-hard relative overflow-hidden rounded-blob bg-orange px-6 py-16 text-center sm:p-20">
+      <Reveal className="card-hard relative overflow-hidden rounded-blob bg-primary px-6 py-16 text-center sm:p-20">
         <div
           className="pointer-events-none absolute inset-0 opacity-15"
           style={{
@@ -14,16 +14,16 @@ export function FinalCta() {
             backgroundSize: "150px 150px",
           }}
         />
-        <h2 className="relative font-display text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-6xl">
+        <h2 className="relative font-display text-4xl font-extrabold leading-tight tracking-tight text-primary-foreground sm:text-6xl">
           Ta prochaine bonne affaire
           <br />
           t&apos;attend{" "}
-          <span className="inline-block -rotate-2 rounded-2xl bg-ink px-3 text-sun">
+          <span className="inline-block -rotate-2 rounded-2xl bg-foreground px-3 text-sun">
             déjà
           </span>
           .
         </h2>
-        <p className="relative mx-auto mt-6 max-w-xl text-lg text-white/85">
+        <p className="relative mx-auto mt-6 max-w-xl text-lg text-primary-foreground/85">
           Rejoins des milliers d&apos;Ivoiriens qui achètent malin, vendent
           facile et négocient chaque jour.
         </p>

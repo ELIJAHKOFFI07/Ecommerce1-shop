@@ -37,7 +37,7 @@ export function CategoryShowcase({
         </div>
         <a
           href={exploreHref}
-          className="underline-grow inline-flex items-center gap-2 font-display text-lg font-bold transition-colors hover:text-orange"
+          className="underline-grow inline-flex items-center gap-2 font-display text-lg font-bold transition-colors hover:text-primary"
         >
           {exploreLabel}
           <span aria-hidden>→</span>
@@ -45,7 +45,7 @@ export function CategoryShowcase({
       </Reveal>
 
       <Reveal>
-        <div className="card-hard overflow-hidden rounded-3xl bg-cream">
+        <div className="card-hard overflow-hidden rounded-3xl bg-background">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
             <div className="min-w-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}

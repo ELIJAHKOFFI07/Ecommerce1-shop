@@ -76,25 +76,25 @@ export function NegotiationDemo() {
 
   return (
     <Reveal>
-      <div className="card-hard mx-auto w-full max-w-md overflow-hidden rounded-blob bg-paper">
-        <div className="flex items-center gap-3 bg-ink px-5 py-4 text-cream">
+      <div className="card-hard mx-auto w-full max-w-md overflow-hidden rounded-blob bg-card">
+        <div className="flex items-center gap-3 bg-foreground px-5 py-4 text-background">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={ASSETS.products.sneakers}
             alt="Sneakers Air Fusion"
-            className="h-11 w-11 rounded-xl border-2 border-cream/30 object-cover"
+            className="h-11 w-11 rounded-xl border-2 border-background/30 object-cover"
           />
           <div className="min-w-0">
             <p className="truncate font-display text-sm font-bold">
               Boutique « Abidjan Kicks »
             </p>
-            <p className="flex items-center gap-1.5 text-xs text-cream/60">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-vert" />
+            <p className="flex items-center gap-1.5 text-xs text-background/60">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-secondary" />
               En ligne · répond vite
             </p>
           </div>
           <span className="ml-auto shrink-0 text-right">
-            <span className="block text-[10px] font-bold uppercase tracking-wider text-cream/50">
+            <span className="block text-[10px] font-bold uppercase tracking-wider text-background/50">
               Prix affiché
             </span>
             <span className="font-display text-sun font-extrabold">
@@ -105,7 +105,7 @@ export function NegotiationDemo() {
 
         <div
           ref={boxRef}
-          className="h-72 space-y-3 overflow-y-auto bg-cream/60 p-4"
+          className="h-72 space-y-3 overflow-y-auto bg-background/60 p-4"
         >
           {messages.map((msg, i) => (
             <div
@@ -125,7 +125,7 @@ export function NegotiationDemo() {
         </div>
 
         <div className="border-t-2 border-border/10 p-4">
-          <p className="mb-2.5 text-xs font-bold uppercase tracking-wider text-ink/50">
+          <p className="mb-2.5 text-xs font-bold uppercase tracking-wider text-foreground/50">
             Propose ton prix (essaye !)
           </p>
           <div className="flex flex-wrap gap-2">
@@ -134,7 +134,7 @@ export function NegotiationDemo() {
                 key={offer}
                 type="button"
                 onClick={() => handleOffer(offer)}
-                className="card-hard-sm rounded-full bg-paper px-4 py-2 font-display text-sm font-bold transition-colors hover:bg-sun"
+                className="card-hard-sm rounded-full bg-card px-4 py-2 font-display text-sm font-bold transition-colors hover:bg-sun"
               >
                 {fmt(offer)} F
               </button>
@@ -142,7 +142,7 @@ export function NegotiationDemo() {
           </div>
         </div>
       </div>
-      <p className="mt-4 text-center text-sm font-medium text-ink/50">
+      <p className="mt-4 text-center text-sm font-medium text-foreground/50">
         Démo interactive — dans l&apos;app, ça se passe exactement comme ça.
       </p>
     </Reveal>

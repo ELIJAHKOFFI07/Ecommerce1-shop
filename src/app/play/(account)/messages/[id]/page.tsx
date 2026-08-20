@@ -96,14 +96,14 @@ export default function ConversationPage({
     <div className="mx-auto flex max-w-2xl flex-col">
       <Link
         href="/play/messages"
-        className="card-hard-sm inline-flex w-fit items-center gap-1.5 rounded-full bg-paper px-3.5 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
+        className="card-hard-sm inline-flex w-fit items-center gap-1.5 rounded-full bg-card px-3.5 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
       >
         <ArrowLeft className="h-4 w-4" strokeWidth={2.5} /> Messages
       </Link>
 
       <div className="mt-4 min-h-[50vh] space-y-2">
         {messages.length === 0 ? (
-          <p className="py-16 text-center font-semibold text-ink/60">
+          <p className="py-16 text-center font-semibold text-foreground/60">
             Aucun message. Dites bonjour !
           </p>
         ) : (
@@ -135,12 +135,12 @@ export default function ConversationPage({
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Votre message…"
-          className="flex-1 rounded-full border-2 border-border bg-paper px-4 py-2.5 text-sm font-semibold text-ink outline-none placeholder:text-ink/40 focus:border-orange"
+          className="flex-1 rounded-full border-2 border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary"
         />
         <button
           type="submit"
           disabled={sending || !draft.trim()}
-          className="card-hard-sm grid h-10 w-10 shrink-0 place-items-center rounded-full bg-orange text-white transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+          className="card-hard-sm grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
           aria-label="Envoyer"
         >
           <Send className="h-4 w-4" strokeWidth={2.5} />

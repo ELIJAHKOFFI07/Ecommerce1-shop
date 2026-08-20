@@ -47,6 +47,7 @@
   --muted-foreground: #8a7a68;
 
   --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: #ffffff;
 
   /* Trait cartoon : toutes les bordures portent l'encre */
   --border: #17110b;
@@ -105,6 +106,7 @@
   --muted-foreground: #c9b8a6;
 
   --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: #140d07;
   --border: #f3e7d3;
   --input: #f3e7d3;
   --ring: #ff7d1a;
@@ -234,6 +236,7 @@
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -520,51 +523,37 @@ svg {
 }
 
 /* ===========================================================================
-   ALIAS NÉO-BRUTAL → tokens shadcn (accueil public).
+   TOKENS NÉO-BRUTAL DÉDIÉS.
 
-   Les noms de la maquette (ink, cream, paper, orange, vert, sun) sont conservés
-   pour la migration progressive des composants, mais pointent désormais vers
-   les tokens shadcn définis en tête de fichier : c'est la même couleur, une
-   seule source de vérité. `bg-ink`, `bg-cream`, `bg-orange`, `bg-sun`… restent
-   donc utilisables, tout en étant identiques à `bg-foreground`, `bg-background`,
-   `bg-primary`, `bg-accent`…
+   La migration des composants est terminée : les couleurs de la maquette
+   (ink, cream, paper, orange, vert) pointent désormais directement sur les
+   tokens shadcn du haut de fichier (foreground, background, card, primary,
+   secondary, accent-dark, surface-2) — il n'y a plus d'alias intermédiaires.
 
-   `sun` (jaune) n'a pas d'équivalent direct dans les tokens shadcn : il reste
-   un token dédié de l'identité néo-brutal (marqueurs, roue, code de retrait).
+   Seuls trois tokens n'ont PAS d'équivalent shadcn et restent dédiés à
+   l'identité néo-brutal :
+     --sun        (jaune)      → marqueurs, roue de la chance, code de retrait
+     --vert-deep  (vert foncé) → texte/icônes verts lisibles sur fond clair
+     --vert-soft  (vert pâle)  → aplats (motif wax, marqueurs)
    --------------------------------------------------------------------------- */
 :root {
-  --ink: var(--foreground);
-  --cream: var(--background);
-  --paper: var(--card);
-  --orange: var(--primary);
-  --orange-deep: var(--accent-dark);
-  --orange-soft: var(--surface-2);
-  --vert: var(--secondary);
   --vert-deep: #006b42;          /* vert soutenu pour texte/icônes sur fond clair */
   --vert-soft: #d9f3e6;          /* aplat vert très pâle (motif wax, marqueurs) */
   --sun: #ffc700;
 }
 
-/* Mode sombre : seules les teintes sans équivalent shadcn sont redéfinies,
-   les alias suivent automatiquement les tokens. */
+/* Mode sombre : ces teintes sont calibrées pour le fond clair, on les re-cale
+   pour rester lisibles sur fond sombre. */
 :root[data-theme="dark"] {
-  --orange-soft: #3a2410;
   --vert-deep: #19c47a;
   --vert-soft: #103025;
   --sun: #ffd23d;
 }
 
-/* Exposition à Tailwind : chaque entrée génère une classe (bg-ink, text-cream,
-   border-orange, shadow-hard, rounded-blob, font-display…) pilotée par les
-   variables ci-dessus — comme le bloc existant pour background/foreground. */
+/* Exposition à Tailwind : tokens dédiés + fonts, ombres et rayon du style
+   néo-brutal (les couleurs d'interface passent par les tokens shadcn exposés
+   plus haut dans le fichier). */
 @theme inline {
-  --color-ink: var(--ink);
-  --color-cream: var(--cream);
-  --color-paper: var(--paper);
-  --color-orange: var(--orange);
-  --color-orange-deep: var(--orange-deep);
-  --color-orange-soft: var(--orange-soft);
-  --color-vert: var(--vert);
   --color-vert-deep: var(--vert-deep);
   --color-vert-soft: var(--vert-soft);
   --color-sun: var(--sun);
@@ -581,8 +570,8 @@ svg {
 
 /* ---------------------------------------------------------------------------
    Trait cartoon en une classe : bordure encre 2px + ombre dure.
-   Remplace le trio `border-2 border-ink shadow-hard*` répété sur chaque carte
-   et bouton de l'accueil — une seule classe, toujours la même couleur de
+   Remplace le trio `border-2 border-foreground shadow-hard*` répété sur chaque
+   carte et bouton de l'accueil — une seule classe, toujours la même couleur de
    bordure (--border = encre), l'ombre portée suit --foreground / --primary.
    Comme les autres utilitaires Tailwind, elles supportent les variantes
    (hover:card-hard…) et peuvent être neutralisées (hover:shadow-none).
@@ -616,7 +605,7 @@ svg {
 @utility card-hard-cream {
   border-width: 2px;
   border-color: var(--border);
-  box-shadow: 6px 6px 0 0 var(--cream);
+  box-shadow: 6px 6px 0 0 var(--background);
 }
 
 body {
@@ -629,7 +618,7 @@ body {
 
 /* Sélection de texte */
 ::selection {
-  background: var(--orange);
+  background: var(--primary);
   color: #fff;
 }
 
@@ -682,7 +671,7 @@ body {
   transform: skew(-8deg) rotate(-1deg);
 }
 .marker.orange::after {
-  background: var(--orange);
+  background: var(--primary);
 }
 .marker.vert::after {
   background: var(--vert-soft);
@@ -750,21 +739,21 @@ body {
   font-size: 0.9rem;
 }
 .bubble-me {
-  background: var(--ink);
-  color: var(--cream);
+  background: var(--foreground);
+  color: var(--background);
   border-bottom-right-radius: 0.25rem;
   margin-left: auto;
 }
 .bubble-vendor {
-  background: var(--paper);
-  border: 2px solid var(--ink);
+  background: var(--card);
+  border: 2px solid var(--foreground);
   border-bottom-left-radius: 0.25rem;
 }
 .typing-dot {
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: var(--ink);
+  background: var(--foreground);
   opacity: 0.4;
   animation: blink 1s infinite;
 }
@@ -795,8 +784,8 @@ body {
   box-shadow: 8px 8px 0 0 var(--foreground);
 }
 .heart-btn.active svg {
-  fill: var(--orange);
-  stroke: var(--orange);
+  fill: var(--primary);
+  stroke: var(--primary);
 }
 
 /* ---- FAQ ---- */

@@ -12,24 +12,24 @@ const PERKS: {
   {
     value: "+200 pts",
     tone: "orange",
-    icon: <UserPlus className="h-5 w-5 text-white" strokeWidth={2.5} />,
+    icon: <UserPlus className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />,
     text: (
       <>
         pour toi à chaque filleul parrainé{" "}
-        <span className="text-ink/40">(+100 pts pour lui)</span>
+        <span className="text-foreground/40">(+100 pts pour lui)</span>
       </>
     ),
   },
   {
     value: "1 tirage",
     tone: "sun",
-    icon: <Dices className="h-5 w-5 text-ink" strokeWidth={2.5} />,
+    icon: <Dices className="h-5 w-5 text-foreground" strokeWidth={2.5} />,
     text: "gratuit chaque jour à la roue de la chance",
   },
   {
     value: "Stories",
     tone: "vert",
-    icon: <Clapperboard className="h-5 w-5 text-white" strokeWidth={2.5} />,
+    icon: <Clapperboard className="h-5 w-5 text-secondary-foreground" strokeWidth={2.5} />,
     text: "suis les nouveautés de tes boutiques façon réseau social",
   },
   {
@@ -56,14 +56,14 @@ export function Bonus() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-orange/25 blur-3xl"
+        className="pointer-events-none absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-primary/25 blur-3xl"
       />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-10"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 15% 20%, var(--sun) 0 5px, transparent 6px),radial-gradient(circle at 85% 30%, var(--cream) 0 5px, transparent 6px),radial-gradient(circle at 30% 80%, var(--orange) 0 5px, transparent 6px),radial-gradient(circle at 70% 90%, var(--sun) 0 5px, transparent 6px)",
+            "radial-gradient(circle at 15% 20%, var(--sun) 0 5px, transparent 6px),radial-gradient(circle at 85% 30%, var(--background) 0 5px, transparent 6px),radial-gradient(circle at 30% 80%, var(--primary) 0 5px, transparent 6px),radial-gradient(circle at 70% 90%, var(--sun) 0 5px, transparent 6px)",
           backgroundSize: "170px 170px",
         }}
       />
@@ -74,25 +74,25 @@ export function Bonus() {
           <div className="relative mx-auto w-full max-w-sm">
             <FloatingCard rotation={6} className="-right-2 -top-6 z-10 sm:-right-8">
               <div className="card-hard-cream flex items-center gap-2.5 rounded-2xl bg-sun px-4 py-3">
-                <Gift className="h-6 w-6 shrink-0 text-ink" strokeWidth={2.4} />
+                <Gift className="h-6 w-6 shrink-0 text-foreground" strokeWidth={2.4} />
                 <div>
-                  <p className="font-display text-lg font-extrabold leading-tight text-ink">
+                  <p className="font-display text-lg font-extrabold leading-tight text-foreground">
                     +200 pts
                   </p>
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-ink/60">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-foreground/60">
                     par filleul parrainé
                   </p>
                 </div>
               </div>
             </FloatingCard>
             <FloatingCard rotation={-5} delay={1.2} className="-left-2 bottom-20 z-10 sm:-left-8">
-              <div className="card-hard-sun flex items-center gap-2.5 rounded-2xl bg-paper px-4 py-3">
+              <div className="card-hard-sun flex items-center gap-2.5 rounded-2xl bg-card px-4 py-3">
                 <Sparkles className="h-6 w-6 shrink-0 text-vert-deep" strokeWidth={2.4} />
                 <div>
-                  <p className="font-display text-lg font-extrabold leading-tight text-ink">
+                  <p className="font-display text-lg font-extrabold leading-tight text-foreground">
                     1 tirage / jour
                   </p>
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-ink/50">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-foreground/50">
                     à la roue de la chance
                   </p>
                 </div>
@@ -121,7 +121,7 @@ export function Bonus() {
               {PERKS.map((perk) => (
                 <div
                   key={perk.value}
-                  className="card-hard-sun relative rounded-2xl bg-paper px-5 py-4"
+                  className="card-hard-sun relative rounded-2xl bg-card px-5 py-4"
                 >
                   <span
                     aria-hidden
@@ -137,7 +137,7 @@ export function Bonus() {
                   <p className="mt-3 font-display text-2xl font-extrabold text-vert-deep">
                     {perk.value}
                   </p>
-                  <p className="mt-1 text-sm font-medium text-ink/70">{perk.text}</p>
+                  <p className="mt-1 text-sm font-medium text-foreground/70">{perk.text}</p>
                 </div>
               ))}
             </div>

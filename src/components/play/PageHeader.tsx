@@ -41,7 +41,7 @@ export function PageHeader({
         <button
           onClick={goBack}
           aria-label="Retour"
-          className="card-hard-sm mt-0.5 shrink-0 rounded-full bg-paper p-2.5 text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="card-hard-sm mt-0.5 shrink-0 rounded-full bg-card p-2.5 text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
         </button>
@@ -51,7 +51,7 @@ export function PageHeader({
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-1 text-sm font-semibold text-ink/60 lg:text-base">
+            <p className="mt-1 text-sm font-semibold text-foreground/60 lg:text-base">
               {subtitle}
             </p>
           )}

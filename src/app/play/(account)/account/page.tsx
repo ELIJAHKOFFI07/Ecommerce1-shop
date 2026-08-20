@@ -95,7 +95,7 @@ export default function AccountPage() {
         <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -109,9 +109,9 @@ export default function AccountPage() {
   return (
     <div className="space-y-6">
       {/* ---- Carte d'identité ---- */}
-      <div className="card-hard rounded-2xl bg-paper p-5 sm:p-6">
+      <div className="card-hard rounded-2xl bg-card p-5 sm:p-6">
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
-          <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-border bg-orange-soft">
+          <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-border bg-surface-2">
             {profile?.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -120,7 +120,7 @@ export default function AccountPage() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="flex h-full w-full items-center justify-center font-display text-3xl font-extrabold text-orange">
+              <span className="flex h-full w-full items-center justify-center font-display text-3xl font-extrabold text-primary">
                 {initial}
               </span>
             )}
@@ -130,10 +130,10 @@ export default function AccountPage() {
             <h1 className="truncate font-display text-2xl font-extrabold tracking-tight">
               {displayName}
             </h1>
-            <p className="truncate text-sm font-semibold text-ink/60">
+            <p className="truncate text-sm font-semibold text-foreground/60">
               {email}
             </p>
-            <p className="mt-2 inline-flex items-center gap-2 rounded-full border-2 border-border bg-sun px-3 py-1 font-display text-sm font-bold text-ink">
+            <p className="mt-2 inline-flex items-center gap-2 rounded-full border-2 border-border bg-sun px-3 py-1 font-display text-sm font-bold text-foreground">
               {ROLE_LABELS[roleOf(profile) ?? "user"]} ·{" "}
               {profile?.loyalty_points ?? 0} points
             </p>
@@ -142,14 +142,14 @@ export default function AccountPage() {
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
             <Link
               href="/play/account/edit"
-              className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-paper px-5 py-2.5 font-display text-sm font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
+              className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-card px-5 py-2.5 font-display text-sm font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
             >
               <UserPen className="h-4 w-4" strokeWidth={2.5} />
               Modifier mon profil
             </Link>
             <button
               onClick={signOut}
-              className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-paper px-5 py-2.5 font-display text-sm font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:text-red-600 hover:shadow-none"
+              className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-card px-5 py-2.5 font-display text-sm font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:text-red-600 hover:shadow-none"
             >
               <LogOut className="h-4 w-4" strokeWidth={2.5} /> Se déconnecter
             </button>
@@ -163,12 +163,12 @@ export default function AccountPage() {
           <Link
             key={href}
             href={href}
-            className="card-hard rounded-2xl bg-paper p-4 transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+            className="card-hard rounded-2xl bg-card p-4 transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
           >
-            <span className="grid h-11 w-11 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+            <span className="grid h-11 w-11 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
               <Icon className="h-5 w-5" strokeWidth={2.5} />
             </span>
-            <p className="mt-3 font-display text-base font-bold text-ink">
+            <p className="mt-3 font-display text-base font-bold text-foreground">
               {label}
             </p>
           </Link>

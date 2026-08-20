@@ -7,7 +7,7 @@ import { ASSETS } from "./assets";
 const FEATURES = [
   {
     tone: "orange-soft" as const,
-    icon: <Wallet className="h-5 w-5 text-orange-deep" />,
+    icon: <Wallet className="h-5 w-5 text-accent-dark" />,
     title: "Portefeuille & retrait Mobile Money",
     text: "Tes ventes sont crédités instantanément. Retire quand tu veux, dès le seuil atteint.",
   },
@@ -19,7 +19,7 @@ const FEATURES = [
   },
   {
     tone: "sun" as const,
-    icon: <MessagesSquare className="h-5 w-5 text-ink" />,
+    icon: <MessagesSquare className="h-5 w-5 text-foreground" />,
     title: "Offres gérées en un clin d'œil",
     text: "Reçois les propositions de prix, accepte ou refuse, discute en direct.",
   },
@@ -41,20 +41,20 @@ export function VendorSection() {
           </div>
           <FloatingCard
             rotation={-3}
-            className="card-hard-sm -bottom-6 -left-2 rounded-2xl bg-paper px-5 py-4 sm:left-6"
+            className="card-hard-sm -bottom-6 -left-2 rounded-2xl bg-card px-5 py-4 sm:left-6"
           >
-            <p className="text-[10px] font-bold uppercase tracking-widest text-ink/50">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
               Portefeuille vendeur
             </p>
             <p className="font-display text-2xl font-extrabold text-vert-deep">
               + 342 500 F{" "}
-              <span className="text-sm font-bold text-ink/40">ce mois</span>
+              <span className="text-sm font-bold text-foreground/40">ce mois</span>
             </p>
           </FloatingCard>
         </Reveal>
 
         <Reveal>
-          <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-orange">
+          <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-primary">
             Pour les vendeurs
           </p>
           <h2 className="font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
@@ -66,7 +66,7 @@ export function VendorSection() {
             </Marker>
             .
           </h2>
-          <p className="mt-6 max-w-lg text-lg leading-relaxed text-ink/70">
+          <p className="mt-6 max-w-lg text-lg leading-relaxed text-foreground/70">
             Que tu vendes depuis ta boutique physique, ton salon ou ton garage :
             DreamTeamShop te donne une vitrine pro, des clients proches et un
             vrai outil de gestion.
@@ -75,14 +75,14 @@ export function VendorSection() {
             {FEATURES.map((feature) => (
               <li
                 key={feature.title}
-                className="card-hard-sm flex items-start gap-4 rounded-2xl bg-paper p-4"
+                className="card-hard-sm flex items-start gap-4 rounded-2xl bg-card p-4"
               >
                 <IconBadge tone={feature.tone} size="md" className="rounded-xl">
                   {feature.icon}
                 </IconBadge>
                 <div>
                   <p className="font-display font-bold">{feature.title}</p>
-                  <p className="text-sm text-ink/60">{feature.text}</p>
+                  <p className="text-sm text-foreground/60">{feature.text}</p>
                 </div>
               </li>
             ))}

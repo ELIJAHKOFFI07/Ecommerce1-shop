@@ -107,15 +107,15 @@ export default function OffersPage() {
   if (!connected) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
           <Handshake className="h-6 w-6" strokeWidth={2.5} />
         </span>
-        <p className="mt-3 text-sm font-semibold text-ink/60">
+        <p className="mt-3 text-sm font-semibold text-foreground/60">
           Connectez-vous pour voir vos offres.
         </p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -133,7 +133,7 @@ export default function OffersPage() {
         <button
           onClick={() => setTab("sent")}
           className={`card-hard-sm flex-1 rounded-full px-4 py-2 font-display text-sm font-bold transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
-            tab === "sent" ? "bg-ink text-cream" : "bg-paper text-ink hover:bg-orange-soft"
+            tab === "sent" ? "bg-foreground text-background" : "bg-card text-foreground hover:bg-surface-2"
           }`}
         >
           Envoyées ({sent.length})
@@ -141,7 +141,7 @@ export default function OffersPage() {
         <button
           onClick={() => setTab("received")}
           className={`card-hard-sm flex-1 rounded-full px-4 py-2 font-display text-sm font-bold transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
-            tab === "received" ? "bg-ink text-cream" : "bg-paper text-ink hover:bg-orange-soft"
+            tab === "received" ? "bg-foreground text-background" : "bg-card text-foreground hover:bg-surface-2"
           }`}
         >
           Reçues ({received.length})
@@ -151,7 +151,7 @@ export default function OffersPage() {
       {error && <p className="mt-4 text-sm font-semibold text-red-600">{error}</p>}
 
       {list.length === 0 ? (
-        <p className="py-16 text-center font-semibold text-ink/60">
+        <p className="py-16 text-center font-semibold text-foreground/60">
           {tab === "sent"
             ? "Vous n'avez envoyé aucune offre."
             : "Aucune offre reçue."}
@@ -161,43 +161,43 @@ export default function OffersPage() {
           {list.map((offer) => (
             <li
               key={offer.id}
-              className="card-hard rounded-2xl bg-paper p-4"
+              className="card-hard rounded-2xl bg-card p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   {offer.products ? (
                     <Link
                       href={`/play/product/${offer.product_id}`}
-                      className="block truncate font-display text-base font-bold text-ink hover:text-orange"
+                      className="block truncate font-display text-base font-bold text-foreground hover:text-primary"
                     >
                       {offer.products.title}
                     </Link>
                   ) : (
-                    <span className="font-display text-base font-bold text-ink">Produit supprimé</span>
+                    <span className="font-display text-base font-bold text-foreground">Produit supprimé</span>
                   )}
                   {tab === "received" && offer.profiles && (
-                    <span className="block text-xs font-semibold text-ink/60">
+                    <span className="block text-xs font-semibold text-foreground/60">
                       par {offer.profiles.username}
                     </span>
                   )}
-                  <span className="mt-1 block text-xs font-semibold text-ink/60">
+                  <span className="mt-1 block text-xs font-semibold text-foreground/60">
                     {relativeTime(offer.created_at)}
                   </span>
                 </div>
                 <div className="shrink-0 text-right">
-                  <span className="block font-display text-base font-extrabold text-orange">
+                  <span className="block font-display text-base font-extrabold text-primary">
                     {formatFcfa(offer.amount)}
                   </span>
-                  <span className="block text-xs font-bold text-ink/60">
+                  <span className="block text-xs font-bold text-foreground/60">
                     {OFFER_STATUS_LABELS[offer.status]}
                   </span>
                 </div>
               </div>
 
               {offer.counter_amount != null && (
-                <p className="mt-2 text-sm font-semibold text-ink/70">
+                <p className="mt-2 text-sm font-semibold text-foreground/70">
                   Contre-offre du vendeur :{" "}
-                  <span className="font-display font-extrabold text-orange">
+                  <span className="font-display font-extrabold text-primary">
                     {formatFcfa(offer.counter_amount)}
                   </span>
                 </p>
@@ -208,21 +208,21 @@ export default function OffersPage() {
                   <button
                     disabled={busyId === offer.id}
                     onClick={() => respond(offer.id, "accepted")}
-                    className="card-hard-sm flex-1 rounded-full bg-vert px-3 py-2 font-display text-xs font-bold text-white transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+                    className="card-hard-sm flex-1 rounded-full bg-secondary px-3 py-2 font-display text-xs font-bold text-secondary-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
                   >
                     Accepter
                   </button>
                   <button
                     disabled={busyId === offer.id}
                     onClick={() => respond(offer.id, "countered")}
-                    className="card-hard-sm flex-1 rounded-full bg-paper px-3 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+                    className="card-hard-sm flex-1 rounded-full bg-card px-3 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
                   >
                     Contre-offre
                   </button>
                   <button
                     disabled={busyId === offer.id}
                     onClick={() => respond(offer.id, "declined")}
-                    className="card-hard-sm flex-1 rounded-full bg-paper px-3 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:text-red-600 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+                    className="card-hard-sm flex-1 rounded-full bg-card px-3 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:text-red-600 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
                   >
                     Refuser
                   </button>

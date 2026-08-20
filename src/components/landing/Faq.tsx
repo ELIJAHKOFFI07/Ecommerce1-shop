@@ -39,7 +39,7 @@ export function Faq() {
   return (
     <section id="faq" className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
       <Reveal className="mb-10 text-center">
-        <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-orange">
+        <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-primary">
           On te dit tout
         </p>
         <h2 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
@@ -54,7 +54,7 @@ export function Faq() {
             <Reveal
               key={item.question}
               delay={index * 0.05}
-              className="card-hard-sm overflow-hidden rounded-2xl bg-paper"
+              className="card-hard-sm overflow-hidden rounded-2xl bg-card"
             >
               <div className={open ? "faq-item open" : "faq-item"}>
                 <button
@@ -68,7 +68,7 @@ export function Faq() {
                 </button>
                 <div className="faq-panel">
                   <div className="overflow-hidden">
-                    <p className="px-6 pb-5 leading-relaxed text-ink/70">
+                    <p className="px-6 pb-5 leading-relaxed text-foreground/70">
                       {item.answer}
                     </p>
                   </div>

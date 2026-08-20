@@ -117,7 +117,7 @@ export default function EditProfilePage() {
         <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -126,15 +126,15 @@ export default function EditProfilePage() {
   }
 
   const field =
-    "w-full rounded-xl border-2 border-border bg-cream px-4 py-3 text-sm font-semibold text-ink outline-none placeholder:text-ink/40 focus:border-orange";
-  const label = "mb-1 block text-sm font-bold text-ink/70";
+    "w-full rounded-xl border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary";
+  const label = "mb-1 block text-sm font-bold text-foreground/70";
   const shown = preview ?? avatarUrl;
 
   return (
     <div className="mx-auto max-w-2xl">
       <Link
         href="/play/account"
-        className="card-hard-sm inline-flex items-center gap-1.5 rounded-full bg-paper px-3.5 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
+        className="card-hard-sm inline-flex items-center gap-1.5 rounded-full bg-card px-3.5 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
       >
         <ArrowLeft className="h-4 w-4" strokeWidth={2.5} /> Mon compte
       </Link>
@@ -145,14 +145,14 @@ export default function EditProfilePage() {
 
       <form
         onSubmit={save}
-        className="card-hard mt-6 rounded-2xl bg-paper p-5 sm:p-8"
+        className="card-hard mt-6 rounded-2xl bg-card p-5 sm:p-8"
       >
         {/* ---- Photo de profil ---- */}
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full border-2 border-border bg-orange-soft shadow-hard"
+            className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full border-2 border-border bg-surface-2 shadow-hard"
             aria-label="Changer la photo de profil"
           >
             {shown ? (
@@ -163,11 +163,11 @@ export default function EditProfilePage() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="flex h-full w-full items-center justify-center font-display text-4xl font-extrabold text-orange">
+              <span className="flex h-full w-full items-center justify-center font-display text-4xl font-extrabold text-primary">
                 {(fullName || username || "?")[0]?.toUpperCase()}
               </span>
             )}
-            <span className="absolute -bottom-1 -right-1 grid h-10 w-10 place-items-center rounded-full border-2 border-border bg-ink text-cream">
+            <span className="absolute -bottom-1 -right-1 grid h-10 w-10 place-items-center rounded-full border-2 border-border bg-foreground text-background">
               <Camera className="h-4 w-4" strokeWidth={2.5} />
             </span>
           </button>
@@ -181,10 +181,10 @@ export default function EditProfilePage() {
 
           <div className="flex flex-1 flex-col items-center gap-3 text-center sm:items-start sm:text-left">
             <div>
-              <p className="font-display text-base font-bold text-ink">
+              <p className="font-display text-base font-bold text-foreground">
                 Photo de profil
               </p>
-              <p className="mt-0.5 text-xs font-semibold text-ink/60">
+              <p className="mt-0.5 text-xs font-semibold text-foreground/60">
                 JPG ou PNG · 5 Mo max. Elle apparaît sur vos annonces et vos
                 messages.
               </p>
@@ -193,7 +193,7 @@ export default function EditProfilePage() {
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
-                className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+                className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
               >
                 <Camera className="h-4 w-4" strokeWidth={2.5} />
                 Changer la photo
@@ -202,7 +202,7 @@ export default function EditProfilePage() {
                 <button
                   type="button"
                   onClick={removeAvatar}
-                  className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-paper px-5 py-2.5 font-display text-sm font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:text-red-600 hover:shadow-none"
+                  className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-card px-5 py-2.5 font-display text-sm font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:text-red-600 hover:shadow-none"
                 >
                   Retirer
                 </button>
@@ -294,7 +294,7 @@ export default function EditProfilePage() {
 
           <button
             disabled={saving}
-            className="card-hard-sm w-full rounded-full bg-ink py-3 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 sm:col-span-2"
+            className="card-hard-sm w-full rounded-full bg-foreground py-3 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 sm:col-span-2"
           >
             {saving ? "Enregistrement…" : "Enregistrer"}
           </button>

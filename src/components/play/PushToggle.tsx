@@ -65,12 +65,12 @@ export function PushToggle() {
 
   if (state === "unsupported") {
     return (
-      <div className="card-hard rounded-2xl bg-paper p-4">
-        <p className="flex items-center gap-2 font-display text-sm font-bold text-ink">
-          <BellOff className="h-4 w-4 text-ink/60" strokeWidth={2.5} />
+      <div className="card-hard rounded-2xl bg-card p-4">
+        <p className="flex items-center gap-2 font-display text-sm font-bold text-foreground">
+          <BellOff className="h-4 w-4 text-foreground/60" strokeWidth={2.5} />
           Notifications push indisponibles
         </p>
-        <p className="mt-1 text-xs font-semibold text-ink/60">
+        <p className="mt-1 text-xs font-semibold text-foreground/60">
           Sur iPhone, ajoutez d&apos;abord le site à votre écran d&apos;accueil
           via le bouton Partager, puis rouvrez-le depuis cette icône.
         </p>
@@ -79,22 +79,22 @@ export function PushToggle() {
   }
 
   return (
-    <div className="card-hard rounded-2xl bg-paper p-4">
+    <div className="card-hard rounded-2xl bg-card p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="flex items-center gap-2 font-display text-sm font-bold text-ink">
+          <p className="flex items-center gap-2 font-display text-sm font-bold text-foreground">
             {subscribed ? (
               <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-border bg-vert-soft text-vert-deep">
                 <BellRing className="h-4 w-4" strokeWidth={2.5} />
               </span>
             ) : (
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-border bg-orange-soft text-orange">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-border bg-surface-2 text-primary">
                 <Bell className="h-4 w-4" strokeWidth={2.5} />
               </span>
             )}
             Notifications push
           </p>
-          <p className="mt-1 text-xs font-semibold text-ink/60">
+          <p className="mt-1 text-xs font-semibold text-foreground/60">
             Commandes, offres, enchères et messages, même application fermée.
           </p>
         </div>
@@ -104,8 +104,8 @@ export function PushToggle() {
           disabled={busy || state === "denied"}
           className={`card-hard-sm shrink-0 rounded-full px-4 py-2 font-display text-xs font-bold transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 ${
             subscribed
-              ? "bg-paper text-ink hover:text-red-600"
-              : "bg-ink text-cream"
+              ? "bg-card text-foreground hover:text-red-600"
+              : "bg-foreground text-background"
           }`}
         >
           {busy ? "…" : subscribed ? "Désactiver" : "Activer"}
@@ -113,7 +113,7 @@ export function PushToggle() {
       </div>
 
       {state === "denied" && (
-        <p className="mt-3 text-xs font-semibold text-ink/60">
+        <p className="mt-3 text-xs font-semibold text-foreground/60">
           Vous avez refusé les notifications pour ce site. Le navigateur ne
           repose plus la question : réautorisez-les depuis l&apos;icône à
           gauche de la barre d&apos;adresse.

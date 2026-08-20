@@ -159,7 +159,7 @@ function Stars({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((s) => (
         <svg
           key={s}
-          className={`h-3.5 w-3.5 ${s <= Math.round(rating) ? "text-ink" : "text-ink/20"}`}
+          className={`h-3.5 w-3.5 ${s <= Math.round(rating) ? "text-foreground" : "text-foreground/20"}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -172,7 +172,7 @@ function Stars({ rating }: { rating: number }) {
 
 function ProductCard({ product }: { product: BestSellerProduct }) {
   return (
-    <div className="card-hover card-hard-sm group w-[260px] shrink-0 overflow-hidden rounded-3xl bg-paper sm:w-[280px]">
+    <div className="card-hover card-hard-sm group w-[260px] shrink-0 overflow-hidden rounded-3xl bg-card sm:w-[280px]">
       <div className="relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -183,25 +183,25 @@ function ProductCard({ product }: { product: BestSellerProduct }) {
       </div>
       <div className="p-4">
         <div className="mb-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-border bg-vert px-2.5 py-1 font-display text-xs font-extrabold text-white">
+          <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-border bg-secondary px-2.5 py-1 font-display text-xs font-extrabold text-secondary-foreground">
             <CircleCheck className="h-3.5 w-3.5" />
             Baisse de prix
           </span>
         </div>
         <h3 className="font-display font-bold leading-snug">{product.title}</h3>
-        <p className="mt-0.5 text-sm text-ink/50">{product.condition}</p>
+        <p className="mt-0.5 text-sm text-foreground/50">{product.condition}</p>
         <div className="mt-1.5 flex items-center gap-1.5">
           <Stars rating={product.rating} />
-          <span className="text-xs font-semibold text-ink/50">
+          <span className="text-xs font-semibold text-foreground/50">
             {product.rating}/5 ({product.reviews.toLocaleString()})
           </span>
         </div>
         <div className="mt-2 flex items-baseline gap-2">
-          <span className="font-display text-lg font-extrabold text-orange-deep">
+          <span className="font-display text-lg font-extrabold text-accent-dark">
             {formatFcfa(product.price)}
           </span>
           {product.originalPrice && (
-            <span className="text-sm font-semibold text-ink/40 line-through">
+            <span className="text-sm font-semibold text-foreground/40 line-through">
               {formatFcfa(product.originalPrice)}
             </span>
           )}
@@ -212,12 +212,12 @@ function ProductCard({ product }: { product: BestSellerProduct }) {
           </p>
         )}
         {product.lowestPrice && (
-          <p className="mt-0.5 flex items-center gap-1 text-xs text-ink/40">
+          <p className="mt-0.5 flex items-center gap-1 text-xs text-foreground/40">
             Prix le plus bas : {formatFcfa(product.lowestPrice)}
             <Info className="h-3 w-3" />
           </p>
         )}
-        <button className="mt-3 w-full rounded-full border-2 border-border bg-paper px-4 py-2.5 font-display text-sm font-bold transition-colors hover:bg-ink hover:text-cream">
+        <button className="mt-3 w-full rounded-full border-2 border-border bg-card px-4 py-2.5 font-display text-sm font-bold transition-colors hover:bg-foreground hover:text-background">
           + Ajouter au panier
         </button>
       </div>

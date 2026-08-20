@@ -89,3 +89,10 @@ export function useSession(): SessionContextValue {
   }
   return ctx;
 }
+
+/// Variante tolérante : retourne `null` hors d'un `SessionProvider`. Utile
+/// pour les composants partagés entre la vitrine publique (sans provider) et
+/// `/play` (avec), comme la barre de navigation.
+export function useOptionalSession(): SessionContextValue | null {
+  return useContext(SessionContext);
+}

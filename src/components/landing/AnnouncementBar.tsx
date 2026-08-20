@@ -9,7 +9,7 @@ const ITEMS: { label: string; tone: "sun" | "orange" | "vert" }[] = [
   { label: "Enchères & ventes flash chaque jour", tone: "vert" },
 ];
 
-const TONE_CLASS = { sun: "text-sun", orange: "text-orange", vert: "text-vert" };
+const TONE_CLASS = { sun: "text-sun", orange: "text-primary", vert: "text-secondary" };
 
 function Row({ ariaHidden }: { ariaHidden?: boolean }) {
   return (
@@ -26,7 +26,7 @@ function Row({ ariaHidden }: { ariaHidden?: boolean }) {
 
 export function AnnouncementBar() {
   return (
-    <div className="relative z-50 overflow-hidden bg-ink py-2.5 text-cream">
+    <div className="relative z-50 overflow-hidden bg-foreground py-2.5 text-background">
       <div className="marquee-track font-display text-sm font-semibold tracking-wide uppercase">
         <Row />
         <Row ariaHidden />

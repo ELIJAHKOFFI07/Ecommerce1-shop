@@ -82,7 +82,7 @@ export function AuthSplit({
         {/* Colonne formulaire : centrée verticalement, largeur lisible. */}
         <div className="flex flex-col justify-center px-6 py-7 sm:px-10 lg:px-12 lg:py-9">
           <div className="w-full max-w-md">
-            <span className="card-hard-sm inline-flex w-fit items-center gap-2 rounded-full bg-paper px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground">
+            <span className="card-hard-sm inline-flex w-fit items-center gap-2 rounded-full bg-card px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground">
               <span className={`h-2 w-2 rounded-full ${accent}`} aria-hidden />
               {kicker}
             </span>
@@ -114,13 +114,13 @@ export function AuthSplit({
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
 
-          <div className="card-hard-sm animate-float absolute left-6 top-6 flex items-center gap-2 rounded-full bg-paper px-4 py-2 text-sm font-bold text-foreground">
+          <div className="card-hard-sm animate-float absolute left-6 top-6 flex items-center gap-2 rounded-full bg-card px-4 py-2 text-sm font-bold text-foreground">
             {badge}
           </div>
 
-          <div className="card-hard absolute bottom-8 left-8 w-64 rounded-2xl bg-paper p-5">
+          <div className="card-hard absolute bottom-8 left-8 w-64 rounded-2xl bg-card p-5">
             <div className={`flex items-center gap-0.5 ${accent}`} aria-hidden>
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star key={i} className="h-4 w-4 fill-current" />

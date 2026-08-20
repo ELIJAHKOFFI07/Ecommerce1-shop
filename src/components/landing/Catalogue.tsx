@@ -60,16 +60,16 @@ function AuctionTimerSmall() {
 /* ------------------------------------------------------------------ */
 
 const BADGE_TONES: Record<BadgeTone, string> = {
-  orange: "bg-orange text-white border-border",
-  ink: "bg-ink text-sun border-sun",
-  vert: "bg-vert text-white border-border",
-  sun: "bg-sun text-ink border-border",
+  orange: "bg-primary text-primary-foreground border-border",
+  ink: "bg-foreground text-sun border-sun",
+  vert: "bg-secondary text-secondary-foreground border-border",
+  sun: "bg-sun text-foreground border-border",
 };
 
 const TAG_TONES: Record<TagTone, string> = {
   neg: "bg-vert-soft text-vert-deep",
-  flash: "bg-orange-soft text-orange-deep",
-  auction: "bg-sun text-ink",
+  flash: "bg-surface-2 text-accent-dark",
+  auction: "bg-sun text-foreground",
 };
 
 function ProductCard({
@@ -82,7 +82,7 @@ function ProductCard({
   return (
     <Reveal
       delay={delay}
-      className="card-hover card-hard-sm group overflow-hidden rounded-3xl bg-paper"
+      className="card-hover card-hard-sm group overflow-hidden rounded-3xl bg-card"
     >
       <div className="relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,21 +98,21 @@ function ProductCard({
             {product.badge.label}
           </span>
         )}
-        <HeartButton className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border-2 border-border bg-paper" />
+        <HeartButton className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border-2 border-border bg-card" />
       </div>
 
       <div className="p-4">
-        <div className="mb-1 flex items-center gap-1.5 text-xs font-bold text-ink/50">
+        <div className="mb-1 flex items-center gap-1.5 text-xs font-bold text-foreground/50">
           <MapPin className="h-3.5 w-3.5" strokeWidth={2.2} />
           {product.city}
         </div>
         <h3 className="font-display font-bold leading-snug">{product.title}</h3>
         <div className="mt-2 flex items-baseline gap-2">
-          <span className="font-display text-lg font-extrabold text-orange-deep">
+          <span className="font-display text-lg font-extrabold text-accent-dark">
             {product.price}
           </span>
           {product.oldPrice && (
-            <span className="text-sm font-semibold text-ink/40 line-through">
+            <span className="text-sm font-semibold text-foreground/40 line-through">
               {product.oldPrice}
             </span>
           )}
@@ -144,7 +144,7 @@ export function Catalogue({
     <section id="catalogue" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
       <Reveal className="mb-8 flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-vert">
+          <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-secondary">
             Fraîchement arrivés
           </p>
           <h2 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
@@ -155,7 +155,7 @@ export function Catalogue({
         </div>
         <a
           href="/play/search"
-          className="underline-grow inline-flex items-center gap-2 font-display text-lg font-bold transition-colors hover:text-orange"
+          className="underline-grow inline-flex items-center gap-2 font-display text-lg font-bold transition-colors hover:text-primary"
         >
           Tout explorer
           <span aria-hidden>→</span>

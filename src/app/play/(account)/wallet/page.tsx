@@ -95,15 +95,15 @@ export default function WalletPage() {
   if (!connected) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
           <Wallet className="h-6 w-6" strokeWidth={2.5} />
         </span>
-        <p className="mt-3 text-sm font-semibold text-ink/60">
+        <p className="mt-3 text-sm font-semibold text-foreground/60">
           Connectez-vous pour consulter votre portefeuille.
         </p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -119,17 +119,17 @@ export default function WalletPage() {
           pendant qu'on parcourt l'historique, au lieu de défiler hors écran. */}
       <div className="mt-6 grid gap-6 lg:grid-cols-[22rem_1fr] lg:items-start">
       <div className="space-y-6 lg:sticky lg:top-20">
-      <div className="card-hard rounded-2xl bg-paper p-6 text-center">
-        <p className="font-display text-sm font-bold text-ink/60">Solde disponible</p>
-        <p className="mt-2 font-display text-3xl font-extrabold text-orange">{formatFcfa(balance)}</p>
+      <div className="card-hard rounded-2xl bg-card p-6 text-center">
+        <p className="font-display text-sm font-bold text-foreground/60">Solde disponible</p>
+        <p className="mt-2 font-display text-3xl font-extrabold text-primary">{formatFcfa(balance)}</p>
       </div>
 
       <form
         onSubmit={withdraw}
-        className="card-hard rounded-2xl bg-paper p-6"
+        className="card-hard rounded-2xl bg-card p-6"
       >
-        <h2 className="font-display text-lg font-extrabold text-ink">Demander un retrait</h2>
-        <p className="mt-1 text-xs font-semibold text-ink/60">
+        <h2 className="font-display text-lg font-extrabold text-foreground">Demander un retrait</h2>
+        <p className="mt-1 text-xs font-semibold text-foreground/60">
           Minimum {formatFcfa(minWithdrawal)}.
         </p>
         <div className="mt-4 space-y-3">
@@ -139,14 +139,14 @@ export default function WalletPage() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Montant en FCFA"
-            className="w-full rounded-xl border-2 border-border bg-cream px-3 py-2.5 text-sm font-semibold text-ink outline-none placeholder:text-ink/40 focus:border-orange"
+            className="w-full rounded-xl border-2 border-border bg-background px-3 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary"
           />
           <input
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Numéro Mobile Money"
-            className="w-full rounded-xl border-2 border-border bg-cream px-3 py-2.5 text-sm font-semibold text-ink outline-none placeholder:text-ink/40 focus:border-orange"
+            className="w-full rounded-xl border-2 border-border bg-background px-3 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary"
           />
         </div>
         {error && <p className="mt-3 text-sm font-semibold text-red-600">{error}</p>}
@@ -154,7 +154,7 @@ export default function WalletPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="card-hard-sm mt-4 w-full rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+          className="card-hard-sm mt-4 w-full rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
         >
           {submitting ? "Envoi…" : "Demander le retrait"}
         </button>
@@ -162,9 +162,9 @@ export default function WalletPage() {
       </div>
 
       <div>
-      <h2 className="font-display text-lg font-extrabold text-ink">Historique</h2>
+      <h2 className="font-display text-lg font-extrabold text-foreground">Historique</h2>
       {transactions.length === 0 ? (
-        <p className="py-10 text-center font-semibold text-ink/60">
+        <p className="py-10 text-center font-semibold text-foreground/60">
           Aucun mouvement pour le moment.
         </p>
       ) : (
@@ -174,11 +174,11 @@ export default function WalletPage() {
             return (
               <li
                 key={tx.id}
-                className="card-hard flex items-center gap-3 rounded-2xl bg-paper p-3"
+                className="card-hard flex items-center gap-3 rounded-2xl bg-card p-3"
               >
                 <span
                   className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-border ${
-                    positive ? "bg-vert-soft text-vert-deep" : "bg-orange-soft text-red-600"
+                    positive ? "bg-vert-soft text-vert-deep" : "bg-surface-2 text-red-600"
                   }`}
                 >
                   {positive ? (
@@ -188,10 +188,10 @@ export default function WalletPage() {
                   )}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block font-display text-sm font-bold text-ink">
+                  <span className="block font-display text-sm font-bold text-foreground">
                     {WALLET_KIND_LABELS[tx.kind] ?? tx.kind}
                   </span>
-                  <span className="block truncate text-xs font-semibold text-ink/60">
+                  <span className="block truncate text-xs font-semibold text-foreground/60">
                     {tx.note ?? relativeTime(tx.created_at)}
                   </span>
                 </span>

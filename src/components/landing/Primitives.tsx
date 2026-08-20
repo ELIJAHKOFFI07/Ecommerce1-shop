@@ -17,13 +17,13 @@ type IconBadgeTone =
   | "white";
 
 const ICON_BADGE_TONES: Record<IconBadgeTone, string> = {
-  orange: "bg-orange text-white",
-  vert: "bg-vert text-white",
-  sun: "bg-sun text-ink",
-  ink: "bg-ink text-sun",
-  "orange-soft": "bg-orange-soft text-orange-deep",
+  orange: "bg-primary text-primary-foreground",
+  vert: "bg-secondary text-secondary-foreground",
+  sun: "bg-sun text-foreground",
+  ink: "bg-foreground text-sun",
+  "orange-soft": "bg-surface-2 text-accent-dark",
   "vert-soft": "bg-vert-soft text-vert-deep",
-  paper: "bg-paper text-ink",
+  paper: "bg-card text-foreground",
   white: "bg-white text-vert-deep",
 };
 
@@ -60,11 +60,11 @@ export function IconBadge({
 type PillTone = "paper" | "ink" | "orange" | "vert" | "sun";
 
 const PILL_TONES: Record<PillTone, string> = {
-  paper: "bg-paper text-ink",
-  ink: "bg-ink text-cream",
-  orange: "bg-orange text-white",
-  vert: "bg-vert text-white",
-  sun: "bg-sun text-ink",
+  paper: "bg-card text-foreground",
+  ink: "bg-foreground text-background",
+  orange: "bg-primary text-primary-foreground",
+  vert: "bg-secondary text-secondary-foreground",
+  sun: "bg-sun text-foreground",
 };
 
 export function Pill({
@@ -96,12 +96,12 @@ export function Pill({
 type CtaVariant = "orange" | "paper" | "ink" | "vert" | "white" | "sun";
 
 const CTA_VARIANTS: Record<CtaVariant, string> = {
-  orange: "bg-orange text-white",
-  paper: "bg-paper text-ink",
-  ink: "bg-ink text-cream",
-  vert: "bg-vert text-white",
-  white: "bg-white text-ink",
-  sun: "bg-sun text-ink",
+  orange: "bg-primary text-primary-foreground",
+  paper: "bg-card text-foreground",
+  ink: "bg-foreground text-background",
+  vert: "bg-secondary text-secondary-foreground",
+  white: "bg-white text-foreground",
+  sun: "bg-sun text-foreground",
 };
 
 const CTA_SIZES = {

@@ -151,7 +151,7 @@ export default function ProductPage({
     : 0;
   const stockInfo =
     stock <= 0
-      ? { label: "Rupture de stock", cls: "bg-destructive text-white" }
+      ? { label: "Rupture de stock", cls: "bg-destructive text-destructive-foreground" }
       : stock <= 5
         ? { label: `Plus que ${stock} en stock`, cls: "bg-sun text-foreground" }
         : { label: "En stock", cls: "bg-secondary text-secondary-foreground" };

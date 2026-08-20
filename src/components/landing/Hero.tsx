@@ -14,14 +14,14 @@ const FEATURES = [
 export function Hero() {
   return (
     <section className="wax-pattern relative overflow-hidden">
-      <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-orange-soft opacity-70 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-surface-2 opacity-70 blur-3xl" />
       <div className="pointer-events-none absolute -left-32 top-1/2 h-80 w-80 rounded-full bg-vert-soft opacity-70 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16 lg:grid-cols-[1.15fr_1fr]">
         <div>
           <Reveal>
-            <div className="card-hard-sm mb-6 inline-flex items-center gap-2 rounded-full bg-paper px-4 py-1.5 text-sm font-bold">
-              <span className="pulse-ring h-2 w-2 rounded-full bg-vert" />
+            <div className="card-hard-sm mb-6 inline-flex items-center gap-2 rounded-full bg-card px-4 py-1.5 text-sm font-bold">
+              <span className="pulse-ring h-2 w-2 rounded-full bg-secondary" />
               La marketplace sociale de Côte d&apos;Ivoire
             </div>
           </Reveal>
@@ -37,12 +37,12 @@ export function Hero() {
           </Reveal>
 
           <Reveal>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink/70 sm:text-xl">
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-foreground/70 sm:text-xl">
               Achète, vends et surtout{" "}
-              <strong className="text-ink">négocie</strong> près de chez toi.
+              <strong className="text-foreground">négocie</strong> près de chez toi.
               Paie en Mobile Money ou à la livraison. Et le catalogue ? Il est
               ouvert à tout le monde,{" "}
-              <strong className="text-ink">même sans compte</strong>.
+              <strong className="text-foreground">même sans compte</strong>.
             </p>
           </Reveal>
 
@@ -61,7 +61,7 @@ export function Hero() {
             <div className="mt-8 flex flex-wrap gap-2.5">
               {FEATURES.map((feature) => (
                 <Pill key={feature} tone="paper" size="sm">
-                  <Check className="h-4 w-4 text-vert" strokeWidth={2.5} />
+                  <Check className="h-4 w-4 text-secondary" strokeWidth={2.5} />
                   {feature}
                 </Pill>
               ))}
@@ -71,7 +71,7 @@ export function Hero() {
 
         {/* Visuel héro */}
         <Reveal className="relative mx-auto w-full max-w-md">
-          <div className="card-hard hero-arch relative overflow-hidden bg-gradient-to-b from-orange to-orange-deep">
+          <div className="card-hard hero-arch relative overflow-hidden bg-gradient-to-b from-primary to-accent-dark">
             <div
               className="absolute inset-0 opacity-20"
               style={{
@@ -88,7 +88,7 @@ export function Hero() {
             />
           </div>
 
-          <FloatingCard rotation={-4} className="card-hard-sm -left-4 top-10 z-20 rounded-2xl bg-paper px-4 py-3 sm:-left-10">
+          <FloatingCard rotation={-4} className="card-hard-sm -left-4 top-10 z-20 rounded-2xl bg-card px-4 py-3 sm:-left-10">
             <div className="flex items-center gap-3">
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-border bg-vert-soft">
                 <Check className="h-5 w-5 text-vert-deep" strokeWidth={2.6} />
@@ -97,7 +97,7 @@ export function Hero() {
                 <p className="font-display text-sm font-bold leading-tight">
                   Offre acceptée !
                 </p>
-                <p className="text-xs text-ink/60">
+                <p className="text-xs text-foreground/60">
                   45 000 FCFA au lieu de 60 000
                 </p>
               </div>
@@ -107,9 +107,9 @@ export function Hero() {
           <FloatingCard
             variant="floaty-slow"
             rotation={3}
-            className="card-hard-orange -right-3 bottom-24 z-20 rounded-2xl bg-ink px-4 py-3 text-cream sm:-right-8"
+            className="card-hard-orange -right-3 bottom-24 z-20 rounded-2xl bg-foreground px-4 py-3 text-background sm:-right-8"
           >
-            <p className="text-[11px] font-bold uppercase tracking-widest text-cream/60">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-background/60">
               Code de retrait
             </p>
             <p className="font-display text-2xl font-extrabold tracking-[0.25em] text-sun">
@@ -124,7 +124,7 @@ export function Hero() {
           >
             <p className="font-display text-sm font-extrabold">
               VENTE FLASH{" "}
-              <span className="ml-1 rounded-md bg-ink px-1.5 py-0.5 text-sun">
+              <span className="ml-1 rounded-md bg-foreground px-1.5 py-0.5 text-sun">
                 −40%
               </span>
             </p>

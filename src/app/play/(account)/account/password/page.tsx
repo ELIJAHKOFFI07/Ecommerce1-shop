@@ -64,7 +64,7 @@ function PasswordInner() {
         <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -73,12 +73,12 @@ function PasswordInner() {
   }
 
   const field =
-    "w-full rounded-xl border-2 border-border bg-cream px-4 py-3 text-sm font-semibold text-ink outline-none placeholder:text-ink/40 focus:border-orange";
+    "w-full rounded-xl border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary";
 
   return (
     <div className="mx-auto max-w-sm">
-      <div className="card-hard rounded-3xl bg-paper p-6 sm:p-8">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+      <div className="card-hard rounded-3xl bg-card p-6 sm:p-8">
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
           <KeyRound className="h-6 w-6" strokeWidth={2.5} />
         </span>
         <h1 className="mt-4 text-center font-display text-2xl font-extrabold tracking-tight">
@@ -88,7 +88,7 @@ function PasswordInner() {
         </h1>
 
         {forced && (
-          <p className="card-hard-sm mt-4 rounded-2xl bg-sun p-3 text-center text-sm font-semibold text-ink">
+          <p className="card-hard-sm mt-4 rounded-2xl bg-sun p-3 text-center text-sm font-semibold text-foreground">
             Votre mot de passe a été réinitialisé par un administrateur. Vous
             devez en choisir un nouveau pour continuer.
           </p>
@@ -115,7 +115,7 @@ function PasswordInner() {
           {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
           <button
             disabled={saving}
-            className="card-hard-sm w-full rounded-full bg-ink py-3 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+            className="card-hard-sm w-full rounded-full bg-foreground py-3 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
           >
             {saving ? "Enregistrement…" : "Enregistrer"}
           </button>
@@ -125,7 +125,7 @@ function PasswordInner() {
       {!forced && (
         <Link
           href="/play/account"
-          className="mt-4 block text-center text-sm font-bold text-ink/60 hover:text-orange"
+          className="mt-4 block text-center text-sm font-bold text-foreground/60 hover:text-primary"
         >
           Annuler
         </Link>

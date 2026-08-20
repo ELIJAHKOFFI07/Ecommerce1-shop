@@ -97,15 +97,15 @@ export default function NotificationsPage() {
   if (!connected) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-orange text-white">
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
           <Bell className="h-6 w-6" strokeWidth={2.5} />
         </span>
-        <p className="mt-3 text-sm font-semibold text-ink/60">
+        <p className="mt-3 text-sm font-semibold text-foreground/60">
           Connectez-vous pour voir vos notifications.
         </p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -123,7 +123,7 @@ export default function NotificationsPage() {
           unread > 0 ? (
             <button
               onClick={markAllRead}
-              className="card-hard-sm inline-flex items-center gap-2 rounded-full bg-paper px-3.5 py-2 font-display text-xs font-bold text-ink transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-orange-soft hover:shadow-none"
+              className="card-hard-sm inline-flex items-center gap-2 rounded-full bg-card px-3.5 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
             >
               <CheckCheck className="h-4 w-4" strokeWidth={2.5} /> Tout marquer
               comme lu
@@ -133,7 +133,7 @@ export default function NotificationsPage() {
       />
 
       {notifications.length === 0 ? (
-        <p className="py-20 text-center font-semibold text-ink/60">
+        <p className="py-20 text-center font-semibold text-foreground/60">
           Aucune notification pour le moment.
         </p>
       ) : (
@@ -142,18 +142,18 @@ export default function NotificationsPage() {
             <li
               key={n.id}
               className={`card-hard flex gap-3 rounded-2xl p-3 ${
-                n.read_at ? "bg-paper" : "bg-orange-soft"
+                n.read_at ? "bg-card" : "bg-surface-2"
               }`}
             >
               <span className="text-xl leading-none">{TYPE_EMOJI[n.type] ?? "🔔"}</span>
               <span className="min-w-0 flex-1">
-                <span className="block font-display text-sm font-bold text-ink">
+                <span className="block font-display text-sm font-bold text-foreground">
                   {n.title}
                 </span>
-                <span className="block text-sm font-semibold text-ink/60">
+                <span className="block text-sm font-semibold text-foreground/60">
                   {n.body}
                 </span>
-                <span className="mt-1 block text-xs font-semibold text-ink/60">
+                <span className="mt-1 block text-xs font-semibold text-foreground/60">
                   {relativeTime(n.created_at)}
                 </span>
               </span>

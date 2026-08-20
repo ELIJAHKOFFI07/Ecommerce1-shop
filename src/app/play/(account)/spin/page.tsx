@@ -24,10 +24,10 @@ const SLICE = 360 / SPIN_SEGMENTS.length;
 /// foreground adapté à sa teinte (les accents clairs du mode sombre portent
 /// du texte foncé, les teintes vives du texte blanc).
 const SEGMENT_STYLE: Record<string, { bg: string; fg: string }> = {
-  "nothing-0": { bg: "var(--sun)", fg: "var(--ink)" },
-  "points-10": { bg: "var(--vert)", fg: "var(--secondary-foreground)" },
+  "nothing-0": { bg: "var(--sun)", fg: "var(--foreground)" },
+  "points-10": { bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
   "points-50": { bg: "var(--color-blue-500)", fg: "white" },
-  "coupon-5": { bg: "var(--orange)", fg: "var(--primary-foreground)" },
+  "coupon-5": { bg: "var(--primary)", fg: "var(--primary-foreground)" },
   "coupon-15": { bg: "var(--color-red-500)", fg: "white" },
 };
 
@@ -126,7 +126,7 @@ export default function SpinPage() {
         <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-2.5 font-display text-sm font-bold text-cream transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         >
           Se connecter
         </Link>
@@ -145,14 +145,14 @@ export default function SpinPage() {
         {/* Motif wax derrière la carte : l'ombre dure card-hard tombe dessus. */}
         <div className="absolute inset-0 -z-10 rounded-3xl wax-pattern" aria-hidden />
 
-        <div className="card-hard relative rounded-3xl bg-paper px-6 py-8 text-center sm:px-8">
+        <div className="card-hard relative rounded-3xl bg-card px-6 py-8 text-center sm:px-8">
           <Sparkles
             className="absolute -top-2 -right-1 h-7 w-7 animate-float text-sun"
             strokeWidth={2.5}
             aria-hidden
           />
           <Sparkles
-            className="absolute -bottom-2 -left-1 h-6 w-6 animate-float text-vert"
+            className="absolute -bottom-2 -left-1 h-6 w-6 animate-float text-secondary"
             style={{ animationDelay: "1.2s" }}
             strokeWidth={2.5}
             aria-hidden
@@ -201,13 +201,13 @@ export default function SpinPage() {
             </div>
 
             {/* Moyeu central */}
-            <div className="absolute left-1/2 top-1/2 z-10 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-paper bg-ink shadow-hard">
+            <div className="absolute left-1/2 top-1/2 z-10 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-card bg-foreground shadow-hard">
               <Star className="h-6 w-6 fill-sun text-sun" strokeWidth={2} />
             </div>
           </div>
 
           {result && (
-            <div className="card-hard-sm mt-8 animate-rise rounded-2xl bg-sun px-4 py-3 font-display text-base font-extrabold text-ink">
+            <div className="card-hard-sm mt-8 animate-rise rounded-2xl bg-sun px-4 py-3 font-display text-base font-extrabold text-foreground">
               {spinResultLabel(result)}
             </div>
           )}
@@ -215,7 +215,7 @@ export default function SpinPage() {
             <p className="mt-8 text-sm font-semibold text-red-600">{error}</p>
           )}
           {!result && !error && !canSpin && (
-            <p className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-border bg-paper px-4 py-2 text-sm font-semibold text-ink/60">
+            <p className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/60">
               <CalendarX className="h-4 w-4" strokeWidth={2.5} />
               Vous avez déjà joué aujourd&apos;hui. Revenez demain !
             </p>
@@ -224,7 +224,7 @@ export default function SpinPage() {
           <button
             onClick={spin}
             disabled={!canSpin || spinning}
-            className="card-hard-sm mt-8 inline-flex items-center gap-2 rounded-full bg-orange px-8 py-3 font-display text-base font-bold text-on-accent transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+            className="card-hard-sm mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-display text-base font-bold text-on-accent transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
           >
             <Sparkles className="h-4 w-4" strokeWidth={2.5} />
             {spinning ? "Ça tourne…" : "Lancer la roue"}
@@ -238,17 +238,17 @@ export default function SpinPage() {
         {SPIN_SEGMENTS.map((segment) => (
           <div
             key={`legend-${segment.kind}-${segment.value}`}
-            className="card-hard-sm flex items-center gap-2 rounded-full bg-paper px-3 py-1.5"
+            className="card-hard-sm flex items-center gap-2 rounded-full bg-card px-3 py-1.5"
           >
             <span
-              className="h-3 w-3 rounded-full border-2 border-ink"
+              className="h-3 w-3 rounded-full border-2 border-foreground"
               style={{
                 backgroundColor:
                   SEGMENT_STYLE[segmentKey(segment.kind, segment.value)].bg,
               }}
               aria-hidden
             />
-            <span className="font-display text-xs font-bold text-ink">
+            <span className="font-display text-xs font-bold text-foreground">
               {segment.label}
             </span>
           </div>
@@ -261,7 +261,7 @@ export default function SpinPage() {
 function SkeletonWheel() {
   return (
     <div className="mx-auto max-w-lg space-y-4">
-      <div className="card-hard rounded-3xl bg-paper p-8">
+      <div className="card-hard rounded-3xl bg-card p-8">
         <div className="mx-auto h-64 w-64 animate-shimmer rounded-full bg-surface-2" />
         <div className="mx-auto mt-8 h-12 w-48 animate-shimmer rounded-full bg-surface-2" />
       </div>
