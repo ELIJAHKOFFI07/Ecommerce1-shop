@@ -47,7 +47,7 @@ export function Bonus() {
   return (
     <section
       id="bonus"
-      className="relative overflow-hidden border-y-2 border-border bg-vert-deep py-16 text-white sm:py-24"
+      className="relative overflow-hidden border-y-2 border-border bg-secondary py-16 text-secondary-foreground sm:py-24"
     >
       {/* Halos de couleur + confettis : profondeur sur l'aplat vert profond. */}
       <div

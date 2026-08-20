@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, User } from "lucide-react";
 import { useOptionalSession } from "@/lib/session";
 import { ROLE_LABELS, roleOf } from "@/lib/roles";
 import { SECTIONS, visibleLinks } from "@/lib/nav";
@@ -108,6 +108,19 @@ export function AccountDropdown({
           )}
 
           <nav>
+            <Link
+              href="/play/account"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${
+                active
+                  ? "bg-accent/10 text-accent"
+                  : "text-foreground hover:bg-surface-2"
+              }`}
+            >
+              <User className="h-4 w-4 shrink-0 text-accent" />
+              Mon compte
+            </Link>
             {SECTIONS.map((section) => {
               const links = visibleLinks(section.links, { canSell, isAdmin });
               if (links.length === 0) return null;

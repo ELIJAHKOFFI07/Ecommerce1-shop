@@ -22,9 +22,10 @@ Le projet privilégie une **interface sobre, accessible et mobile-first** :
   `--muted`, `--accent`, `--accent-dark`, `--on-accent`). Les composants
   n'utilisent que les classes Tailwind correspondantes (`bg-surface`,
   `text-muted`, `border-border`, …) — jamais de valeur de couleur en dur.
-- **L'accent est l'unique couleur de marque** : seul l'accent change selon le
-  thème/palette, les surfaces et le texte restent fixes pour préserver les
-  contrastes mesurés (WCAG, voir les commentaires de `globals.css`).
+- **L'accent est l'unique couleur de marque** : une seule couleur d'accent par
+  mode, pas de dimension palette. Les surfaces et le texte varient ensemble
+  entre clair et sombre ; les contrastes sont mesurés et documentés en
+  commentaire dans `globals.css`.
 - **Mobile d'abord** : barre de navigation fixe en bas sur téléphone
   (`BOTTOM_LINKS`), en-tête sticky, carrousels à ancrage natif, cibles
   tactiles suffisantes.
@@ -75,11 +76,20 @@ src/
 
 - **Un seul mode** clair/sombre (`data-theme` sur `<html>`), deux valeurs :
   `light` (défaut) et `dark`. L'accent est unique par mode — la dimension
-  « palette » (`data-preset`) a été supprimée.
+  « palette » (`data-preset`) a été supprimée. Les `*-foreground` et
+  `--on-accent` sont alignés sur le fond du mode (texte foncé sur les accents
+  clairs en sombre).
+- **Mode sombre non plat** : hiérarchie espresso → caramel → ambre. Fond
+  `--background #120b06` (léger voile froid), cartes `--card`/`--popover`
+  `#221910`, surfaces `--surface #1a120a` / `--surface-2 #3d2612`, sidebar
+  `#1c130b` / `--sidebar-accent #382311`. Contrastes vérifiés et notés dans
+  `globals.css` : texte ≥ 14:1, muted 8,9:1 sur card, `on-accent` 7,6:1.
 - Persistance en `localStorage` (clé `dreamteamshop_theme_mode`), lue par un
   **script inline anti-flash** dans `layout.tsx` avant l'hydratation.
-- Le sélecteur est `components/ThemeSwitcher.tsx`, réutilisé sur
-  `/play/account` et `/admin`.
+- Le sélecteur `components/ThemeSwitcher.tsx` a deux gabarits : **carte**
+  (`compact={false}`, défaut) dans la sidebar `/admin`, et **rangée de menu**
+  (prop `compact`) dans le dropdown « Mon compte » du header. La logique est
+  unique, seul le gabarit change.
 
 ## Règles de styling (Tailwind v4)
 
@@ -152,6 +162,14 @@ src/
   du bas mobile, **exactement 4 entrées fixes** — ne pas en ajouter, chaque
   item est en `flex-1` et passerait de 25 % à 20 % de largeur),
   `SECTIONS` (menu regroupé par thème).
+- **`AccountDropdown` (header)** : en plus des `SECTIONS`, il porte un lien
+  « Mon compte » codé en dur (volontairement absent de `SECTIONS` pour éviter
+  un self-link sur la page `/play/account`, qui partage la même source) et la
+  bascule de thème `ThemeSwitcher compact` sous la rubrique « Apparence ».
+- **Header `Navbar.tsx`** : rangées 1 + 2 sous `lg`. Le bouton « Vendre »
+  n'apparaît qu'une fois par écran (rangée 1 dès `sm`, rangée 2 sinon). Les
+  actions de droite sont groupées dans un conteneur `ml-auto` annulé en `xl`
+  (`xl:ml-0`) pour ne pas concurrencer le `ml-auto` du nav utilitaire.
 - **Gardes d'accès** : `MEMBER_ONLY_PREFIXES` + `isMemberOnly()` déclenchent
   la redirection vers la connexion via `AuthGate`. `/play/cart` en est
   volontairement absent (panier sans compte). Le back-office `/admin` est

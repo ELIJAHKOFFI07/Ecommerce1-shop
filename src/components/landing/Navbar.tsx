@@ -166,30 +166,32 @@ export function Navbar() {
           ))}
         </nav>
 
-        <Link
-          href="/play/sell"
-          className="card-hard-sm hidden items-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary hover:text-foreground hover:shadow-none sm:inline-flex"
-        >
-          <Store className="h-4 w-4" strokeWidth={2.5} />
-          Vendre
-        </Link>
+        <div className="ml-auto flex shrink-0 items-center gap-3 xl:ml-0">
+          <Link
+            href="/play/sell"
+            className="card-hard-sm hidden items-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary hover:text-foreground hover:shadow-none sm:inline-flex"
+          >
+            <Store className="h-4 w-4" strokeWidth={2.5} />
+            Vendre
+          </Link>
 
-        <AccountDropdown label="Mon compte" icon={User} round />
+          <AccountDropdown label="Mon compte" icon={User} round />
 
-        <Link
-          href="/play/cart"
-          aria-label="Panier"
-          className="card-hard-sm grid h-11 w-11 shrink-0 place-items-center rounded-full bg-card transition-colors hover:bg-surface-2"
-        >
-          <ShoppingCart className="h-5 w-5" strokeWidth={2.4} />
-        </Link>
+          <Link
+            href="/play/cart"
+            aria-label="Panier"
+            className="card-hard-sm grid h-11 w-11 shrink-0 place-items-center rounded-full bg-card transition-colors hover:bg-surface-2"
+          >
+            <ShoppingCart className="h-5 w-5" strokeWidth={2.4} />
+          </Link>
+        </div>
       </div>
 
       {/* ---- Rangée 1 (mobile) : Vendre + recherche compacte ---- */}
       <div className="flex items-center gap-2.5 px-4 pb-3 sm:px-6 lg:hidden">
         <Link
           href="/play/sell"
-          className="inline-flex shrink-0 items-center gap-2 rounded-full border-2 border-border bg-foreground px-4 py-2.5 font-display text-sm font-bold text-background"
+          className="inline-flex shrink-0 items-center gap-2 rounded-full border-2 border-border bg-foreground px-4 py-2.5 font-display text-sm font-bold text-background sm:hidden"
         >
           <Store className="h-4 w-4" strokeWidth={2.5} />
           Vendre
