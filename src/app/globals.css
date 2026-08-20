@@ -309,45 +309,6 @@ body {
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
-/* ---------------------------------------------------------------------------
-   Écrans de chargement (loading.tsx de la racine et de /play).
-   --------------------------------------------------------------------------- */
-
-/* Barre de progression indéterminée : un trait orange glisse dans un rail
-   néo-brutal. La progression n'est pas mesurable, le mouvement traduit
-   simplement une activité en cours. */
-@keyframes loader-progress {
-  0% {
-    transform: translateX(-120%);
-  }
-  45% {
-    transform: translateX(120%);
-  }
-  100% {
-    transform: translateX(340%);
-  }
-}
-
-.animate-loader-progress {
-  animation: loader-progress 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-}
-
-/* Points de suspension du pied de loader : même battement que les points du
-   chat de négociation (blink), réutilisés ici sans toucher à ce composant. */
-.loading-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  background: currentColor;
-  animation: blink 1s infinite;
-}
-.loading-dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.loading-dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
 /* Respecte le réglage système « réduire les animations » : rien ne bouge, et
    surtout rien ne reste invisible — les animations d'entrée partent d'une
    opacité nulle, il faut donc les neutraliser et non seulement les arrêter. */
@@ -355,11 +316,6 @@ body {
   .animate-shimmer {
     animation: none;
     opacity: 0.7;
-  }
-
-  .animate-loader-progress,
-  .loading-dot {
-    animation: none;
   }
 
   .animate-rise,
