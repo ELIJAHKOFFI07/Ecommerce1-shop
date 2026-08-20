@@ -7,6 +7,7 @@ import { ChevronDown } from "lucide-react";
 import { useOptionalSession } from "@/lib/session";
 import { ROLE_LABELS, roleOf } from "@/lib/roles";
 import { SECTIONS, visibleLinks } from "@/lib/nav";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import type { LucideIcon } from "lucide-react";
 
 /// Menu déroulant du bouton « Compte » de la barre du haut.
@@ -141,6 +142,14 @@ export function AccountDropdown({
               );
             })}
           </nav>
+
+          {/* Bascule de thème clair/sombre, dans le gabarit compact du menu. */}
+          <div className="mt-1 border-t border-border pb-1 pt-2">
+            <p className="mb-1 px-3 text-xs uppercase tracking-wide text-muted">
+              Apparence
+            </p>
+            <ThemeSwitcher compact />
+          </div>
         </div>
       )}
     </div>

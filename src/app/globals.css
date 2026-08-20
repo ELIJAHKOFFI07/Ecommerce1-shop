@@ -132,22 +132,10 @@
   --auth-bg: #0d0905;      /* encore plus sombre pour garder le contraste */
 }
 
-/* Palettes de couleurs : seul l'accent change, les surfaces restent
-   identiques pour préserver les contrastes vérifiés ci-dessus. */
-:root[data-preset="emerald"]  { --accent: #047857; --accent-dark: #065f46; }
-:root[data-preset="ocean"]    { --accent: #0369a1; --accent-dark: #075985; }
-:root[data-preset="ruby"]     { --accent: #be123c; --accent-dark: #9f1239; }
-:root[data-preset="amethyst"] { --accent: #7c3aed; --accent-dark: #6d28d9; }
-:root[data-preset="sahel"]    { --accent: #c2410c; --accent-dark: #9a3412; }
-
-/* Variantes sombres : les accents ci-dessus sont calibrés pour un fond blanc
-   et deviennent illisibles sur fond sombre. Le texte posé dessus repasse au
-   noir, ces teintes-là étant claires. */
-:root[data-theme="dark"][data-preset="emerald"]  { --accent: #34d399; --accent-dark: #6ee7b7; --on-accent: #0a0a0a; }
-:root[data-theme="dark"][data-preset="ocean"]    { --accent: #38bdf8; --accent-dark: #7dd3fc; --on-accent: #0a0a0a; }
-:root[data-theme="dark"][data-preset="ruby"]     { --accent: #fb7185; --accent-dark: #fda4af; --on-accent: #0a0a0a; }
-:root[data-theme="dark"][data-preset="amethyst"] { --accent: #a78bfa; --accent-dark: #c4b5fd; --on-accent: #0a0a0a; }
-:root[data-theme="dark"][data-preset="sahel"]    { --accent: #fb923c; --accent-dark: #fdba74; --on-accent: #0a0a0a; }
+/* L'accent est désormais unique : il ne varie plus par palette, seulement par
+   mode (valeurs du `:root` et du bloc dark ci-dessus). Supprimer la dimension
+   `data-preset` a retiré la pastille « gold » fantôme (bleue dans le sélecteur,
+   orange appliquée) : il n'y a plus qu'un accent par mode. */
 
 /* ---------------------------------------------------------------------------
    Palette des graphiques (back-office).

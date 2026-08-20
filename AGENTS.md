@@ -64,7 +64,7 @@ src/
 │   ├── charts/     # Graphiques SVG sans dépendance
 │   └── three/      # Scène 3D (FloatingBag)
 └── lib/
-    ├── theme.ts    # Palettes + mode clair/sombre
+    ├── theme.ts    # Mode clair/sombre
     ├── nav.ts      # Navigation : liens primaires, sections, gardes
     ├── cart.tsx    # Panier (Context + localStorage)
     ├── session.tsx # Session (Context + Supabase)
@@ -73,15 +73,13 @@ src/
 
 ## Système de thème
 
-- Deux dimensions indépendantes : **palette** (`data-preset` sur `<html>`) et
-  **mode** clair/sombre (`data-theme`). Valeurs par défaut : `gold` / `light`.
-- Persistance en `localStorage` (clés `dreamteamshop_theme_preset` et
-  `dreamteamshop_theme_mode`), lues par un **script inline anti-flash** dans
-  `layout.tsx` avant l'hydratation.
+- **Un seul mode** clair/sombre (`data-theme` sur `<html>`), deux valeurs :
+  `light` (défaut) et `dark`. L'accent est unique par mode — la dimension
+  « palette » (`data-preset`) a été supprimée.
+- Persistance en `localStorage` (clé `dreamteamshop_theme_mode`), lue par un
+  **script inline anti-flash** dans `layout.tsx` avant l'hydratation.
 - Le sélecteur est `components/ThemeSwitcher.tsx`, réutilisé sur
-  `/play/account` et `/admin`. La liste des palettes vit dans `lib/theme.ts`.
-- **Ne pas renommer** l'identifiant `gold` : c'est la valeur déjà écrite dans
-  le localStorage des visiteurs (`lib/theme.ts:22-24`).
+  `/play/account` et `/admin`.
 
 ## Règles de styling (Tailwind v4)
 

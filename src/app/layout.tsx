@@ -37,14 +37,12 @@ export const metadata: Metadata = {
     "La marketplace sociale de Côte d'Ivoire : postez vos produits, négociez en direct, payez en Mobile Money.",
 };
 
-// Applique la palette et le mode sauvegardés avant l'hydratation React, pour
-// éviter un flash du thème par défaut au chargement.
+// Applique le mode sauvegardé avant l'hydratation React, pour éviter un flash
+// du thème par défaut au chargement.
 const themeInitScript = `
 (function () {
   try {
-    var preset = localStorage.getItem("dreamteamshop_theme_preset") || "gold";
     var mode = localStorage.getItem("dreamteamshop_theme_mode") || "light";
-    document.documentElement.dataset.preset = preset;
     document.documentElement.dataset.theme = mode;
   } catch (e) {}
 })();
@@ -59,7 +57,6 @@ export default function RootLayout({
     <html
       lang="fr"
       data-theme="light"
-      data-preset="gold"
       className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} ${inter.variable} h-full antialiased`}
     >
       <head>
