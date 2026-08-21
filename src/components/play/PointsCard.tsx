@@ -47,8 +47,8 @@ export function PointsCard({
   };
 
   return (
-    <div className="card-hard flex items-center gap-3 rounded-2xl bg-card p-4 sm:gap-4 sm:p-5">
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
+    <div className="flex items-center gap-3 rounded-sm bg-card p-4 sm:gap-4 sm:p-5">
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-sm border border-border bg-primary text-primary-foreground">
         <Star className="h-5 w-5" strokeWidth={2.5} />
       </span>
       <div className="min-w-0 flex-1">
@@ -69,7 +69,7 @@ export function PointsCard({
       <button
         onClick={redeem}
         disabled={busy || points < POINTS_MIN_REDEEM}
-        className="card-hard-sm shrink-0 rounded-full bg-foreground px-4 py-2 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+        className="shrink-0 rounded-sm bg-foreground px-4 py-2 font-display text-sm font-bold text-background transition-all disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
       >
         Convertir
       </button>

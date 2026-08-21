@@ -39,7 +39,7 @@ export function ThemeSwitcher({ compact = false }: { compact?: boolean }) {
           <Sun className="h-4 w-4 shrink-0 text-accent" strokeWidth={2.5} />
         )}
         <span className="flex-1 text-left">Mode {mode === "dark" ? "sombre" : "clair"}</span>
-        <span className="card-hard-sm rounded-full bg-card px-2.5 py-1 font-display text-[10px] font-bold uppercase tracking-wide text-foreground">
+        <span className="rounded-sm bg-card px-2.5 py-1 font-display text-[10px] font-bold uppercase tracking-wide text-foreground">
           {mode === "dark" ? "Sombre" : "Clair"}
         </span>
       </button>
@@ -47,7 +47,7 @@ export function ThemeSwitcher({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <div className="card-hard flex items-center justify-between rounded-2xl bg-card p-4">
+    <div className="flex items-center justify-between rounded-sm bg-card p-4">
       <div>
         <p className="font-display text-sm font-bold text-foreground">Thème</p>
         <p className="mt-1 text-xs font-semibold text-foreground/60">
@@ -57,7 +57,7 @@ export function ThemeSwitcher({ compact = false }: { compact?: boolean }) {
       <button
         type="button"
         onClick={toggleMode}
-        className="card-hard-sm inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1.5 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
+        className="inline-flex items-center gap-1.5 rounded-sm bg-card px-3 py-1.5 font-display text-xs font-bold text-foreground transition-all hover:bg-surface-2"
       >
         {mode === "dark" ? (
           <Moon className="h-3.5 w-3.5" strokeWidth={2.5} />

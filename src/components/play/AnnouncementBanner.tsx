@@ -38,7 +38,7 @@ export function AnnouncementBanner() {
   if (!message || dismissed) return null;
 
   return (
-    <div className="mb-4 flex items-start gap-3 rounded-xl border border-accent/40 bg-accent/10 p-4">
+    <div className="mb-4 flex items-start gap-3 rounded-sm border border-accent/40 bg-accent/10 p-4">
       <Megaphone className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
       <p className="min-w-0 flex-1 whitespace-pre-line text-sm">{message}</p>
       <button

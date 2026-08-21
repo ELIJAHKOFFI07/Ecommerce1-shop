@@ -158,7 +158,7 @@ export function ProductActions({ product }: { product: Product }) {
   /// comme les pastilles de tri de la page recherche. Posée nue sur la page,
   /// sans carte autour — le produit porte déjà assez de cadres.
   const actionBtn = (active = false) =>
-    `card-hard-sm press inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-display font-bold transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+    `press rounded-sm inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-display font-bold transition-all hover:bg-surface-2 ${
       active ? "bg-foreground text-background" : "bg-surface text-muted hover:text-foreground"
     }`;
 
@@ -202,7 +202,7 @@ export function ProductActions({ product }: { product: Product }) {
             <BookmarkPlus className="h-3.5 w-3.5" /> Ajouter à une liste
           </button>
           {pickerOpen && (
-            <div className="card-hard-sm absolute left-0 top-full z-20 mt-2 w-56 overflow-hidden rounded-2xl bg-surface">
+            <div className="absolute left-0 top-full z-20 mt-2 w-56 overflow-hidden rounded-sm bg-surface">
               {wishlists.map((w) => (
                 <button
                   key={w.id}
@@ -246,7 +246,7 @@ export function ProductActions({ product }: { product: Product }) {
         {compareCount >= 2 && (
           <a
             href="/play/compare"
-            className="card-hard-sm press inline-flex items-center rounded-full bg-foreground px-3 py-1.5 text-xs font-display font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+            className="press rounded-full inline-flex items-center gap-1.5 bg-foreground px-3 py-1.5 text-xs font-display font-bold text-background transition-all hover:bg-surface-2"
           >
             Voir la comparaison ({compareCount})
           </a>

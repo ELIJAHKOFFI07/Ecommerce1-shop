@@ -14,8 +14,8 @@ import type { LucideIcon } from "lucide-react";
 ///
 /// Reprend la même source unique que le tiroir latéral (`SECTIONS`) : ajouter
 /// une entrée dans `lib/nav.ts` la fait apparaître ici, dans le tiroir et sur
-/// la page compte. Le panneau porte le trait néo-brutal (`card-hard`) pour
-/// rester cohérent avec le reste de l'interface.
+/// la page compte. Le panneau reprend le gabarit de surface standard
+/// (`rounded-sm`, bordure `border`) pour rester cohérent avec l'interface.
 ///
 /// `round` rend un bouton rond icône seule (grammaire du header principal,
 /// à côté de « Vendre ») ; sans, un lien texte (nav desktop de PlayNav).
@@ -65,7 +65,7 @@ export function AccountDropdown({
           aria-haspopup="menu"
           aria-expanded={open}
           aria-label={label}
-          className={`card-hard-sm grid h-11 w-11 shrink-0 place-items-center rounded-full transition-colors ${
+          className={`rounded-sm grid h-11 w-11 shrink-0 place-items-center transition-colors ${
             open ? "bg-surface-2" : "bg-card hover:bg-surface-2"
           }`}
         >
@@ -93,7 +93,7 @@ export function AccountDropdown({
       {open && (
         <div
           role="menu"
-          className="card-hard absolute right-0 top-full z-50 mt-3 max-h-[70vh] w-72 max-w-[85vw] overflow-y-auto rounded-2xl bg-surface p-2"
+          className="absolute right-0 top-full z-50 mt-3 max-h-[70vh] w-72 max-w-[85vw] overflow-y-auto rounded-sm bg-surface p-2"
         >
           {profile && (
             <div className="border-b border-border px-3 pb-3 pt-2">

@@ -44,7 +44,7 @@ export function ImagePicker({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-background px-4 py-6 text-center transition-colors hover:border-accent"
+        className="flex w-full flex-col items-center justify-center gap-2 rounded-sm border border-dashed border-border bg-background px-4 py-6 text-center transition-colors hover:border-accent"
       >
         <ImagePlus className="h-6 w-6 text-accent" />
         <span className="text-sm font-medium">{label}</span>

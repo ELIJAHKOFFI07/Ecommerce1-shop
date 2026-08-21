@@ -11,12 +11,11 @@ import { formatFcfa } from "@/lib/types";
 /// vingt fois sur une grille, alourdit la page sans rien apporter puisque
 /// l'image délimite déjà la zone cliquable.
 ///
-/// `hard` enveloppe la vignette dans le cadre néo-brutal (`card-hard` +
-/// `card-hover`, trait encre + ombre dure) pour les grilles où chaque carte
-/// doit porter le trait cartoon — la page de recherche.
+/// `hard` enveloppe la vignette dans un cadre à filet (`border`) pour les
+/// grilles où chaque carte doit porter un cadre net — la page de recherche.
 ///
-/// `compact` réduit le cadre (`card-hard-sm`, padding et textes plus petits) :
-/// pour les carrousels où l'on veut des cartes denses, ex. la page d'accueil.
+/// `compact` réduit le padding et les textes : pour les carrousels où l'on
+/// veut des cartes denses, ex. la page d'accueil.
 export function ProductCard({
   product,
   hard = false,
@@ -34,9 +33,9 @@ export function ProductCard({
     : 0;
 
   const frame = compact
-    ? "card-hard-sm rounded-3xl bg-surface p-2"
+    ? "rounded-sm bg-surface p-2"
     : hard
-      ? "card-hard card-hover rounded-3xl bg-surface p-3"
+      ? "rounded-sm bg-surface p-3"
       : "";
 
   return (
@@ -45,7 +44,7 @@ export function ProductCard({
       className={`press group block ${frame}`}
     >
       <div
-        className={`relative aspect-square overflow-hidden rounded-2xl bg-surface-2 ${
+        className={`relative aspect-square overflow-hidden rounded-sm bg-surface-2 ${
           compact ? "mb-2" : "mb-3"
         }`}
       >

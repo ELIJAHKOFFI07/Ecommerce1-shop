@@ -136,7 +136,7 @@ export function PromoCarousel() {
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
-      className="card-hard relative h-[300px] overflow-hidden rounded-[1.75rem]"
+      className="relative h-[300px] overflow-hidden rounded-sm"
     >
       <CarouselContent>
         {SLIDES.map((slide) => (
@@ -154,7 +154,7 @@ export function PromoCarousel() {
                 className="absolute inset-0 h-full w-full object-cover opacity-50"
               />
               <div className="absolute inset-0 bg-linear-to-r from-black/65 via-black/35 to-black/10" />
-              <div className="wax-pattern absolute inset-0 opacity-60" />
+              <div className="absolute inset-0 opacity-60" />
 
               <div className="relative flex h-full items-center justify-between gap-6 px-6 sm:px-10">
                 <div className="max-w-sm">
@@ -172,7 +172,7 @@ export function PromoCarousel() {
                   <p className="mt-2 text-sm text-white/90">{slide.text}</p>
                   <Link
                     href={slide.href}
-                    className="press mt-4 inline-flex items-center gap-2 rounded-full border-2 border-border px-5 py-2.5 font-display text-sm font-bold text-white transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:brightness-90"
+                    className="press mt-4 inline-flex items-center gap-2 rounded-sm border border-border px-5 py-2.5 font-display text-sm font-bold text-white transition-all hover:brightness-90"
                     style={{ backgroundColor: slide.accent }}
                   >
                     {slide.cta}
@@ -181,7 +181,7 @@ export function PromoCarousel() {
                 </div>
 
                 {/* Médaillon flottant (caché sur mobile, comme la maquette). */}
-                <span className="floaty-slow hidden h-28 w-28 shrink-0 items-center justify-center rounded-full border-2 border-white/30 bg-white/15 sm:flex">
+                <span className="hidden h-28 w-28 shrink-0 items-center justify-center rounded-sm border border-white/20 bg-white/15 sm:flex">
                   <slide.circle className="h-11 w-11 text-white" />
                 </span>
               </div>
@@ -202,7 +202,7 @@ export function PromoCarousel() {
         aria-label={
           playing ? "Arrêter le défilement" : "Relancer le défilement"
         }
-        className="press absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full border-2 border-border bg-background/90 shadow-hard-sm"
+        className="press absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-sm border border-border bg-background/90"
       >
         {playing ? (
           <Pause className="h-4 w-4" />
@@ -217,7 +217,7 @@ export function PromoCarousel() {
         type="button"
         aria-label="Slide précédente"
         onClick={() => api?.scrollPrev()}
-        className="press absolute left-3 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border-2 border-border bg-background/90 text-foreground shadow-hard-sm sm:grid"
+        className="press absolute left-3 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-sm border border-border bg-background/90 text-foreground sm:grid"
       >
         <ChevronLeft className="h-4 w-4" />
       </button>
@@ -225,7 +225,7 @@ export function PromoCarousel() {
         type="button"
         aria-label="Slide suivante"
         onClick={() => api?.scrollNext()}
-        className="press absolute right-3 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border-2 border-border bg-background/90 text-foreground shadow-hard-sm sm:grid"
+        className="press absolute right-3 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-sm border border-border bg-background/90 text-foreground sm:grid"
       >
         <ChevronRight className="h-4 w-4" />
       </button>

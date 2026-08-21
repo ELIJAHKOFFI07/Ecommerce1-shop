@@ -97,13 +97,13 @@ export function EditProductDialog({
   }
 
   const field =
-    "w-full rounded-xl border border-border bg-background px-4 py-3 outline-none focus:border-accent";
+    "w-full rounded-sm border border-border bg-background px-4 py-3 outline-none focus:border-accent";
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/60 p-4 sm:items-center">
       <form
         onSubmit={save}
-        className="my-auto w-full max-w-lg space-y-3 rounded-2xl border border-border bg-surface p-5"
+        className="my-auto w-full max-w-lg space-y-3 rounded-sm border border-border bg-surface p-5"
       >
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold">Modifier le produit</h2>

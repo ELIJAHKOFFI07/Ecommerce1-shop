@@ -65,7 +65,7 @@ export function PushToggle() {
 
   if (state === "unsupported") {
     return (
-      <div className="card-hard rounded-2xl bg-card p-4">
+<div className="rounded-sm bg-card p-4">
         <p className="flex items-center gap-2 font-display text-sm font-bold text-foreground">
           <BellOff className="h-4 w-4 text-foreground/60" strokeWidth={2.5} />
           Notifications push indisponibles
@@ -79,16 +79,16 @@ export function PushToggle() {
   }
 
   return (
-    <div className="card-hard rounded-2xl bg-card p-4">
+    <div className="rounded-sm bg-card p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="flex items-center gap-2 font-display text-sm font-bold text-foreground">
             {subscribed ? (
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-border bg-vert-soft text-vert-deep">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-border bg-vert-soft text-vert-deep">
                 <BellRing className="h-4 w-4" strokeWidth={2.5} />
               </span>
             ) : (
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-border bg-surface-2 text-primary">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-border bg-surface-2 text-primary">
                 <Bell className="h-4 w-4" strokeWidth={2.5} />
               </span>
             )}
@@ -102,7 +102,7 @@ export function PushToggle() {
         <button
           onClick={toggle}
           disabled={busy || state === "denied"}
-          className={`card-hard-sm shrink-0 rounded-full px-4 py-2 font-display text-xs font-bold transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 ${
+          className={`rounded-sm shrink-0 px-4 py-2 font-display text-xs font-bold transition-all hover:bg-surface-2 disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 ${
             subscribed
               ? "bg-card text-foreground hover:text-red-600"
               : "bg-foreground text-background"

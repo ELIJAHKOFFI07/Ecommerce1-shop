@@ -92,20 +92,20 @@ export default function NotificationsPage() {
     );
   };
 
-  if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><ListSkeleton count={6} /></div>);
+ if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><ListSkeleton count={6} /></div>);
 
   if (!connected) {
     return (
-      <div className="mx-auto max-w-md py-20 text-center">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
-          <Bell className="h-6 w-6" strokeWidth={2.5} />
+ <div className="mx-auto max-w-md py-20 text-center">
+ <span className="mx-auto grid h-12 w-12 place-items-center rounded-sm border border-border bg-primary text-primary-foreground">
+ <Bell className="h-6 w-6" strokeWidth={2.5} />
         </span>
-        <p className="mt-3 text-sm font-semibold text-foreground/60">
+ <p className="mt-3 text-sm font-semibold text-foreground/60">
           Connectez-vous pour voir vos notifications.
         </p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="mt-4 inline-flex items-center gap-2 rounded-sm bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all"
         >
           Se connecter
         </Link>
@@ -116,16 +116,16 @@ export default function NotificationsPage() {
   const unread = notifications.filter((n) => !n.read_at).length;
 
   return (
-    <div className="mx-auto max-w-4xl">
+ <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Notifications"
         action={
           unread > 0 ? (
             <button
               onClick={markAllRead}
-              className="card-hard-sm inline-flex items-center gap-2 rounded-full bg-card px-3.5 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
+ className="inline-flex items-center gap-2 rounded-sm bg-card px-3.5 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
             >
-              <CheckCheck className="h-4 w-4" strokeWidth={2.5} /> Tout marquer
+ <CheckCheck className="h-4 w-4" strokeWidth={2.5} /> Tout marquer
               comme lu
             </button>
           ) : undefined
@@ -133,27 +133,27 @@ export default function NotificationsPage() {
       />
 
       {notifications.length === 0 ? (
-        <p className="py-20 text-center font-semibold text-foreground/60">
+ <p className="py-20 text-center font-semibold text-foreground/60">
           Aucune notification pour le moment.
         </p>
       ) : (
-        <ul className="mt-6 grid gap-3 xl:grid-cols-2">
+ <ul className="mt-6 grid gap-3 xl:grid-cols-2">
           {notifications.map((n) => (
             <li
               key={n.id}
-              className={`card-hard flex gap-3 rounded-2xl p-3 ${
+ className={` flex gap-3 rounded-sm p-3 ${
                 n.read_at ? "bg-card" : "bg-surface-2"
               }`}
             >
-              <span className="text-xl leading-none">{TYPE_EMOJI[n.type] ?? "🔔"}</span>
-              <span className="min-w-0 flex-1">
-                <span className="block font-display text-sm font-bold text-foreground">
+ <span className="text-xl leading-none">{TYPE_EMOJI[n.type] ??"🔔"}</span>
+ <span className="min-w-0 flex-1">
+ <span className="block font-display text-sm font-bold text-foreground">
                   {n.title}
                 </span>
-                <span className="block text-sm font-semibold text-foreground/60">
+ <span className="block text-sm font-semibold text-foreground/60">
                   {n.body}
                 </span>
-                <span className="mt-1 block text-xs font-semibold text-foreground/60">
+ <span className="mt-1 block text-xs font-semibold text-foreground/60">
                   {relativeTime(n.created_at)}
                 </span>
               </span>

@@ -39,9 +39,8 @@ const FALLBACK_ICON: LucideIcon = ShoppingBag;
 /// Vignette de catégorie.
 ///
 /// Le cadre ne contient que la tuile (fond `surface-2` + icône ou image) ; le
-/// nom vit à l'extérieur, sous le trait cartoon. La tuile porte la variante
-/// `card-hard-sm` qui s'enfonce au survol (comme le bouton « Tout voir ») :
-/// l'ombre disparaît et la case glisse de quelques pixels.
+/// nom vit à l'extérieur, sous la tuile. La tuile porte un `press` au survol
+/// (comme le bouton « Tout voir ») pour marquer l'affordance tactile.
 export function CategoryCard({ category }: { category: Category }) {
   const Icon = CATEGORY_ICONS[category.slug] ?? FALLBACK_ICON;
 
@@ -50,7 +49,7 @@ export function CategoryCard({ category }: { category: Category }) {
       href={`/play/search?category=${category.id}`}
       className="block"
     >
-      <div className="card-hard-sm press group flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-surface-2 transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none">
+      <div className="press group flex aspect-square items-center justify-center overflow-hidden rounded-sm bg-surface-2 transition-all">
         {category.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

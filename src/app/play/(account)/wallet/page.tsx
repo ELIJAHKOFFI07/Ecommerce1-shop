@@ -90,20 +90,20 @@ export default function WalletPage() {
     await load();
   };
 
-  if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><Skeleton className="h-28 w-full rounded-xl" /><Skeleton className="h-56 w-full rounded-xl" /><ListSkeleton count={4} /></div>);
+ if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><Skeleton className="h-28 w-full rounded-sm" /><Skeleton className="h-56 w-full rounded-sm" /><ListSkeleton count={4} /></div>);
 
   if (!connected) {
     return (
-      <div className="mx-auto max-w-md py-20 text-center">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
-          <Wallet className="h-6 w-6" strokeWidth={2.5} />
+ <div className="mx-auto max-w-md py-20 text-center">
+ <span className="mx-auto grid h-12 w-12 place-items-center rounded-sm border border-border bg-primary text-primary-foreground">
+ <Wallet className="h-6 w-6" strokeWidth={2.5} />
         </span>
-        <p className="mt-3 text-sm font-semibold text-foreground/60">
+ <p className="mt-3 text-sm font-semibold text-foreground/60">
           Connectez-vous pour consulter votre portefeuille.
         </p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="mt-4 inline-flex items-center gap-2 rounded-sm bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all"
         >
           Se connecter
         </Link>
@@ -112,49 +112,49 @@ export default function WalletPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+ <div className="mx-auto max-w-4xl">
       <PageHeader title="Portefeuille" subtitle="Vos ventes livrées sont créditées ici, commission déduite." />
 
       {/* Deux colonnes dès `lg` : le solde et le formulaire restent visibles
           pendant qu'on parcourt l'historique, au lieu de défiler hors écran. */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-[22rem_1fr] lg:items-start">
-      <div className="space-y-6 lg:sticky lg:top-20">
-      <div className="card-hard rounded-2xl bg-card p-6 text-center">
-        <p className="font-display text-sm font-bold text-foreground/60">Solde disponible</p>
-        <p className="mt-2 font-display text-3xl font-extrabold text-primary">{formatFcfa(balance)}</p>
+ <div className="mt-6 grid gap-6 lg:grid-cols-[22rem_1fr] lg:items-start">
+ <div className="space-y-6 lg:sticky lg:top-20">
+ <div className="rounded-sm bg-card p-6 text-center">
+ <p className="font-display text-sm font-bold text-foreground/60">Solde disponible</p>
+ <p className="mt-2 font-display text-3xl font-extrabold text-primary">{formatFcfa(balance)}</p>
       </div>
 
       <form
         onSubmit={withdraw}
-        className="card-hard rounded-2xl bg-card p-6"
+ className="rounded-sm bg-card p-6"
       >
-        <h2 className="font-display text-lg font-extrabold text-foreground">Demander un retrait</h2>
-        <p className="mt-1 text-xs font-semibold text-foreground/60">
+ <h2 className="font-display text-lg font-extrabold text-foreground">Demander un retrait</h2>
+ <p className="mt-1 text-xs font-semibold text-foreground/60">
           Minimum {formatFcfa(minWithdrawal)}.
         </p>
-        <div className="mt-4 space-y-3">
+ <div className="mt-4 space-y-3">
           <input
             type="number"
             inputMode="numeric"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Montant en FCFA"
-            className="w-full rounded-xl border-2 border-border bg-background px-3 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary"
+ className="w-full rounded-sm border border-border bg-background px-3 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus-visible:border-accent"
           />
           <input
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Numéro Mobile Money"
-            className="w-full rounded-xl border-2 border-border bg-background px-3 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary"
+ className="w-full rounded-sm border border-border bg-background px-3 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus-visible:border-accent"
           />
         </div>
-        {error && <p className="mt-3 text-sm font-semibold text-red-600">{error}</p>}
-        {success && <p className="mt-3 text-sm font-semibold text-vert-deep">{success}</p>}
+ {error && <p className="mt-3 text-sm font-semibold text-red-600">{error}</p>}
+ {success && <p className="mt-3 text-sm font-semibold text-vert-deep">{success}</p>}
         <button
           type="submit"
           disabled={submitting}
-          className="card-hard-sm mt-4 w-full rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+ className="mt-4 w-full rounded-sm bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
         >
           {submitting ? "Envoi…" : "Demander le retrait"}
         </button>
@@ -162,41 +162,41 @@ export default function WalletPage() {
       </div>
 
       <div>
-      <h2 className="font-display text-lg font-extrabold text-foreground">Historique</h2>
+ <h2 className="font-display text-lg font-extrabold text-foreground">Historique</h2>
       {transactions.length === 0 ? (
-        <p className="py-10 text-center font-semibold text-foreground/60">
+ <p className="py-10 text-center font-semibold text-foreground/60">
           Aucun mouvement pour le moment.
         </p>
       ) : (
-        <ul className="mt-4 space-y-3">
+ <ul className="mt-4 space-y-3">
           {transactions.map((tx) => {
             const positive = tx.amount > 0;
             return (
               <li
                 key={tx.id}
-                className="card-hard flex items-center gap-3 rounded-2xl bg-card p-3"
+ className="flex items-center gap-3 rounded-sm bg-card p-3"
               >
                 <span
-                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-border ${
+ className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border ${
                     positive ? "bg-vert-soft text-vert-deep" : "bg-surface-2 text-red-600"
                   }`}
                 >
                   {positive ? (
-                    <ArrowDownLeft className="h-4 w-4" strokeWidth={2.5} />
+ <ArrowDownLeft className="h-4 w-4" strokeWidth={2.5} />
                   ) : (
-                    <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+ <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                   )}
                 </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block font-display text-sm font-bold text-foreground">
+ <span className="min-w-0 flex-1">
+ <span className="block font-display text-sm font-bold text-foreground">
                     {WALLET_KIND_LABELS[tx.kind] ?? tx.kind}
                   </span>
-                  <span className="block truncate text-xs font-semibold text-foreground/60">
+ <span className="block truncate text-xs font-semibold text-foreground/60">
                     {tx.note ?? relativeTime(tx.created_at)}
                   </span>
                 </span>
                 <span
-                  className={`font-display text-sm font-extrabold ${
+ className={`font-display text-sm font-extrabold ${
                     positive ? "text-vert-deep" : "text-red-600"
                   }`}
                 >

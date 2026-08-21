@@ -50,21 +50,21 @@ function PasswordInner() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-sm space-y-4">
+ <div className="mx-auto max-w-sm space-y-4">
         <HeaderSkeleton />
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-12 w-full" />
+ <Skeleton className="h-12 w-full" />
+ <Skeleton className="h-12 w-full" />
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="py-16 text-center">
-        <p className="font-display text-lg font-bold">Connexion requise</p>
+ <div className="py-16 text-center">
+ <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="mt-4 inline-flex items-center gap-2 rounded-sm bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all"
         >
           Se connecter
         </Link>
@@ -73,28 +73,28 @@ function PasswordInner() {
   }
 
   const field =
-    "w-full rounded-xl border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary";
+    "w-full rounded-sm border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus-visible:border-accent";
 
   return (
-    <div className="mx-auto max-w-sm">
-      <div className="card-hard rounded-3xl bg-card p-6 sm:p-8">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
-          <KeyRound className="h-6 w-6" strokeWidth={2.5} />
+ <div className="mx-auto max-w-sm">
+ <div className="rounded-sm bg-card p-6 sm:p-8">
+ <span className="mx-auto grid h-12 w-12 place-items-center rounded-sm border border-border bg-primary text-primary-foreground">
+ <KeyRound className="h-6 w-6" strokeWidth={2.5} />
         </span>
-        <h1 className="mt-4 text-center font-display text-2xl font-extrabold tracking-tight">
+ <h1 className="mt-4 text-center font-display text-2xl font-extrabold tracking-tight">
           {forced
             ? "Choisissez un nouveau mot de passe"
             : "Changer mon mot de passe"}
         </h1>
 
         {forced && (
-          <p className="card-hard-sm mt-4 rounded-2xl bg-sun p-3 text-center text-sm font-semibold text-foreground">
+ <p className="mt-4 rounded-sm bg-sun p-3 text-center text-sm font-semibold text-foreground">
             Votre mot de passe a été réinitialisé par un administrateur. Vous
             devez en choisir un nouveau pour continuer.
           </p>
         )}
 
-        <form onSubmit={submit} className="mt-6 space-y-4">
+ <form onSubmit={submit} className="mt-6 space-y-4">
           <input
             type="password"
             required
@@ -102,7 +102,7 @@ function PasswordInner() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Nouveau mot de passe (8 caractères min.)"
-            className={field}
+ className={field}
           />
           <input
             type="password"
@@ -110,12 +110,12 @@ function PasswordInner() {
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             placeholder="Confirmer le mot de passe"
-            className={field}
+ className={field}
           />
-          {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
+ {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
           <button
             disabled={saving}
-            className="card-hard-sm w-full rounded-full bg-foreground py-3 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+ className="w-full rounded-sm bg-foreground py-3 font-display text-sm font-bold text-background transition-all disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
           >
             {saving ? "Enregistrement…" : "Enregistrer"}
           </button>
@@ -125,7 +125,7 @@ function PasswordInner() {
       {!forced && (
         <Link
           href="/play/account"
-          className="mt-4 block text-center text-sm font-bold text-foreground/60 hover:text-primary"
+ className="mt-4 block text-center text-sm font-bold text-foreground/60 hover:text-primary"
         >
           Annuler
         </Link>
@@ -138,9 +138,9 @@ export default function PasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-sm space-y-4">
+ <div className="mx-auto max-w-sm space-y-4">
           <HeaderSkeleton />
-          <Skeleton className="h-12 w-full" />
+ <Skeleton className="h-12 w-full" />
         </div>
       }
     >

@@ -75,15 +75,15 @@ export default function AccountPage() {
   // valeurs par défaut (« Utilisateur », 0 point) avant de se corriger.
   if (authed === null) {
     return (
-      <div className="mx-auto max-w-lg space-y-4">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-16 w-16 shrink-0 rounded-full" />
-          <div className="flex-1 space-y-2">
-            <Skeleton className="h-5 w-40" />
-            <Skeleton className="h-4 w-52 max-w-full" />
+ <div className="mx-auto max-w-lg space-y-4">
+ <div className="flex items-center gap-4">
+ <Skeleton className="h-16 w-16 shrink-0 rounded-full" />
+ <div className="flex-1 space-y-2">
+ <Skeleton className="h-5 w-40" />
+ <Skeleton className="h-4 w-52 max-w-full" />
           </div>
         </div>
-        <Skeleton className="h-14 w-full rounded-xl" />
+ <Skeleton className="h-14 w-full rounded-sm" />
         <ListSkeleton count={6} />
       </div>
     );
@@ -91,11 +91,11 @@ export default function AccountPage() {
 
   if (authed === false) {
     return (
-      <div className="py-16 text-center">
-        <p className="font-display text-lg font-bold">Connexion requise</p>
+ <div className="py-16 text-center">
+ <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="mt-4 inline-flex items-center gap-2 rounded-sm bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all"
         >
           Se connecter
         </Link>
@@ -107,68 +107,68 @@ export default function AccountPage() {
   const initial = displayName[0]?.toUpperCase() ?? "?";
 
   return (
-    <div className="space-y-6">
+ <div className="space-y-6">
       {/* ---- Carte d'identité ---- */}
-      <div className="card-hard rounded-2xl bg-card p-5 sm:p-6">
-        <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
-          <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-border bg-surface-2">
+ <div className="rounded-sm bg-card p-5 sm:p-6">
+ <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
+ <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full border border-border bg-surface-2">
             {profile?.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={profile.avatar_url}
                 alt=""
-                className="h-full w-full object-cover"
+ className="h-full w-full object-cover"
               />
             ) : (
-              <span className="flex h-full w-full items-center justify-center font-display text-3xl font-extrabold text-primary">
+ <span className="flex h-full w-full items-center justify-center font-display text-3xl font-extrabold text-primary">
                 {initial}
               </span>
             )}
           </div>
 
-          <div className="min-w-0 flex-1 text-center sm:text-left">
-            <h1 className="truncate font-display text-2xl font-extrabold tracking-tight">
+ <div className="min-w-0 flex-1 text-center sm:text-left">
+ <h1 className="truncate font-display text-2xl font-extrabold tracking-tight">
               {displayName}
             </h1>
-            <p className="truncate text-sm font-semibold text-foreground/60">
+ <p className="truncate text-sm font-semibold text-foreground/60">
               {email}
             </p>
-            <p className="mt-2 inline-flex items-center gap-2 rounded-full border-2 border-border bg-sun px-3 py-1 font-display text-sm font-bold text-foreground">
+ <p className="mt-2 inline-flex items-center gap-2 rounded-sm border border-border bg-sun px-3 py-1 font-display text-sm font-bold text-foreground">
               {ROLE_LABELS[roleOf(profile) ?? "user"]} ·{" "}
               {profile?.loyalty_points ?? 0} points
             </p>
           </div>
 
-          <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+ <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
             <Link
               href="/play/account/edit"
-              className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-card px-5 py-2.5 font-display text-sm font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
+ className="inline-flex items-center justify-center gap-2 rounded-sm bg-card px-5 py-2.5 font-display text-sm font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
             >
-              <UserPen className="h-4 w-4" strokeWidth={2.5} />
+ <UserPen className="h-4 w-4" strokeWidth={2.5} />
               Modifier mon profil
             </Link>
             <button
               onClick={signOut}
-              className="card-hard-sm inline-flex items-center justify-center gap-2 rounded-full bg-card px-5 py-2.5 font-display text-sm font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:text-red-600 hover:shadow-none"
+ className="inline-flex items-center justify-center gap-2 rounded-sm bg-card px-5 py-2.5 font-display text-sm font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:text-red-600 hover:shadow-none"
             >
-              <LogOut className="h-4 w-4" strokeWidth={2.5} /> Se déconnecter
+ <LogOut className="h-4 w-4" strokeWidth={2.5} /> Se déconnecter
             </button>
           </div>
         </div>
       </div>
 
       {/* ---- Accès rapides ---- */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+ <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {QUICK_LINKS.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
             href={href}
-            className="card-hard rounded-2xl bg-card p-4 transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="rounded-sm bg-card p-4 transition-all"
           >
-            <span className="grid h-11 w-11 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
-              <Icon className="h-5 w-5" strokeWidth={2.5} />
+ <span className="grid h-11 w-11 place-items-center rounded-sm border border-border bg-primary text-primary-foreground">
+ <Icon className="h-5 w-5" strokeWidth={2.5} />
             </span>
-            <p className="mt-3 font-display text-base font-bold text-foreground">
+ <p className="mt-3 font-display text-base font-bold text-foreground">
               {label}
             </p>
           </Link>
@@ -176,7 +176,7 @@ export default function AccountPage() {
       </div>
 
       {/* ---- Points de fidélité ---- */}
-      <div className="max-w-sm">
+ <div className="max-w-sm">
         <PointsCard
           points={profile?.loyalty_points ?? 0}
           onRedeemed={refreshProfile}

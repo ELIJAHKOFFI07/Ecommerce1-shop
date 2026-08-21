@@ -43,13 +43,13 @@ export function PriceHistory({ productId }: { productId: string }) {
   const [lastX, lastY] = points.split(" ").pop()!.split(",");
 
   return (
-    <div className="card-hard-sm rounded-3xl bg-surface p-4">
+    <div className="rounded-sm bg-surface p-4">
       <div className="flex items-center justify-between gap-2">
         <p className="flex items-center gap-2 font-display text-sm font-extrabold">
           <TrendingDown className="h-4 w-4 text-accent" /> Historique du prix
         </p>
         {isLowest && (
-          <span className="rounded-full border-2 border-border bg-sun px-2.5 py-0.5 text-[11px] font-bold">
+          <span className="rounded-sm border border-border bg-sun px-2.5 py-0.5 text-[11px] font-bold">
             Prix le plus bas !
           </span>
         )}

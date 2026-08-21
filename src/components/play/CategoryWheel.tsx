@@ -12,8 +12,9 @@ import { useReducedMotion } from "@/lib/useReducedMotion";
 /// est bornée par ses extrémités — jamais de boucle infinie. Taper un item le
 /// sélectionne immédiatement et la roue s'aligne dessus.
 ///
-/// Le style et l'animation de l'arc sont conservés : pastilles `card-hard-sm`,
-/// item du centre à l'encre, effet de profondeur (réduction, inclinaison,
+/// Le style et l'animation de l'arc sont conservés : pastilles à filet
+/// (`border`), item du centre à l'encre, effet de profondeur (réduction,
+/// inclinaison,
 /// fondu) appliqué en direct sur les refs pendant le défilement, cadencé par
 /// `requestAnimationFrame` — aucun re-render React. La sélection est
 /// confirmée après un court temps d'arrêt, pour ne pas rafraîchir les
@@ -162,7 +163,7 @@ export function CategoryWheel({
     <div>
       <div className="mb-3 flex items-center justify-between gap-3 px-1">
         <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-muted">
-          <span className="grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 border-border bg-accent text-on-accent">
+           <span className="grid h-5 w-5 shrink-0 place-items-center rounded-md border border-border bg-accent text-on-accent">
             <LayoutGrid className="h-3 w-3" strokeWidth={2.5} />
           </span>
           Catégories
@@ -176,7 +177,7 @@ export function CategoryWheel({
           tabIndex={0}
           onKeyDown={handleKeyDown}
           aria-label="Catégories : défilez pour changer de catégorie"
-          className="scrollbar-hide relative overflow-y-auto rounded-2xl snap-y outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="scrollbar-hide relative overflow-y-auto rounded-sm snap-y outline-none focus-visible:ring-2 focus-visible:ring-accent"
           style={{ height: WINDOW_H }}
         >
           <div
@@ -194,7 +195,7 @@ export function CategoryWheel({
                   }}
                   onClick={() => onSelect(item.id)}
                   aria-pressed={selected}
-                  className={`card-hard-sm h-10 max-w-full shrink-0 snap-center truncate whitespace-nowrap rounded-full px-5 text-sm font-medium transition-colors duration-200 ${
+                  className={`rounded-sm h-10 max-w-full shrink-0 snap-center truncate whitespace-nowrap px-5 text-sm font-medium transition-colors duration-200 ${
                     selected
                       ? "bg-foreground text-background"
                       : focused

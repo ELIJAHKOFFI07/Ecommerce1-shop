@@ -113,7 +113,7 @@ export default function SpinPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+ <div className="space-y-6">
         <HeaderSkeleton />
         <SkeletonWheel />
       </div>
@@ -122,11 +122,11 @@ export default function SpinPage() {
 
   if (authed === false) {
     return (
-      <div className="py-16 text-center">
-        <p className="font-display text-lg font-bold">Connexion requise</p>
+ <div className="py-16 text-center">
+ <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="mt-4 inline-flex items-center gap-2 rounded-sm bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all"
         >
           Se connecter
         </Link>
@@ -135,37 +135,37 @@ export default function SpinPage() {
   }
 
   return (
-    <div className="mx-auto max-w-lg">
+ <div className="mx-auto max-w-lg">
       <PageHeader
         title="Roue de la chance"
         subtitle="Un tour par jour — points et coupons à gagner"
       />
 
-      <div className="relative">
-        {/* Motif wax derrière la carte : l'ombre dure card-hard tombe dessus. */}
-        <div className="absolute inset-0 -z-10 rounded-3xl wax-pattern" aria-hidden />
+ <div className="relative">
+        {/* Motif wax derrière la carte : l'ombre dure tombe dessus. */}
+ <div className="absolute inset-0 -z-10 rounded-sm" aria-hidden />
 
-        <div className="card-hard relative rounded-3xl bg-card px-6 py-8 text-center sm:px-8">
+ <div className="relative rounded-sm bg-card px-6 py-8 text-center sm:px-8">
           <Sparkles
-            className="absolute -top-2 -right-1 h-7 w-7 animate-float text-sun"
+ className="absolute -top-2 -right-1 h-7 w-7 animate-float text-sun"
             strokeWidth={2.5}
             aria-hidden
           />
           <Sparkles
-            className="absolute -bottom-2 -left-1 h-6 w-6 animate-float text-secondary"
+ className="absolute -bottom-2 -left-1 h-6 w-6 animate-float text-secondary"
             style={{ animationDelay: "1.2s" }}
             strokeWidth={2.5}
             aria-hidden
           />
 
-          <div className="relative mx-auto h-64 w-64 sm:h-72 sm:w-72">
+ <div className="relative mx-auto h-64 w-64 sm:h-72 sm:w-72">
             {/* Pointeur */}
-            <div className="absolute left-1/2 top-0 z-20 -translate-x-1/2">
-              <div className="h-0 w-0 border-x-[14px] border-t-[24px] border-x-transparent border-t-ink" />
+ <div className="absolute left-1/2 top-0 z-20 -translate-x-1/2">
+ <div className="h-0 w-0 border-x-[14px] border-t-[24px] border-x-transparent border-t-ink" />
             </div>
 
             <div
-              className="h-full w-full rounded-full border-4 border-border transition-transform duration-[3200ms] ease-out"
+ className="h-full w-full rounded-full border-4 border-border transition-transform duration-[3200ms] ease-out"
               style={{
                 transform: `rotate(${angle}deg)`,
                 background: `conic-gradient(${SPIN_SEGMENTS.map(
@@ -180,7 +180,7 @@ export default function SpinPage() {
                 return (
                   <span
                     key={`${segment.kind}-${segment.value}`}
-                    className="absolute left-1/2 top-1/2 flex w-24 flex-col items-center text-center leading-none"
+ className="absolute left-1/2 top-1/2 flex w-24 flex-col items-center text-center leading-none"
                     style={{
                       // Centre le libellé sur la roue, le pousse le long du
                       // rayon puis fait orbiter autour du centre : chaque
@@ -189,10 +189,10 @@ export default function SpinPage() {
                       color: SEGMENT_STYLE[key].fg,
                     }}
                   >
-                    <span className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+ <span className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
                       {label.value}
                     </span>
-                    <span className="mt-1 font-display text-[10px] font-bold uppercase tracking-widest opacity-70 sm:text-xs">
+ <span className="mt-1 font-display text-[10px] font-bold uppercase tracking-widest opacity-70 sm:text-xs">
                       {label.unit}
                     </span>
                   </span>
@@ -201,22 +201,22 @@ export default function SpinPage() {
             </div>
 
             {/* Moyeu central */}
-            <div className="absolute left-1/2 top-1/2 z-10 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-card bg-foreground shadow-hard">
-              <Star className="h-6 w-6 fill-sun text-sun" strokeWidth={2} />
+ <div className="absolute left-1/2 top-1/2 z-10 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-card bg-foreground">
+ <Star className="h-6 w-6 fill-sun text-sun" strokeWidth={2} />
             </div>
           </div>
 
           {result && (
-            <div className="card-hard-sm mt-8 animate-rise rounded-2xl bg-sun px-4 py-3 font-display text-base font-extrabold text-foreground">
+ <div className="mt-8 animate-rise rounded-sm bg-sun px-4 py-3 font-display text-base font-extrabold text-foreground">
               {spinResultLabel(result)}
             </div>
           )}
           {error && (
-            <p className="mt-8 text-sm font-semibold text-red-600">{error}</p>
+ <p className="mt-8 text-sm font-semibold text-red-600">{error}</p>
           )}
           {!result && !error && !canSpin && (
-            <p className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/60">
-              <CalendarX className="h-4 w-4" strokeWidth={2.5} />
+ <p className="mt-8 inline-flex items-center gap-2 rounded-sm border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/60">
+ <CalendarX className="h-4 w-4" strokeWidth={2.5} />
               Vous avez déjà joué aujourd&apos;hui. Revenez demain !
             </p>
           )}
@@ -224,9 +224,9 @@ export default function SpinPage() {
           <button
             onClick={spin}
             disabled={!canSpin || spinning}
-            className="card-hard-sm mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-display text-base font-bold text-on-accent transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+ className="mt-8 inline-flex items-center gap-2 rounded-sm bg-primary px-8 py-3 font-display text-base font-bold text-on-accent transition-all disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
           >
-            <Sparkles className="h-4 w-4" strokeWidth={2.5} />
+ <Sparkles className="h-4 w-4" strokeWidth={2.5} />
             {spinning ? "Ça tourne…" : "Lancer la roue"}
           </button>
         </div>
@@ -234,21 +234,21 @@ export default function SpinPage() {
 
       {/* Légende : la couleur n'est jamais le seul canal — chaque lot est
           libellé, avec sa pastille de la couleur du segment. */}
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+ <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
         {SPIN_SEGMENTS.map((segment) => (
           <div
             key={`legend-${segment.kind}-${segment.value}`}
-            className="card-hard-sm flex items-center gap-2 rounded-full bg-card px-3 py-1.5"
+ className="flex items-center gap-2 rounded-sm bg-card px-3 py-1.5"
           >
             <span
-              className="h-3 w-3 rounded-full border-2 border-foreground"
+ className="h-3 w-3 rounded-full border-2 border-foreground"
               style={{
                 backgroundColor:
                   SEGMENT_STYLE[segmentKey(segment.kind, segment.value)].bg,
               }}
               aria-hidden
             />
-            <span className="font-display text-xs font-bold text-foreground">
+ <span className="font-display text-xs font-bold text-foreground">
               {segment.label}
             </span>
           </div>
@@ -260,16 +260,16 @@ export default function SpinPage() {
 
 function SkeletonWheel() {
   return (
-    <div className="mx-auto max-w-lg space-y-4">
-      <div className="card-hard rounded-3xl bg-card p-8">
-        <div className="mx-auto h-64 w-64 animate-shimmer rounded-full bg-surface-2" />
-        <div className="mx-auto mt-8 h-12 w-48 animate-shimmer rounded-full bg-surface-2" />
+ <div className="mx-auto max-w-lg space-y-4">
+ <div className="rounded-sm bg-card p-8">
+ <div className="mx-auto h-64 w-64 animate-shimmer rounded-full bg-surface-2" />
+ <div className="mx-auto mt-8 h-12 w-48 animate-shimmer rounded-sm bg-surface-2" />
       </div>
-      <div className="flex flex-wrap items-center justify-center gap-2">
+ <div className="flex flex-wrap items-center justify-center gap-2">
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
-            className="h-8 w-28 animate-shimmer rounded-full bg-surface-2"
+ className="h-8 w-28 animate-shimmer rounded-sm bg-surface-2"
           />
         ))}
       </div>

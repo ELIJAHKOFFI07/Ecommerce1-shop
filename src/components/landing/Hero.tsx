@@ -15,7 +15,7 @@ const FEATURES = [
 export function Hero() {
   return (
     <section className="bg-background">
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
+      <div className="mx-auto grid max-w-7xl items-center px-10 gap-10  lg:grid-cols-2 ">
         <div>
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
             Achetez, vendez et{" "}

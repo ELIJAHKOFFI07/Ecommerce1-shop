@@ -13,7 +13,7 @@ export function ShopCard({
   return (
     <Link
       href={`/play/shop/${shop.id}`}
-      className="press group flex h-full items-center gap-3 rounded-2xl border border-border bg-surface p-4 transition-colors hover:bg-surface-2"
+      className="press group flex h-full items-center gap-3 rounded-sm border border-border bg-surface p-4 transition-colors hover:bg-surface-2"
     >
       <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface-2 lg:h-14 lg:w-14">
         {shop.logo_url ? (

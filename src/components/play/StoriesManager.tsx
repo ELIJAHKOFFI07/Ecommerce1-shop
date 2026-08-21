@@ -65,7 +65,7 @@ export function StoriesManager({ shopId }: { shopId: string }) {
 
   return (
     <div>
-      <div className="rounded-xl border border-border bg-surface p-4">
+      <div className="rounded-sm border border-border bg-surface p-4">
         <p className="text-sm font-medium">Publier une story</p>
         <p className="mt-1 text-xs text-muted">
           Visible 24 h par tous les acheteurs sur l&apos;accueil.

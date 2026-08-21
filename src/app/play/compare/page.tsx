@@ -49,14 +49,14 @@ export default function ComparePage() {
     load();
   };
 
-  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
+ if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
 
   if (products.length < 2) {
     return (
-      <div className="py-20 text-center">
-        <GitCompareArrows className="mx-auto h-10 w-10 text-accent" />
-        <p className="mt-4 font-medium">Ajoutez au moins 2 produits</p>
-        <p className="mt-1 text-sm text-muted">
+ <div className="py-20 text-center">
+ <GitCompareArrows className="mx-auto h-10 w-10 text-accent" />
+ <p className="mt-4 font-medium">Ajoutez au moins 2 produits</p>
+ <p className="mt-1 text-sm text-muted">
           Utilisez le bouton « Comparer » sur une fiche produit (3 max).
         </p>
       </div>
@@ -74,46 +74,46 @@ export default function ComparePage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-medium tracking-tight">Comparer</h1>
+ <div className="flex items-center justify-between">
+ <h1 className="text-2xl font-medium tracking-tight">Comparer</h1>
         <button
           onClick={() => {
             clearCompare();
             load();
           }}
-          className="text-sm text-muted hover:text-red-400"
+ className="text-sm text-muted hover:text-red-400"
         >
           Vider
         </button>
       </div>
 
-      <div className="mt-6 overflow-x-auto">
-        <table className="w-full min-w-[560px] border-collapse text-sm">
+ <div className="mt-6 overflow-x-auto">
+ <table className="w-full min-w-[560px] border-collapse text-sm">
           <thead>
             <tr>
-              <th className="w-28" />
+ <th className="w-28" />
               {products.map((p) => (
-                <th key={p.id} className="p-2 text-left align-top">
-                  <Link href={`/play/product/${p.id}`} className="block">
-                    <div className="h-24 w-24 overflow-hidden rounded-lg bg-surface-2">
+ <th key={p.id} className="p-2 text-left align-top">
+ <Link href={`/play/product/${p.id}`} className="block">
+ <div className="h-24 w-24 overflow-hidden rounded-lg bg-surface-2">
                       {p.product_images?.[0]?.url && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={p.product_images[0].url}
                           alt={p.title}
-                          className="h-full w-full object-cover"
+ className="h-full w-full object-cover"
                         />
                       )}
                     </div>
-                    <p className="mt-1 line-clamp-2 w-28 font-medium">
+ <p className="mt-1 line-clamp-2 w-28 font-medium">
                       {p.title}
                     </p>
                   </Link>
                   <button
                     onClick={() => remove(p.id)}
-                    className="mt-1 inline-flex items-center gap-1 text-xs text-muted hover:text-red-400"
+ className="mt-1 inline-flex items-center gap-1 text-xs text-muted hover:text-red-400"
                   >
-                    <Trash2 className="h-3 w-3" /> Retirer
+ <Trash2 className="h-3 w-3" /> Retirer
                   </button>
                 </th>
               ))}
@@ -121,12 +121,12 @@ export default function ComparePage() {
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.label} className="border-t border-border">
-                <td className="p-2 font-bold">{row.label}</td>
+ <tr key={row.label} className="border-t border-border">
+ <td className="p-2 font-bold">{row.label}</td>
                 {products.map((p) => (
                   <td
                     key={p.id}
-                    className={`p-2 ${row.label === "Prix" ? "font-bold text-accent" : ""}`}
+ className={`p-2 ${row.label ==="Prix" ?"font-bold text-accent" :""}`}
                   >
                     {row.value(p)}
                   </td>

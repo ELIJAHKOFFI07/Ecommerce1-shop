@@ -64,20 +64,20 @@ export default function MessagesPage() {
     load();
   }, [load]);
 
-  if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>);
+ if (loading) return (<div className="mx-auto max-w-2xl space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>);
 
   if (!connected) {
     return (
-      <div className="mx-auto max-w-md py-20 text-center">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
-          <MessageCircle className="h-6 w-6" strokeWidth={2.5} />
+ <div className="mx-auto max-w-md py-20 text-center">
+ <span className="mx-auto grid h-12 w-12 place-items-center rounded-sm border border-border bg-primary text-primary-foreground">
+ <MessageCircle className="h-6 w-6" strokeWidth={2.5} />
         </span>
-        <p className="mt-3 text-sm font-semibold text-foreground/60">
+ <p className="mt-3 text-sm font-semibold text-foreground/60">
           Connectez-vous pour accéder à vos messages.
         </p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="mt-4 inline-flex items-center gap-2 rounded-sm bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all"
         >
           Se connecter
         </Link>
@@ -86,32 +86,32 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+ <div className="mx-auto max-w-2xl">
       <PageHeader title="Messages" />{rows.length === 0 ? (
-        <p className="py-20 text-center font-semibold text-foreground/60">
+ <p className="py-20 text-center font-semibold text-foreground/60">
           Aucune conversation. Contactez un vendeur depuis une fiche produit.
         </p>
       ) : (
-        <ul className="mt-6 space-y-3">
+ <ul className="mt-6 space-y-3">
           {rows.map((c) => (
             <li key={c.id}>
               <Link
                 href={`/play/messages/${c.id}`}
-                className="card-hard flex items-center gap-3 rounded-2xl bg-card p-4 transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="flex items-center gap-3 rounded-sm bg-card p-4 transition-all"
               >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-border bg-primary font-display text-base font-extrabold text-primary-foreground">
+ <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-primary font-display text-base font-extrabold text-primary-foreground">
                   {c.otherName.charAt(0).toUpperCase()}
                 </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate font-display text-base font-bold text-foreground">
+ <span className="min-w-0 flex-1">
+ <span className="block truncate font-display text-base font-bold text-foreground">
                     {c.otherName}
                   </span>
-                  <span className="block truncate text-sm font-semibold text-foreground/60">
+ <span className="block truncate text-sm font-semibold text-foreground/60">
                     {c.last_message ?? "Nouvelle conversation"}
                   </span>
                 </span>
                 {c.last_message_at && (
-                  <span className="shrink-0 text-xs font-bold text-foreground/60">
+ <span className="shrink-0 text-xs font-bold text-foreground/60">
                     {relativeTime(c.last_message_at)}
                   </span>
                 )}

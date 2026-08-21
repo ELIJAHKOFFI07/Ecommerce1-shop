@@ -37,45 +37,45 @@ export default function ShopPage({
     })();
   }, [id]);
 
-  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ProductGridSkeleton /></div>;
+ if (loading) return <div className="space-y-6"><HeaderSkeleton /><ProductGridSkeleton /></div>;
   if (!shop)
-    return <p className="py-16 text-center text-muted">Boutique introuvable.</p>;
+ return <p className="py-16 text-center text-muted">Boutique introuvable.</p>;
 
   return (
     <div>
-      <div className="card-hard relative mb-8 overflow-hidden rounded-3xl bg-surface">
-        <div className="wax-pattern relative flex min-h-40 flex-col justify-end p-5 sm:p-6">
-          <div className="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-sun/30 blur-2xl" />
-          <div className="relative flex flex-wrap items-end gap-4">
-            <div className="card-hard -rotate-2 flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-surface-2 text-2xl font-bold text-foreground">
+ <div className="relative mb-8 overflow-hidden rounded-sm bg-surface">
+ <div className="relative flex min-h-40 flex-col justify-end p-5 sm:p-6">
+ <div className="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-sun/30 blur-2xl" />
+ <div className="relative flex flex-wrap items-end gap-4">
+ <div className="-rotate-2 flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-surface-2 text-2xl font-bold text-foreground">
               {shop.logo_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={shop.logo_url} alt="" className="h-full w-full object-cover" />
+ <img src={shop.logo_url} alt="" className="h-full w-full object-cover" />
               ) : (
                 shop.name[0]?.toUpperCase()
               )}
             </div>
-            <div className="min-w-0 flex-1">
-              <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight">
+ <div className="min-w-0 flex-1">
+ <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight">
                 {shop.name}
                 {shop.identity_verified && (
                   <span
-                    className="inline-flex items-center gap-1 rounded-full bg-vert-soft px-2 py-0.5 text-[11px] font-medium text-vert-deep"
+ className="inline-flex items-center gap-1 rounded-sm bg-vert-soft px-2 py-0.5 text-[11px] font-medium text-vert-deep"
                     title="Boutique vérifiée"
                   >
-                    <ShieldCheck className="h-3.5 w-3.5" /> Vérifiée
+ <ShieldCheck className="h-3.5 w-3.5" /> Vérifiée
                   </span>
                 )}
               </h1>
               {shop.city && (
-                <p className="mt-0.5 flex items-center gap-1.5 text-sm text-muted">
-                  <MapPin className="h-3.5 w-3.5" /> {shop.city}
+ <p className="mt-0.5 flex items-center gap-1.5 text-sm text-muted">
+ <MapPin className="h-3.5 w-3.5" /> {shop.city}
                 </p>
               )}
             </div>
           </div>
           {shop.description && (
-            <p className="relative mt-4 max-w-xl text-sm text-muted">
+ <p className="relative mt-4 max-w-xl text-sm text-muted">
               {shop.description}
             </p>
           )}
@@ -83,9 +83,9 @@ export default function ShopPage({
       </div>
 
       {products.length === 0 ? (
-        <p className="py-12 text-center text-muted">Aucun produit.</p>
+ <p className="py-12 text-center text-muted">Aucun produit.</p>
       ) : (
-        <div className="stagger grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+ <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} hard />
           ))}

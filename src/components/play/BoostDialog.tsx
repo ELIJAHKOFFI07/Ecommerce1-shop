@@ -53,7 +53,7 @@ export function BoostDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-6">
+      <div className="w-full max-w-md rounded-sm border border-border bg-surface p-6">
         <div className="flex items-start justify-between">
           <h2 className="flex items-center gap-2 text-lg font-bold">
             <Zap className="h-5 w-5 text-accent" /> Mettre en avant

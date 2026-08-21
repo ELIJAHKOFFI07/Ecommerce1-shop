@@ -14,7 +14,7 @@ export function AuthHeader() {
           href="/"
           className="press flex shrink-0 items-center gap-2 font-display text-xl font-extrabold tracking-tight text-foreground sm:text-2xl"
         >
-          <span className="card-hard-sm grid h-9 w-9 rotate-[-6deg] place-items-center rounded-xl bg-primary sm:h-10 sm:w-10">
+          <span className="grid h-9 w-9 place-items-center rounded-sm bg-primary sm:h-10 sm:w-10">
             <ShoppingBag className="h-5 w-5 text-primary-foreground" strokeWidth={2.4} />
           </span>
           DreamTeam<span className="text-primary">Shop</span>

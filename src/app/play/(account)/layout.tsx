@@ -27,12 +27,12 @@ export default async function AccountLayout({
   }
 
   return (
-    <div className="mx-auto w-full max-w-7xl pb-10 2xl:max-w-[1440px]">
+ <div className="mx-auto w-full max-w-7xl pb-10 2xl:max-w-[1440px]">
       <AccountDashboardNav
         canSell={Boolean(profile?.is_seller || profile?.is_admin)}
         isAdmin={Boolean(profile?.is_admin)}
       />
-      <div className="mt-6">{children}</div>
+ <div className="mt-6">{children}</div>
     </div>
   );
 }

@@ -41,7 +41,7 @@ export function PageHeader({
         <button
           onClick={goBack}
           aria-label="Retour"
-          className="card-hard-sm mt-0.5 shrink-0 rounded-full bg-card p-2.5 text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="mt-0.5 shrink-0 rounded-sm bg-card p-2.5 text-foreground transition-all"
         >
           <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
         </button>

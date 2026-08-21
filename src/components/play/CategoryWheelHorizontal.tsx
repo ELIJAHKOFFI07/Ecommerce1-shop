@@ -143,7 +143,7 @@ export function CategoryWheelHorizontal({
     <div className="mx-auto w-full max-w-4xl">
       <div className="mb-3 flex items-end justify-between gap-3 px-1">
         <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-muted">
-          <span className="grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 border-border bg-accent text-on-accent">
+           <span className="grid h-5 w-5 shrink-0 place-items-center rounded-md border border-border bg-accent text-on-accent">
             <LayoutGrid className="h-3 w-3" strokeWidth={2.5} />
           </span>
           Catégories
@@ -179,7 +179,7 @@ export function CategoryWheelHorizontal({
                   centerOn(e.currentTarget, true);
                 }}
                 aria-pressed={selected}
-                className={`card-hard-sm shrink-0 snap-center whitespace-nowrap rounded-full px-5 py-2 text-sm font-medium transition-colors duration-200 ${
+                className={`rounded-sm shrink-0 snap-center whitespace-nowrap px-5 py-2 text-sm font-medium transition-colors duration-200 ${
                   selected
                     ? "bg-foreground text-background"
                     : focused

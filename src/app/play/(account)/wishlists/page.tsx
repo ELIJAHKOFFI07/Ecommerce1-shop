@@ -51,15 +51,15 @@ export default function WishlistsPage() {
     load();
   };
 
-  if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><ListSkeleton count={4} /></div>);
+ if (loading) return (<div className="mx-auto max-w-4xl space-y-6"><HeaderSkeleton /><ListSkeleton count={4} /></div>);
 
   if (authed === false) {
     return (
-      <div className="py-20 text-center">
-        <p className="font-semibold text-foreground/60">Connectez-vous pour créer des listes.</p>
+ <div className="py-20 text-center">
+ <p className="font-semibold text-foreground/60">Connectez-vous pour créer des listes.</p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="mt-4 inline-flex items-center gap-2 rounded-sm bg-foreground px-5 py-2.5 font-display text-sm font-bold text-background transition-all"
         >
           Se connecter
         </Link>
@@ -68,54 +68,54 @@ export default function WishlistsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+ <div className="mx-auto max-w-4xl">
       <PageHeader title="Mes listes" subtitle="Organisez vos envies par thème (cadeaux, à surveiller…)." />
 
-      <div className="mt-6 flex gap-2">
+ <div className="mt-6 flex gap-2">
         <input
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && create()}
           placeholder="Ex : Idées cadeaux"
-          className="flex-1 rounded-xl border-2 border-border bg-card px-3 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary"
+ className="flex-1 rounded-sm border border-border bg-card px-3 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus-visible:border-accent"
         />
         <button
           onClick={create}
           disabled={creating || !newName.trim()}
-          className="card-hard-sm inline-flex shrink-0 items-center gap-1.5 rounded-full bg-foreground px-4 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+ className="inline-flex shrink-0 items-center gap-1.5 rounded-sm bg-foreground px-4 py-2.5 font-display text-sm font-bold text-background transition-all disabled:opacity-40 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
         >
-          <Plus className="h-4 w-4" strokeWidth={2.5} /> Créer
+ <Plus className="h-4 w-4" strokeWidth={2.5} /> Créer
         </button>
       </div>
 
       {wishlists.length === 0 ? (
-        <p className="py-16 text-center font-semibold text-foreground/60">
+ <p className="py-16 text-center font-semibold text-foreground/60">
           Aucune liste pour le moment.
         </p>
       ) : (
-        <ul className="mt-6 space-y-3">
+ <ul className="mt-6 space-y-3">
           {wishlists.map((w) => (
             <li
               key={w.id}
-              className="card-hard flex items-center gap-3 rounded-2xl bg-card p-4"
+ className="flex items-center gap-3 rounded-sm bg-card p-4"
             >
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border-2 border-border bg-primary text-primary-foreground">
-                <Bookmark className="h-5 w-5" strokeWidth={2.5} />
+ <span className="grid h-10 w-10 shrink-0 place-items-center rounded-sm border border-border bg-primary text-primary-foreground">
+ <Bookmark className="h-5 w-5" strokeWidth={2.5} />
               </span>
-              <Link href={`/play/wishlists/${w.id}`} className="min-w-0 flex-1">
-                <p className="truncate font-display text-base font-bold text-foreground">
+ <Link href={`/play/wishlists/${w.id}`} className="min-w-0 flex-1">
+ <p className="truncate font-display text-base font-bold text-foreground">
                   {w.name}
                 </p>
-                <p className="text-xs font-semibold text-foreground/60">
+ <p className="text-xs font-semibold text-foreground/60">
                   {w.wishlist_items?.length ?? 0} article(s)
                 </p>
               </Link>
               <button
                 onClick={() => remove(w.id)}
-                className="card-hard-sm grid h-9 w-9 shrink-0 place-items-center rounded-full bg-card text-foreground/70 transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:text-red-600 hover:shadow-none"
+ className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-card text-foreground/70 transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:text-red-600 hover:shadow-none"
                 aria-label={`Supprimer ${w.name}`}
               >
-                <Trash2 className="h-4 w-4" strokeWidth={2.5} />
+ <Trash2 className="h-4 w-4" strokeWidth={2.5} />
               </button>
             </li>
           ))}

@@ -7,7 +7,6 @@ import { GoogleButton } from "@/components/play/GoogleButton";
 import { HeaderSkeleton, Skeleton } from "@/components/Skeleton";
 import {
   AuthSplit,
-  AUTH_IMAGES,
   authFieldSecondary,
   authSubmitSecondary,
 } from "@/components/auth/AuthSplit";
@@ -49,16 +48,11 @@ function LoginInner() {
   return (
     <AuthSplit
       tone="secondary"
-      image={AUTH_IMAGES.login}
-      imageAlt="Ambiance shopping chaleureuse DreamTeamShop"
       kicker="De retour parmis nous "
       title="Connexion"
       subtitle="Nous sommes heureux de vous retrouver chez nous."
-      badge="Content de vous revoir"
-      featureTitle="Votre panier vous attend"
-      featureText="Retrouvez vos achats, négociations et vendeurs favoris en un clic."
     >
-      <div className="stagger space-y-3">
+      <div className="space-y-3">
         <GoogleButton
           label="Se connecter avec Google"
           redirectTo={next}
@@ -71,7 +65,7 @@ function LoginInner() {
           <span className="h-px flex-1 bg-border" />
         </div>
 
-        <form onSubmit={submit} className="stagger space-y-3">
+        <form onSubmit={submit} className="space-y-3">
           <input
             type="email"
             required

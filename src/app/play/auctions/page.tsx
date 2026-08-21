@@ -35,56 +35,56 @@ export default function AuctionsPage() {
 
   if (loading)
     return (
-      <div className="space-y-6">
+ <div className="space-y-6">
         <HeaderSkeleton />
         <ListSkeleton count={4} />
       </div>
     );
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <h1 className="flex items-center gap-2 text-2xl font-medium tracking-tight">
-        <Gavel className="h-6 w-6 text-accent" /> Enchères en cours
+ <div className="mx-auto max-w-4xl">
+ <h1 className="flex items-center gap-2 text-2xl font-medium tracking-tight">
+ <Gavel className="h-6 w-6 text-accent" /> Enchères en cours
       </h1>
 
       {auctions.length === 0 ? (
-        <p className="py-16 text-center text-muted">
+ <p className="py-16 text-center text-muted">
           Aucune enchère en cours. Les vendeurs peuvent en lancer depuis leur
           fiche produit.
         </p>
       ) : (
-        <div className="mt-6 space-y-3">
+ <div className="mt-6 space-y-3">
           {auctions.map((a) => (
             <Link
               key={a.id}
               href={`/play/product/${a.product_id}`}
-              className="flex items-center gap-4 rounded-xl border border-border bg-surface p-3 hover:border-accent/50"
+ className="flex items-center gap-4 rounded-sm border border-border bg-surface p-3 hover:border-accent/50"
             >
-              <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-2">
+ <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-2">
                 {a.products?.product_images?.[0]?.url && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={a.products.product_images[0].url}
                     alt={a.products?.title ?? ""}
-                    className="h-full w-full object-cover"
+ className="h-full w-full object-cover"
                   />
                 )}
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="line-clamp-2 text-sm font-medium">
+ <div className="min-w-0 flex-1">
+ <p className="line-clamp-2 text-sm font-medium">
                   {a.products?.title}
                 </p>
-                <p className="mt-1 text-sm font-bold text-accent">
+ <p className="mt-1 text-sm font-bold text-accent">
                   {a.current_bid == null
                     ? `Départ : ${formatFcfa(a.starting_price)}`
                     : `Offre : ${formatFcfa(a.current_bid)} (${a.bids_count})`}
                 </p>
-                <p className="mt-0.5 flex items-center gap-1 text-xs text-muted">
-                  <Timer className="h-3 w-3" />
+ <p className="mt-0.5 flex items-center gap-1 text-xs text-muted">
+ <Timer className="h-3 w-3" />
                   {auctionRemainingLabel(a.ends_at)}
                 </p>
               </div>
-              <Gavel className="h-5 w-5 shrink-0 text-accent" />
+ <Gavel className="h-5 w-5 shrink-0 text-accent" />
             </Link>
           ))}
         </div>

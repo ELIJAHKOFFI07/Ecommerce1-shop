@@ -22,7 +22,7 @@ export default async function PlayLayout({
   // createClient() qui lève, et l'écran de configuration ne s'afficherait pas.
   if (!isBackendConfigured()) {
     return (
-      <div className={`${CONTAINER} pb-10`}>
+ <div className={`${CONTAINER} pb-10`}>
         <SetupNotice />
       </div>
     );
@@ -43,12 +43,12 @@ export default async function PlayLayout({
         <AuthGate connected={connected} />
         {/* Tout /play partage l'habillage de la vitrine : bandeau défilant +
             barre de navigation (logo, recherche, catégories). */}
-        <div className="flex min-h-screen flex-col bg-background text-foreground">
+ <div className="flex min-h-screen flex-col bg-background text-foreground">
           <AnnouncementBar />
           <Navbar />
-          <main className="flex-1">
+ <main className="flex-1">
             {connected && <PasswordChangeGate />}
-            <div className={CONTAINER}>
+ <div className={CONTAINER}>
               <AnnouncementBanner />
               {children}
             </div>

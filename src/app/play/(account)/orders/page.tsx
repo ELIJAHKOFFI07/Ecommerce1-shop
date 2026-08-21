@@ -72,7 +72,7 @@ function OrdersInner() {
   // des données vides, qui disparaissaient dès l'arrivée des vraies.
   if (authed === null) {
     return (
-      <div className="space-y-6">
+ <div className="space-y-6">
         <HeaderSkeleton />
         <ListSkeleton count={4} />
       </div>
@@ -81,11 +81,11 @@ function OrdersInner() {
 
   if (authed === false) {
     return (
-      <div className="py-16 text-center">
-        <p className="font-display text-lg font-bold">Connexion requise</p>
+ <div className="py-16 text-center">
+ <p className="font-display text-lg font-bold">Connexion requise</p>
         <Link
           href="/play/login"
-          className="card-hard-sm mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+ className="mt-4 inline-flex items-center gap-2 rounded-sm bg-foreground px-6 py-2.5 font-display text-sm font-bold text-background transition-all"
         >
           Se connecter
         </Link>
@@ -96,26 +96,26 @@ function OrdersInner() {
   return (
     <div>
       <PageHeader title="Mes commandes" />{orders.length === 0 ? (
-        <p className="py-12 text-center font-semibold text-foreground/60">Aucune commande.</p>
+ <p className="py-12 text-center font-semibold text-foreground/60">Aucune commande.</p>
       ) : (
-        <div className="grid gap-4 xl:grid-cols-2">
+ <div className="grid gap-4 xl:grid-cols-2">
           {orders.map((o) => (
             <div
               key={o.id}
-              className="card-hard rounded-2xl bg-card p-4 sm:p-5"
+ className="rounded-sm bg-card p-4 sm:p-5"
             >
-              <div className="flex items-center justify-between gap-3">
-                <span className="font-display text-base font-extrabold text-foreground">
+ <div className="flex items-center justify-between gap-3">
+ <span className="font-display text-base font-extrabold text-foreground">
                   #{o.id.slice(0, 8).toUpperCase()}
                 </span>
-                <span className="rounded-full border-2 border-border bg-surface-2 px-2.5 py-0.5 font-display text-xs font-bold text-foreground">
+ <span className="rounded-sm border border-border bg-surface-2 px-2.5 py-0.5 font-display text-xs font-bold text-foreground">
                   {ORDER_STATUS_LABELS[o.status]}
                 </span>
               </div>
-              <p className="mt-1 text-sm font-semibold text-foreground/60">
+ <p className="mt-1 text-sm font-semibold text-foreground/60">
                 {o.shops?.name} · {formatFcfa(o.total)}
               </p>
-              <div className="mt-2 text-sm font-semibold text-foreground/60">
+ <div className="mt-2 text-sm font-semibold text-foreground/60">
                 {o.order_items?.map((it) => (
                   <p key={it.id}>
                     {it.quantity} × {it.title}
@@ -128,21 +128,21 @@ function OrdersInner() {
                   href={whatsappLink(o.shops.whatsapp, o)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="card-hard-sm mt-3 inline-flex items-center gap-1.5 rounded-full bg-card px-3.5 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
+ className="mt-3 inline-flex items-center gap-1.5 rounded-sm bg-card px-3.5 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
                 >
-                  <MessageCircle className="h-3.5 w-3.5" strokeWidth={2.5} />
+ <MessageCircle className="h-3.5 w-3.5" strokeWidth={2.5} />
                   Prévenir le vendeur sur WhatsApp
                 </a>
               )}
               {pickupCodes[o.id] && (
-                <div className="card-hard mt-3 rounded-xl bg-sun p-3 text-center">
-                  <p className="font-display text-xs font-extrabold uppercase tracking-wide text-foreground">
+ <div className="mt-3 rounded-sm bg-sun p-3 text-center">
+ <p className="font-display text-xs font-extrabold uppercase tracking-wide text-foreground">
                     Votre code de retrait
                   </p>
-                  <p className="mt-1 font-display text-2xl font-extrabold tracking-[0.4em] text-foreground">
+ <p className="mt-1 font-display text-2xl font-extrabold tracking-[0.4em] text-foreground">
                     {pickupCodes[o.id]}
                   </p>
-                  <p className="mt-1 text-[11px] font-semibold text-foreground/70">
+ <p className="mt-1 text-[11px] font-semibold text-foreground/70">
                     À donner au vendeur uniquement à la réception du colis.
                   </p>
                 </div>
@@ -159,7 +159,7 @@ export default function OrdersPage() {
   return (
     <Suspense
       fallback={
-        <div className="space-y-6">
+ <div className="space-y-6">
           <HeaderSkeleton />
           <ListSkeleton count={4} />
         </div>

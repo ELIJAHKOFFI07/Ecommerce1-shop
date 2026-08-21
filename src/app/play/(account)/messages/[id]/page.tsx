@@ -90,20 +90,20 @@ export default function ConversationPage({
     setDraft("");
   };
 
-  if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
+ if (loading) return <div className="space-y-6"><HeaderSkeleton /><ListSkeleton count={5} /></div>;
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col">
+ <div className="mx-auto flex max-w-2xl flex-col">
       <Link
         href="/play/messages"
-        className="card-hard-sm inline-flex w-fit items-center gap-1.5 rounded-full bg-card px-3.5 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
+ className="inline-flex w-fit items-center gap-1.5 rounded-sm bg-card px-3.5 py-2 font-display text-xs font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-surface-2 hover:shadow-none"
       >
-        <ArrowLeft className="h-4 w-4" strokeWidth={2.5} /> Messages
+ <ArrowLeft className="h-4 w-4" strokeWidth={2.5} /> Messages
       </Link>
 
-      <div className="mt-4 min-h-[50vh] space-y-2">
+ <div className="mt-4 min-h-[50vh] space-y-2">
         {messages.length === 0 ? (
-          <p className="py-16 text-center font-semibold text-foreground/60">
+ <p className="py-16 text-center font-semibold text-foreground/60">
             Aucun message. Dites bonjour !
           </p>
         ) : (
@@ -112,10 +112,10 @@ export default function ConversationPage({
             return (
               <div
                 key={m.id}
-                className={`flex ${mine ? "justify-end" : "justify-start"}`}
+ className={`flex ${mine ?"justify-end" :"justify-start"}`}
               >
                 <span
-                  className={`whitespace-pre-wrap ${
+ className={`whitespace-pre-wrap ${
                     mine ? "bubble bubble-me" : "bubble bubble-vendor"
                   }`}
                 >
@@ -128,22 +128,22 @@ export default function ConversationPage({
         <div ref={bottomRef} />
       </div>
 
-      {error && <p className="mt-2 text-sm font-semibold text-red-600">{error}</p>}
+ {error && <p className="mt-2 text-sm font-semibold text-red-600">{error}</p>}
 
-      <form onSubmit={send} className="sticky bottom-16 mt-4 flex gap-2 md:bottom-4">
+ <form onSubmit={send} className="sticky bottom-16 mt-4 flex gap-2 md:bottom-4">
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Votre message…"
-          className="flex-1 rounded-full border-2 border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus:border-primary"
+ className="flex-1 rounded-sm border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground outline-none placeholder:text-foreground/40 focus-visible:border-accent"
         />
         <button
           type="submit"
           disabled={sending || !draft.trim()}
-          className="card-hard-sm grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+ className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-all disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
           aria-label="Envoyer"
         >
-          <Send className="h-4 w-4" strokeWidth={2.5} />
+ <Send className="h-4 w-4" strokeWidth={2.5} />
         </button>
       </form>
     </div>

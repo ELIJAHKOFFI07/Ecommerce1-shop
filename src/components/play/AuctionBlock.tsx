@@ -80,7 +80,7 @@ export function AuctionBlock({ product }: { product: Product }) {
       <div className="mt-4">
         <button
           onClick={create}
-          className="card-hard-sm press inline-flex items-center gap-1.5 rounded-full bg-surface px-3.5 py-1.5 text-sm font-display font-bold text-foreground transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+          className="press inline-flex items-center gap-1.5 rounded-sm bg-surface px-3.5 py-1.5 text-sm font-display font-bold text-foreground transition-all"
         >
           <Gavel className="h-4 w-4 text-accent" /> Mettre aux enchères
         </button>
@@ -92,12 +92,12 @@ export function AuctionBlock({ product }: { product: Product }) {
   const leading = myId != null && auction.current_bidder === myId;
 
   return (
-    <div className="card-hard rounded-3xl bg-surface p-4">
+    <div className="rounded-sm bg-surface p-4">
       <div className="flex items-center justify-between gap-2">
         <p className="flex items-center gap-2 font-display text-sm font-extrabold">
           <Gavel className="h-4 w-4 text-accent" /> Enchère en cours
         </p>
-        <span className="rounded-full border-2 border-border bg-sun px-2.5 py-0.5 text-[11px] font-bold">
+        <span className="rounded-sm border border-border bg-sun px-2.5 py-0.5 text-[11px] font-bold">
           {auctionRemainingLabel(auction.ends_at)}
         </span>
       </div>
@@ -116,12 +116,12 @@ export function AuctionBlock({ product }: { product: Product }) {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             min={minNextBid(auction)}
-            className="card-hard-sm w-32 rounded-full bg-surface px-3 py-1.5 text-sm outline-none transition-all focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[4px_4px_0_0_var(--accent)]"
+            className="w-32 rounded-sm bg-surface px-3 py-1.5 text-sm outline-none transition-all focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
           />
           <button
             onClick={bid}
             disabled={busy}
-            className="card-hard-sm press inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-sm font-display font-bold text-background transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-40"
+            className="press inline-flex items-center gap-1.5 rounded-sm bg-foreground px-3.5 py-1.5 text-sm font-display font-bold text-background transition-all disabled:opacity-40"
           >
             <Gavel className="h-4 w-4" />
             Enchérir (min {formatFcfa(minNextBid(auction))})

@@ -7,7 +7,6 @@ import { createClient } from "@/lib/backend/client";
 import { GoogleButton } from "@/components/play/GoogleButton";
 import {
   AuthSplit,
-  AUTH_IMAGES,
   authFieldPrimary,
   authSubmitPrimary,
 } from "@/components/auth/AuthSplit";
@@ -50,17 +49,12 @@ export default function RegisterPage() {
     return (
       <AuthSplit
         tone="primary"
-        image={AUTH_IMAGES.register}
-        imageAlt="Nouveau départ sur DreamTeamShop"
         kicker="Bienvenue à bord"
         title="Compte créé"
         subtitle="Une dernière étape avant de profiter de DreamTeamShop."
-        badge="100 points de bienvenue"
-        featureTitle="Rejoignez la communauté"
-        featureText="Achetez, vendez et brillez avec des milliers de membres en Côte d'Ivoire."
       >
         <div className="animate-rise text-center">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-primary/10">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-sm bg-primary/10">
             <PartyPopper className="h-8 w-8 text-primary" />
           </div>
           <p className="font-display mt-4 text-lg font-bold text-foreground">
@@ -83,16 +77,11 @@ export default function RegisterPage() {
   return (
     <AuthSplit
       tone="primary"
-      image={AUTH_IMAGES.register}
-      imageAlt="Nouveau départ sur DreamTeamShop"
       kicker="Rejoignez la team"
       title="Créer un compte"
       subtitle="Gratuit, et vous gagnez 100 points avec un code de parrainage."
-      badge="100 points de bienvenue"
-      featureTitle="Rejoignez la communauté"
-      featureText="Achetez, vendez et brillez avec des milliers de membres en Côte d'Ivoire."
     >
-      <div className="stagger space-y-3">
+      <div className="space-y-3">
         {/* Google en premier : le parcours en un clic évite de remplir cinq
             champs, et le compte est créé automatiquement à la première
             connexion. */}
@@ -104,7 +93,7 @@ export default function RegisterPage() {
           <span className="h-px flex-1 bg-border" />
         </div>
 
-        <form onSubmit={submit} className="stagger space-y-3">
+        <form onSubmit={submit} className="space-y-3">
           <input
             required
             value={username}
