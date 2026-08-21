@@ -6,8 +6,6 @@ import { Search as SearchIcon, X } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/play/ProductCard";
-import { CategoryWheel } from "@/components/play/CategoryWheel";
-import { CategoryWheelHorizontal } from "@/components/play/CategoryWheelHorizontal";
 import { ProductGridSkeleton } from "@/components/Skeleton";
 
 type Sort = "recent" | "price_asc" | "price_desc" | "popular";
@@ -110,7 +108,7 @@ function SearchInner() {
               <button
                 onClick={() => setQuery("")}
                 aria-label="Effacer la recherche"
- className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-surface-2 text-muted transition-colors hover:text-foreground"
+ className="grid h-6 w-6 shrink-0 place-items-center rounded-sm bg-surface-2 text-muted transition-colors hover:text-foreground"
               >
  <X className="h-3.5 w-3.5" />
               </button>
@@ -144,23 +142,49 @@ function SearchInner() {
         défilant collé à gauche de la grille — sticky pendant le défilement.
       */}
       {categories.length > 0 && (
- <div className="lg:hidden">
-          <CategoryWheelHorizontal
-            items={wheelItems}
-            selectedId={resolvedCategoryId}
-            onSelect={setCategoryId}
-          />
+        <div className="flex gap-2 overflow-x-auto pb-2 lg:hidden">
+          {wheelItems.map((wheelItem) => {
+            const active = wheelItem.id === resolvedCategoryId;
+            return (
+              <button
+                key={wheelItem.id ?? "all"}
+                onClick={() => setCategoryId(wheelItem.id)}
+                aria-pressed={active}
+                className={`press rounded-sm px-3 py-1 text-xs font-medium whitespace-nowrap transition-all ${
+                  active
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-surface text-muted hover:text-foreground"
+                }`}
+              >
+                {wheelItem.name}
+              </button>
+            );
+          })}
         </div>
       )}
 
- <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
+      <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
         {categories.length > 0 && (
- <aside className="hidden lg:sticky lg:top-20 lg:block">
-            <CategoryWheel
-              items={wheelItems}
-              selectedId={resolvedCategoryId}
-              onSelect={setCategoryId}
-            />
+          <aside className="hidden lg:sticky lg:top-20 lg:block">
+            <div className="flex flex-col gap-1">
+              {wheelItems.map((wheelItem) => {
+                const active = wheelItem.id === resolvedCategoryId;
+                return (
+                  <button
+                    key={wheelItem.id ?? "all"}
+                    onClick={() => setCategoryId(wheelItem.id)}
+                    aria-pressed={active}
+                    className={`press rounded-sm px-3 py-2 text-sm font-medium text-left transition-all ${
+                      active
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-surface text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {wheelItem.name}
+                  </button>
+                );
+              })}
+            </div>
           </aside>
         )}
 
@@ -176,7 +200,7 @@ function SearchInner() {
           ) : products.length === 0 ? (
  <p className="py-16 text-center text-muted">Aucun résultat.</p>
           ) : (
- <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+ <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-5 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {products.map((p) => (
                 <ProductCard key={p.id} product={p} hard />
               ))}

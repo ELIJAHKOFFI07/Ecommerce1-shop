@@ -26,8 +26,8 @@ import { ProductActions } from "@/components/play/ProductActions";
 import { ProductQna } from "@/components/play/ProductQna";
 import { HeaderSkeleton, ProductGridSkeleton } from "@/components/Skeleton";
 
-/// Bouton principal néo-brutal : aplat orange, trait encre 2px, ombre dure
-/// qui se plaque au survol (translate + suppression d'ombre).
+/// Bouton principal : aplat orange (bg-primary) avec retour tactile `press`
+/// (léger scale au clic). Pas de bordure ni ombre — cohérent avec le reste.
 const BTN_PRIMARY =
   " press inline-flex w-full items-center justify-center gap-2 rounded-sm bg-primary px-5 py-3 font-display text-sm font-bold text-primary-foreground transition-all  disabled:cursor-not-allowed disabled:opacity-50";
 
@@ -192,7 +192,7 @@ export default function ProductPage({
                   onClick={() => setImageIndex(i)}
                   aria-label={`Image ${i + 1} sur ${images.length}`}
                   aria-current={i === imageIndex}
- className={`press h-16 w-16 shrink-0 overflow-hidden rounded-sm border-2 transition-all ${
+ className={`press h-16 w-16 shrink-0 overflow-hidden rounded-sm border transition-all ${
                     i === imageIndex
                       ? "border-accent"
                       : "border-transparent hover:border-border"
@@ -355,7 +355,7 @@ export default function ProductPage({
                 </button>
                 <button
                   aria-label="Ajouter aux favoris"
- className="press grid h-12 w-12 shrink-0 place-items-center rounded-full bg-surface transition-all"
+ className="press grid h-12 w-12 shrink-0 place-items-center rounded-sm bg-surface transition-all"
                 >
  <Heart className="h-5 w-5" />
                 </button>
@@ -407,7 +407,7 @@ export default function ProductPage({
                     aria-pressed={variantId === v.id}
  className={` press rounded-sm px-3.5 py-1.5 text-sm font-display font-bold transition-all disabled:opacity-40 ${
                       variantId === v.id
-                        ? "translate-x-0.5 translate-y-0.5 bg-foreground text-background shadow-none"
+                        ? "bg-foreground text-background"
                         : "bg-surface text-muted  hover:text-foreground"
                     }`}
                   >
