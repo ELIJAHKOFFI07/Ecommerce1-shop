@@ -1,8 +1,5 @@
-"use client";
-
-import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { Reveal } from "./Reveal";
+import { Section, SectionHeading } from "@/components/ui/Section";
 
 const ITEMS: { question: string; answer: string }[] = [
   {
@@ -32,52 +29,30 @@ const ITEMS: { question: string; answer: string }[] = [
   },
 ];
 
-/// FAQ en accordéon : une seule question ouverte à la fois.
+/// FAQ en accordéon natif <details>/<summary> : aucune dépendance JS, aucune
+/// animation, accessible par défaut (clavier + lecteur d'écran). Le chevron
+/// pivote via la pseudo-classe `open` du groupe.
 export function Faq() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
   return (
-    <section id="faq" className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
-      <Reveal className="mb-10 text-center">
-        <p className="mb-3 font-display text-sm font-bold uppercase tracking-widest text-primary">
-          On te dit tout
-        </p>
-        <h2 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
-          Questions fréquentes
-        </h2>
-      </Reveal>
-
-      <div className="space-y-4">
-        {ITEMS.map((item, index) => {
-          const open = openIndex === index;
-          return (
-            <Reveal
-              key={item.question}
-              delay={index * 0.05}
-              className="card-hard-sm overflow-hidden rounded-2xl bg-card"
-            >
-              <div className={open ? "faq-item open" : "faq-item"}>
-                <button
-                  type="button"
-                  aria-expanded={open}
-                  onClick={() => setOpenIndex(open ? null : index)}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-display text-lg font-bold"
-                >
-                  {item.question}
-                  <ChevronDown className="faq-chevron h-5 w-5 shrink-0" strokeWidth={2.5} />
-                </button>
-                <div className="faq-panel">
-                  <div className="overflow-hidden">
-                    <p className="px-6 pb-5 leading-relaxed text-foreground/70">
-                      {item.answer}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          );
-        })}
+    <Section>
+      <SectionHeading
+        title="Questions fréquentes"
+        subtitle="On vous dit tout."
+      />
+      <div className="mx-auto max-w-3xl space-y-2">
+        {ITEMS.map((item) => (
+          <details key={item.question} className="group rounded-sm bg-surface px-5 py-4">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium">
+              {item.question}
+              <ChevronDown
+                className="h-5 w-5 shrink-0 text-muted transition-transform group-open:rotate-180"
+                strokeWidth={2}
+              />
+            </summary>
+            <p className="mt-3 text-sm leading-relaxed text-muted">{item.answer}</p>
+          </details>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }

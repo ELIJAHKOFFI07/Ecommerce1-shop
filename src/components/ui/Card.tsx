@@ -5,33 +5,34 @@ import type { ReactNode } from "react";
 /// CardHeader / CardContent / CardFooter) plutôt qu'avec un empilement de
 /// classes répété à chaque usage.
 ///
-/// Traduction des jetons de couleur — indispensable, les deux projets ne
-/// nomment pas les mêmes choses :
-///   leur `bg-card`            → notre `bg-surface`
-///   leur `bg-muted` (surface) → notre `bg-surface-2`
-///   leur `text-muted-foreground` → notre `text-muted`
-///   leur `text-primary`       → notre `text-accent`
-/// Utiliser `bg-muted` tel quel ici donnerait un fond gris-texte.
+/// Refonte minimaliste : plus de bordure dure ni d'ombre portée (style
+/// néo-brutal supprimé). Les cartes sont de simples aplats `bg-surface`,
+/// sans arrondi imposé, pour laisser au consommateur le soin de composer
+/// le rythme (padding, rayon, séparateurs). Traduction des jetons de
+/// couleur — indispensable, les deux projets ne nomment pas les mêmes
+/// choses : leur `bg-card` → notre `bg-surface`, leur `text-muted-foreground`
+/// → notre `text-muted`.
 
 export function Card({
   children,
   className = "",
-  accent,
-  hover = false,
+  variant = "default",
+  accent = false,
 }: {
   children: ReactNode;
   className?: string;
-  /// Filet de couleur en haut de carte (leur `border-t-4`), utilisé pour
-  /// distinguer des rubriques sans recourir à des fonds colorés.
-  accent?: string;
-  hover?: boolean;
+  /// `default` : aplat `bg-surface` à léger arrondi (4px). `minimal` : aplat
+  /// nu, sans arrondi ni padding — le consommateur contrôle tout le reste.
+  variant?: "default" | "minimal";
+  /// Filet de couleur discret en haut de carte (opt-in). Remplace l'ancien
+  /// `accent` toujours présent : ici rien n'est coloré sauf si demandé.
+  accent?: boolean;
 }) {
+  const base = variant === "minimal" ? "bg-surface" : "bg-surface rounded-sm";
   return (
     <div
-      className={`overflow-hidden rounded-2xl border border-border bg-surface ${
-        hover ? "lift" : ""
-      } ${className}`}
-      style={accent ? { borderTop: `3px solid ${accent}` } : undefined}
+      className={`${base} ${className}`}
+      style={accent ? { borderTop: "2px solid var(--accent)" } : undefined}
     >
       {children}
     </div>
@@ -78,22 +79,4 @@ export function CardFooter({
   className?: string;
 }) {
   return <div className={`p-6 pt-0 ${className}`}>{children}</div>;
-}
-
-/// Pastille ronde qui porte l'icône d'une rubrique.
-export function IconBadge({
-  children,
-  color,
-}: {
-  children: ReactNode;
-  color: string;
-}) {
-  return (
-    <span
-      className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full lg:h-16 lg:w-16"
-      style={{ backgroundColor: `${color}1f`, color }}
-    >
-      {children}
-    </span>
-  );
 }

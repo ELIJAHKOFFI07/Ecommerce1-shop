@@ -1,46 +1,36 @@
-import { Reveal } from "./Reveal";
-import { CtaButton } from "./Primitives";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { Section } from "@/components/ui/Section";
 
-/// Dernier appel à l'action avant le pied de page.
+/// Dernier appel à l'action : bannière pleine largeur sur fond encre. Les
+/// boutons y sont inversés (clair sur fond sombre) pour rester lisibles.
 export function FinalCta() {
   return (
-    <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
-      <Reveal className="card-hard relative overflow-hidden rounded-blob bg-primary px-6 py-16 text-center sm:p-20">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-15"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 30%, #fff 0 10px, transparent 11px),radial-gradient(circle at 80% 70%, #fff 0 8px, transparent 9px),radial-gradient(circle at 60% 15%, #fff 0 6px, transparent 7px)",
-            backgroundSize: "150px 150px",
-          }}
-        />
-        <h2 className="relative font-display text-4xl font-extrabold leading-tight tracking-tight text-primary-foreground sm:text-6xl">
-          Ta prochaine bonne affaire
-          <br />
-          t&apos;attend{" "}
-          <span className="inline-block -rotate-2 rounded-2xl bg-foreground px-3 text-sun">
-            déjà
-          </span>
-          .
+    <Section>
+      <div className="rounded-sm bg-foreground px-6 py-16 text-center text-background sm:px-10">
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          Votre prochaine bonne affaire vous attend.
         </h2>
-        <p className="relative mx-auto mt-6 max-w-xl text-lg text-primary-foreground/85">
-          Rejoins des milliers d&apos;Ivoiriens qui achètent malin, vendent
+        <p className="mx-auto mt-4 max-w-xl text-background/70">
+          Rejoignez des milliers d&apos;Ivoiriens qui achètent malin, vendent
           facile et négocient chaque jour.
         </p>
-        <div className="relative mt-10 flex flex-wrap justify-center gap-4">
-          <CtaButton href="#catalogue" variant="ink" size="lg">
-            Explorer
-          </CtaButton>
-          <CtaButton
-            href="#vendre"
-            variant="white"
-            size="lg"
-            withArrow={false}
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link
+            href="/play/search"
+            className="inline-flex items-center gap-2 rounded-sm bg-background px-6 py-3 text-base font-medium text-foreground hover:bg-background/90"
+          >
+            Explorer le catalogue
+            <ArrowRight className="h-4 w-4" strokeWidth={2} />
+          </Link>
+          <Link
+            href="/play/sell"
+            className="inline-flex items-center gap-2 rounded-sm border border-background/30 px-6 py-3 text-base font-medium text-background hover:bg-background/10"
           >
             Devenir vendeur
-          </CtaButton>
+          </Link>
         </div>
-      </Reveal>
-    </section>
+      </div>
+    </Section>
   );
 }

@@ -22,9 +22,12 @@ export function Section({
   id?: string;
 }) {
   const tones = {
+    /// `plain` : fond de page, aucun aplat.
     plain: "",
-    raised: "border-y border-border bg-surface-2/60",
-    fade: "bg-surface-2/40",
+    /// `raised` : aplat `bg-surface` pour séparer deux sections sans filet.
+    raised: "bg-surface",
+    /// `fade` : aplat léger, enchaîne deux blocs sans rupture visuelle.
+    fade: "bg-surface/50",
   };
 
   return (
@@ -95,7 +98,7 @@ export function Pill({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-muted ${className}`}
+      className={`inline-flex items-center gap-2 rounded-xs bg-surface-2 px-3 py-1.5 text-xs font-medium text-muted ${className}`}
     >
       {children}
     </span>

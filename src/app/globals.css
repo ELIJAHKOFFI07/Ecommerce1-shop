@@ -235,13 +235,15 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  /* Rayons plats (refonte minimaliste) : aucun arrondi massif. Le plus grand
+     rayon utilisable en dehors des pilules est --radius-sm (4px). Les valeurs
+     xl/2xl/3xl/4xl ne sont plus exposées : tout repose sur xs/sm/md/lg/full. */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
 }
 
 /* ---------------------------------------------------------------------------
@@ -365,21 +367,17 @@ body {
   .animate-rise,
   .animate-fade,
   .animate-float,
-  .animate-drift,
-  .stagger > * {
+  .animate-drift {
     animation: none !important;
     opacity: 1;
     transform: none;
   }
 
   .press,
-  .lift,
   .underline-grow::after {
     transition: none;
   }
-  .press:active,
-  .lift:hover,
-  .lift:active {
+  .press:active {
     transform: none;
   }
   .sheen:hover::after {
@@ -461,20 +459,6 @@ body {
   animation: drift 18s ease-in-out infinite;
 }
 
-/* Retards en cascade : les éléments d'une même rangée entrent l'un après
-   l'autre plutôt que d'un bloc. */
-.stagger > * {
-  animation: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.stagger > *:nth-child(1) { animation-delay: 0.04s; }
-.stagger > *:nth-child(2) { animation-delay: 0.08s; }
-.stagger > *:nth-child(3) { animation-delay: 0.12s; }
-.stagger > *:nth-child(4) { animation-delay: 0.16s; }
-.stagger > *:nth-child(5) { animation-delay: 0.2s; }
-.stagger > *:nth-child(6) { animation-delay: 0.24s; }
-.stagger > *:nth-child(7) { animation-delay: 0.28s; }
-.stagger > *:nth-child(8) { animation-delay: 0.32s; }
-
 /* Retour tactile au clic, sur tout élément interactif qui l'adopte. */
 .press {
   transition:
@@ -509,21 +493,6 @@ body {
 }
 .sheen:hover::after {
   animation: sheen 0.75s ease;
-}
-
-/* Carte qui se soulève au survol. */
-.lift {
-  transition:
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-}
-.lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.45);
-}
-.lift:active {
-  transform: translateY(-1px) scale(0.995);
 }
 
 /* Soulignement qui se déploie depuis la gauche. */
@@ -592,53 +561,15 @@ svg {
 
   --font-display: var(--font-bricolage);
   --font-body: var(--font-inter);
-
-  --shadow-hard: 6px 6px 0 0 var(--foreground);
-  --shadow-hard-sm: 4px 4px 0 0 var(--foreground);
-  --shadow-hard-orange: 8px 8px 0 0 var(--primary);
-
-  --radius-blob: 2.5rem;
 }
 
 /* ---------------------------------------------------------------------------
-   Trait cartoon en une classe : bordure encre 2px + ombre dure.
-   Remplace le trio `border-2 border-foreground shadow-hard*` répété sur chaque
-   carte et bouton de l'accueil — une seule classe, toujours la même couleur de
-   bordure (--border = encre), l'ombre portée suit --foreground / --primary.
-   Comme les autres utilitaires Tailwind, elles supportent les variantes
-   (hover:card-hard…) et peuvent être neutralisées (hover:shadow-none).
+   Utilitaires néo-brutaux (`card-hard*`, `shadow-hard*`, `radius-blob`) —
+   SUPPRIMÉS lors de la refonte minimaliste. Les pages play/auth qui les
+   référent encore (phase 2) perdent leur trait cartoon et seront migrées vers
+   les primitives `Card`/`button` minimalistes. Ne pas réintroduire ces classes
+   sans repasser l'ensemble du design system.
    --------------------------------------------------------------------------- */
-@utility card-hard {
-  border-width: 2px;
-  border-color: var(--border);
-  box-shadow: 6px 6px 0 0 var(--foreground);
-}
-
-@utility card-hard-sm {
-  border-width: 2px;
-  border-color: var(--border);
-  box-shadow: 4px 4px 0 0 var(--foreground);
-}
-
-@utility card-hard-orange {
-  border-width: 2px;
-  border-color: var(--border);
-  box-shadow: 8px 8px 0 0 var(--primary);
-}
-
-/* Variantes avec ombre jaune soleil ou crème : utiles sur les aplats foncés
-   (section bonus sur fond vert profond) où l'ombre encre passerait inaperçue. */
-@utility card-hard-sun {
-  border-width: 2px;
-  border-color: var(--border);
-  box-shadow: 6px 6px 0 0 var(--sun);
-}
-
-@utility card-hard-cream {
-  border-width: 2px;
-  border-color: var(--border);
-  box-shadow: 6px 6px 0 0 var(--background);
-}
 
 body {
   font-family: var(--font-body);
@@ -654,24 +585,6 @@ body {
   color: #fff;
 }
 
-/* ---- Bandeau défilant ---- */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 28s linear infinite;
-}
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
 /* ---- Masquer la barre de défilement (nav horizontale du header) ---- */
 .scrollbar-hide {
   scrollbar-width: none;
@@ -681,77 +594,7 @@ body {
   display: none;
 }
 
-/* ---- Mot surligné façon marqueur ---- */
-.marker {
-  position: relative;
-  white-space: nowrap;
-}
-.marker > span {
-  position: relative;
-  z-index: 1;
-}
-.marker::after {
-  content: "";
-  position: absolute;
-  left: -0.06em;
-  right: -0.06em;
-  bottom: 0.08em;
-  height: 0.42em;
-  background: var(--sun);
-  border-radius: 0.2em;
-  z-index: 0;
-  transform: skew(-8deg) rotate(-1deg);
-}
-.marker.orange::after {
-  background: var(--primary);
-}
-.marker.vert::after {
-  background: var(--vert-soft);
-}
-
-/* ---- Blob / arche du héros ---- */
-.hero-arch {
-  border-radius: 999px 999px 2.5rem 2.5rem;
-}
-
-/* ---- Motif wax discret ---- */
-.wax-pattern {
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(255, 107, 0, 0.1) 0 8px, transparent 9px),
-    radial-gradient(circle at 70% 60%, rgba(0, 158, 96, 0.1) 0 8px, transparent 9px),
-    radial-gradient(circle at 45% 85%, rgba(255, 199, 0, 0.12) 0 6px, transparent 7px);
-  background-size: 140px 140px;
-}
-
-/* ---- Apparition au défilement ---- */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-.reveal.in {
-  opacity: 1;
-  transform: none;
-}
-
-/* ---- Flottement des cartes du héros ---- */
-@keyframes floaty {
-  0%,
-  100% {
-    transform: translateY(0) rotate(var(--r, 0deg));
-  }
-  50% {
-    transform: translateY(-12px) rotate(var(--r, 0deg));
-  }
-}
-.floaty {
-  animation: floaty 5s ease-in-out infinite;
-}
-.floaty-slow {
-  animation: floaty 7s ease-in-out infinite;
-}
+/* ---- Motif / arche / marqueur / révélation : supprimés (refonte minimaliste) ---- */
 
 /* ---- Roue de la chance ---- */
 #wheel {
@@ -805,66 +648,15 @@ body {
   }
 }
 
-/* ---- Cartes à ombre dure ---- */
-.card-hover {
-  transition:
-    transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
-    box-shadow 0.35s;
-}
-.card-hover:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 8px 8px 0 0 var(--foreground);
-}
+/* ---- Cartes à ombre dure : supprimées (refonte minimaliste) ---- */
 .heart-btn.active svg {
   fill: var(--primary);
   stroke: var(--primary);
 }
 
-/* ---- FAQ ---- */
-.faq-panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-.faq-item.open .faq-panel {
-  grid-template-rows: 1fr;
-}
-.faq-item.open .faq-chevron {
-  transform: rotate(180deg);
-}
-.faq-chevron {
-  transition: transform 0.3s;
-}
+/* ---- FAQ : désormais en <details>/<summary> natif, sans animation ---- */
 
-/* ---- Impulsion (pastille « live » du héros) ---- */
-@keyframes pulse-ring {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.5);
-  }
-  100% {
-    box-shadow: 0 0 0 18px rgba(255, 107, 0, 0);
-  }
-}
-.pulse-ring {
-  animation: pulse-ring 1.8s ease-out infinite;
-}
-
-/* ---- Réduire les animations ---- */
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  .marquee-track {
-    animation: none;
-  }
-  .floaty,
-  .floaty-slow,
-  .pulse-ring {
-    animation: none;
-  }
-}
+/* ---- Impulsion / flottement / marqueur : supprimés (refonte minimaliste) ---- */
 
 
 

@@ -224,16 +224,8 @@ src/
 - **Ne jamais lancer `npx next build` pendant que `npm run dev` tourne** :
   les deux processus écrivent dans le même dossier `.next` et le build
   corrompt le cache du dev server (manifests de routes invalides → 404 sur
-  toutes les routes). Constaté en session : le simple redémarrage ne suffit
-  pas, il faut `rm -rf .next` avant de relancer `npm run dev`.
-- **Le watcher Turbopack peut manquer une modification de `globals.css`** :
-  le dev server continue alors de servir l'ancienne palette compilée (le
-  fichier `src_app_globals_css_*.single.css` garde son ancien timestamp).
-  Symptômes : couleurs/bordures fausses alors que la source est bonne, et
-  `touch` ne force rien (le cache se base sur le contenu). Vérifier le
-  timestamp du CSS compilé ; en cas de doute, `rm -rf .next` + redémarrage.
-- **Pas de suite de tests automatisés** dans le projet
-  (`Aucune convention de test clairement établie dans la codebase`).
+  toutes les routes).
+
 - **ESLint** : config `eslint-config-next` (core-web-vitals + typescript),
   `npm run lint` = `eslint`. Certains patterns volontaires sont désactivés
   ligne par ligne avec un commentaire justifiant pourquoi (`no-img-element`,
@@ -241,29 +233,15 @@ src/
 
 ## Direction produit (vitrine publique)
 
+- L'objectif ici est de s'inspirer du design minimalist de https://befalo.store/ donc ici on va devoir 
+quasiment tout reprendre en terme de direction de l'interface avec peu de couleur, des effets minimalistes
+
 - La vitrine (`/`) reprend la structure de référence **Turbodeal** : bande
   d'accroche pleine largeur, rubriques en cartes à filet coloré, tableau des
   avantages, catalogue, citation + appel final (commentaires de
   `src/app/page.tsx`). Les primitives `Card`/`Section` viennent de
   `shirt-shop`/`shopCommerce`.
 - **Travail en cours (TODO.md)** : amélioration de la vitrine sur le modèle
-  **Back Market** — voir `analyse-design-inspiration.md` (architecture en 12
-  blocs, réassurance précoce, couleur = signal, densité maîtrisée). Le header
-  doit se masquer au scroll down et réapparaître au scroll up avec une
-  transition fluide, visible sur mobile.
 
-## Workflow de feature (bonus)
 
-Sur demande d'une nouvelle fonctionnalité : documenter d'abord la stratégie
-(outils, librairies, fonctions), puis créer un plan `[FEATURE-NAME].plan.md`
-via le skill `writing-plans`, mis à jour à chaque modification, avec statut
-`EN COURS` ou `COMPLETED` dans le titre.
 
-## Zones à vérifier
-
-- **Composant `FloatingBag` (3D)** : présent mais non branché dans les pages
-  actuelles — `Non établi dans la codebase` s'il est actif quelque part.
-- **`framer-motion`** n'est utilisé que dans `components/marketing/`
-  (`Reveal`, `Testimonial`) ; les composants `play/` utilisent le CSS natif.
-- **Notification push / FCM** (`lib/push.ts`, `PushToggle`) : hors périmètre
-  interface, non détaillé ici.
