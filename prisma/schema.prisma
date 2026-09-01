@@ -1,0 +1,809 @@
+// Schéma Postgres — traduit table par table depuis supabase/schema.sql et
+// supabase/SETUP_COMPLET.sql (39 tables). Voir NEXTJS_BACKEND_MIGRATION.md.
+//
+// Conventions :
+//   - Toutes les clés sont des uuid (@db.Uuid), comme dans le schéma Supabase
+//     d'origine — ça simplifie la reprise des données.
+//   - Les colonnes `check (x in (...))` deviennent des enums Postgres natifs
+//     via Prisma : contrainte réelle en base, pas seulement côté code.
+//   - Les montants sont des Int (FCFA, jamais de décimales) — jamais de
+//     Float sur de l'argent.
+//   - `auth.users` + `public.profiles` de Supabase sont fusionnées en un
+//     seul modèle User, complété par les modèles standard de l'adaptateur
+//     Prisma d'Auth.js (Account, Session, VerificationToken).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma 7 : plus de `url` ici — la connexion vient de prisma.config.ts
+// (pour `prisma migrate`) et de l'adaptateur passé au constructeur
+// PrismaClient (pour l'exécution, voir src/lib/db.ts).
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// Auth.js — modèles standard de l'adaptateur Prisma
+// ============================================================
+
+model Account {
+  id                String  @id @default(uuid()) @db.Uuid
+  userId            String  @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionToken String   @unique
+  userId       String   @db.Uuid
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================================
+// Comptes — fusion auth.users + profiles
+// ============================================================
+
+enum ReportTargetType {
+  product
+  user
+  shop
+}
+
+enum ReportStatus {
+  open
+  resolved
+  dismissed
+}
+
+model User {
+  id                String    @id @default(uuid()) @db.Uuid
+  email             String?   @unique
+  emailVerified     DateTime?
+  /// Hash bcrypt — null pour un compte créé uniquement via Google.
+  passwordHash      String?
+  /// Doit changer son mot de passe à la prochaine connexion (réinitialisation admin).
+  mustChangePassword Boolean  @default(false)
+
+  username     String  @default("")
+  fullName     String?
+  avatarUrl    String?
+  image        String? // alias attendu par Auth.js (photo de profil Google)
+  phone        String?
+  whatsapp     String?
+  city         String?
+  bio          String?
+  isAdmin      Boolean @default(false)
+  isSeller     Boolean @default(false)
+  referralCode String? @unique
+  referredById String? @db.Uuid
+  referredBy   User?   @relation("Referrals", fields: [referredById], references: [id])
+  referredUsers User[] @relation("Referrals")
+  loyaltyPoints Int    @default(0)
+  fcmToken     String?
+  createdAt    DateTime @default(now())
+
+  accounts Account[]
+  sessions Session[]
+
+  shop                 Shop?
+  productsSelling      Product[]          @relation("ProductSeller")
+  favorites            Favorite[]
+  follows              Follow[]
+  blocking             Block[]            @relation("Blocker")
+  blockedBy            Block[]            @relation("Blocked")
+  recentlyViewed       RecentlyViewed[]
+  addresses            Address[]
+  ordersBuying         Order[]
+  reviews              Review[]
+  conversationsAsBuyer Conversation[]     @relation("ConversationBuyer")
+  conversationsAsSeller Conversation[]    @relation("ConversationSeller")
+  messages             Message[]
+  offers               Offer[]
+  notifications        Notification[]
+  wallet               Wallet?
+  reports              Report[]
+  referralsGiven       Referral[]         @relation("Referrer")
+  referralReceived     Referral?          @relation("Referred")
+  spinRewards          SpinReward[]
+  priceAlerts          PriceAlert[]
+  productQuestions     ProductQuestion[]
+  wishlists            Wishlist[]
+  storyViews           ShopStoryView[]
+  bids                 Bid[]
+  auctionsWon          Auction[]          @relation("AuctionWinner")
+  stockMovements       StockMovement[]
+
+  @@index([referredById])
+}
+
+// ============================================================
+// Boutiques et catalogue
+// ============================================================
+
+model Shop {
+  id                String   @id @default(uuid()) @db.Uuid
+  ownerId           String   @unique @db.Uuid
+  owner             User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name              String
+  slug              String   @unique
+  description       String?
+  logoUrl           String?
+  bannerUrl         String?
+  city              String?
+  phone             String?
+  whatsapp          String?
+  identityVerified  Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  products      Product[]
+  follows       Follow[]
+  posts         ShopPost[]
+  coupons       Coupon[]
+  orders        Order[]
+  reviews       Review[]
+  offers        Offer[]
+  productBoosts ProductBoost[]
+  stories       ShopStory[]
+  auctions      Auction[]
+}
+
+model Category {
+  id       String     @id @default(uuid()) @db.Uuid
+  name     String
+  slug     String     @unique
+  icon     String     @default("🛍️")
+  imageUrl String?
+  parentId String?    @db.Uuid
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
+  position Int        @default(0)
+
+  products Product[]
+}
+
+enum ProductCondition {
+  neuf
+  occasion
+  reconditionne
+}
+
+enum ProductStatus {
+  active
+  paused
+  sold
+  removed
+  pending_review
+}
+
+model Product {
+  id              String            @id @default(uuid()) @db.Uuid
+  shopId          String            @db.Uuid
+  shop            Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  sellerId        String            @db.Uuid
+  seller          User              @relation("ProductSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  categoryId      String?           @db.Uuid
+  category        Category?         @relation(fields: [categoryId], references: [id])
+  title           String
+  description     String            @default("")
+  /// FCFA, entier, >= 100 (contrainte reprise du schéma d'origine).
+  price           Int
+  compareAtPrice  Int?
+  stock           Int               @default(0)
+  condition       ProductCondition  @default(neuf)
+  city            String?
+  status          ProductStatus     @default(active)
+  isFlash         Boolean           @default(false)
+  flashEndsAt     DateTime?
+  favoritesCount  Int               @default(0)
+  viewsCount      Int               @default(0)
+  createdAt       DateTime          @default(now())
+
+  images         ProductImage[]
+  variants       ProductVariant[]
+  favorites      Favorite[]
+  recentlyViewed RecentlyViewed[]
+  orderItems     OrderItem[]
+  reviews        Review[]
+  conversations  Conversation[]
+  offers         Offer[]
+  priceAlerts    PriceAlert[]
+  productBoosts  ProductBoost[]
+  questions      ProductQuestion[]
+  wishlistItems  WishlistItem[]
+  stories        ShopStory[]
+  auction        Auction?
+  priceHistory   PriceHistory[]
+  stockMovements StockMovement[]
+
+  @@index([shopId])
+  @@index([status, createdAt])
+  @@index([categoryId])
+}
+
+model ProductImage {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  position  Int     @default(0)
+
+  @@index([productId])
+}
+
+model ProductVariant {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  price     Int?
+  stock     Int     @default(0)
+
+  orderItems     OrderItem[]
+  stockMovements StockMovement[]
+
+  @@index([productId])
+}
+
+// ============================================================
+// Social
+// ============================================================
+
+model Favorite {
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String   @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, productId])
+}
+
+model Follow {
+  followerId String   @db.Uuid
+  follower   User     @relation(fields: [followerId], references: [id], onDelete: Cascade)
+  shopId     String   @db.Uuid
+  shop       Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([followerId, shopId])
+}
+
+model ShopPost {
+  id        String   @id @default(uuid()) @db.Uuid
+  shopId    String   @db.Uuid
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  content   String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+
+  @@index([shopId, createdAt])
+}
+
+model Block {
+  blockerId String   @db.Uuid
+  blocker   User     @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockedId String   @db.Uuid
+  blocked   User     @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([blockerId, blockedId])
+}
+
+model RecentlyViewed {
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String   @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  viewedAt  DateTime @default(now())
+
+  @@id([userId, productId])
+  @@index([productId, viewedAt])
+}
+
+// ============================================================
+// Commerce
+// ============================================================
+
+model DeliveryZone {
+  id        String @id @default(uuid()) @db.Uuid
+  name      String
+  baseFee   Int    @default(0)
+  freeAbove Int    @default(0)
+
+  orders Order[]
+}
+
+model Address {
+  id        String  @id @default(uuid()) @db.Uuid
+  userId    String  @db.Uuid
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String  @default("Adresse")
+  fullName  String
+  phone     String
+  city      String
+  zoneId    String? @db.Uuid
+  details   String  @default("")
+  isDefault Boolean @default(false)
+
+  @@index([userId])
+}
+
+enum CouponType {
+  percent
+  fixed
+}
+
+model Coupon {
+  id             String     @id @default(uuid()) @db.Uuid
+  code           String     @unique
+  type           CouponType @default(percent)
+  /// >0 (contrainte reprise du schéma d'origine).
+  value          Int
+  minOrderAmount Int        @default(0)
+  expiresAt      DateTime?
+  maxUses        Int?
+  usedCount      Int        @default(0)
+  active         Boolean    @default(true)
+  shopId         String?    @db.Uuid
+  shop           Shop?      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  preparing
+  shipped
+  delivered
+  cancelled
+  refunded
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+model Order {
+  id              String        @id @default(uuid()) @db.Uuid
+  buyerId         String        @db.Uuid
+  buyer           User          @relation(fields: [buyerId], references: [id])
+  shopId          String        @db.Uuid
+  shop            Shop          @relation(fields: [shopId], references: [id])
+  zoneId          String?       @db.Uuid
+  zone            DeliveryZone? @relation(fields: [zoneId], references: [id])
+  status          OrderStatus   @default(pending)
+  subtotal        Int
+  discount        Int           @default(0)
+  deliveryFee     Int           @default(0)
+  total           Int
+  paymentMethod   String        @default("cod")
+  paymentStatus   PaymentStatus @default(pending)
+  /// Copie figée de l'adresse au moment de la commande — jamais recalculée
+  /// depuis l'adresse actuelle de l'utilisateur, qui peut changer après coup.
+  addressSnapshot Json          @default("{}")
+  couponCode      String?
+  createdAt       DateTime      @default(now())
+
+  items          OrderItem[]
+  events         OrderEvent[]
+  reviews        Review[]
+  walletTxns     WalletTransaction[]
+  pickupCode     OrderPickupCode?
+
+  @@index([buyerId, createdAt])
+  @@index([shopId, createdAt])
+}
+
+model OrderItem {
+  id          String          @id @default(uuid()) @db.Uuid
+  orderId     String          @db.Uuid
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String?         @db.Uuid
+  product     Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variantId   String?         @db.Uuid
+  variant     ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  title       String
+  variantName String?
+  unitPrice   Int
+  /// >0 (contrainte reprise du schéma d'origine).
+  quantity    Int
+  imageUrl    String?
+
+  @@index([orderId])
+}
+
+model OrderEvent {
+  id        String   @id @default(uuid()) @db.Uuid
+  orderId   String   @db.Uuid
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status    String
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+}
+
+/// Jamais exposé par une route accessible au client — comparé uniquement
+/// côté serveur dans confirmDelivery. Voir NEXTJS_BACKEND_MIGRATION.md §4.
+model OrderPickupCode {
+  orderId   String   @id @db.Uuid
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  code      String
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(uuid()) @db.Uuid
+  orderId   String   @db.Uuid
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String   @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  shopId    String   @db.Uuid
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  authorId  String   @db.Uuid
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  /// 1 à 5 (contrainte reprise du schéma d'origine).
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@unique([orderId, productId, authorId])
+}
+
+// ============================================================
+// Messagerie et négociation
+// ============================================================
+
+model Conversation {
+  id            String    @id @default(uuid()) @db.Uuid
+  buyerId       String    @db.Uuid
+  buyer         User      @relation("ConversationBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId      String    @db.Uuid
+  seller        User      @relation("ConversationSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  productId     String?   @db.Uuid
+  product       Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  lastMessage   String?
+  lastMessageAt DateTime?
+
+  messages Message[]
+
+  @@unique([buyerId, sellerId, productId])
+}
+
+model Message {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @db.Uuid
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String       @db.Uuid
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content        String
+  imageUrl       String?
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+enum OfferStatus {
+  pending
+  accepted
+  declined
+  countered
+  expired
+}
+
+model Offer {
+  id            String      @id @default(uuid()) @db.Uuid
+  productId     String      @db.Uuid
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  buyerId       String      @db.Uuid
+  buyer         User        @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  shopId        String      @db.Uuid
+  shop          Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  /// >0 (contrainte reprise du schéma d'origine).
+  amount        Int
+  counterAmount Int?
+  status        OfferStatus @default(pending)
+  createdAt     DateTime    @default(now())
+
+  @@index([productId])
+  @@index([buyerId])
+}
+
+// ============================================================
+// Notifications, portefeuille, système
+// ============================================================
+
+model Notification {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String    @default("info")
+  title     String
+  body      String    @default("")
+  data      Json      @default("{}")
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Wallet {
+  userId  String @id @db.Uuid
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// >= 0 — appliqué en base ET revérifié dans chaque route qui débite
+  /// (voir NEXTJS_BACKEND_MIGRATION.md §4 : plus de garde-fou en mémoire
+  /// nécessaire, une vraie transaction Postgres suffit).
+  balance Int    @default(0)
+
+  transactions WalletTransaction[]
+}
+
+enum WalletTxnKind {
+  sale_credit
+  withdrawal
+  refund
+  referral_bonus
+}
+
+model WalletTransaction {
+  id           String        @id @default(uuid()) @db.Uuid
+  walletUserId String        @db.Uuid
+  wallet       Wallet        @relation(fields: [walletUserId], references: [userId], onDelete: Cascade)
+  amount       Int
+  kind         WalletTxnKind
+  orderId      String?       @db.Uuid
+  order        Order?        @relation(fields: [orderId], references: [id])
+  note         String?
+  createdAt    DateTime      @default(now())
+
+  @@index([walletUserId, createdAt])
+}
+
+model Report {
+  id         String           @id @default(uuid()) @db.Uuid
+  reporterId String           @db.Uuid
+  reporter   User             @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  targetType ReportTargetType
+  targetId   String           @db.Uuid
+  reason     String
+  details    String?
+  status     ReportStatus     @default(open)
+  createdAt  DateTime         @default(now())
+
+  @@index([status, createdAt])
+}
+
+model Referral {
+  id           String   @id @default(uuid()) @db.Uuid
+  referrerId   String   @db.Uuid
+  referrer     User     @relation("Referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referredId   String   @unique @db.Uuid
+  referred     User     @relation("Referred", fields: [referredId], references: [id], onDelete: Cascade)
+  code         String
+  rewardPoints Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  @@index([referrerId])
+}
+
+enum SpinPrizeKind {
+  points
+  coupon
+  nothing
+}
+
+model SpinReward {
+  id         String        @id @default(uuid()) @db.Uuid
+  userId     String        @db.Uuid
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prizeKind  SpinPrizeKind
+  prizeValue Int           @default(0)
+  couponCode String?
+  createdAt  DateTime      @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model PriceAlert {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String   @db.Uuid
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId        String   @db.Uuid
+  product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  priceAtCreation  Int
+  notified         Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+model ProductBoost {
+  id        String   @id @default(uuid()) @db.Uuid
+  productId String   @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  shopId    String   @db.Uuid
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  cost      Int
+  startsAt  DateTime @default(now())
+  endsAt    DateTime
+  createdAt DateTime @default(now())
+
+  @@index([endsAt])
+}
+
+model ProductQuestion {
+  id         String    @id @default(uuid()) @db.Uuid
+  productId  String    @db.Uuid
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  authorId   String    @db.Uuid
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  question   String
+  answer     String?
+  answeredAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([productId, createdAt])
+}
+
+model Wishlist {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  createdAt DateTime @default(now())
+
+  items WishlistItem[]
+
+  @@index([userId])
+}
+
+model WishlistItem {
+  wishlistId String   @db.Uuid
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  productId  String   @db.Uuid
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  addedAt    DateTime @default(now())
+
+  @@id([wishlistId, productId])
+}
+
+model ShopStory {
+  id        String   @id @default(uuid()) @db.Uuid
+  shopId    String   @db.Uuid
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  caption   String?
+  productId String?  @db.Uuid
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  /// Calculé côté application (createdAt + 24h) à l'insertion — Postgres
+  /// seul ne sait pas faire `now() + interval` comme défaut de colonne via
+  /// Prisma ; la route de création le pose explicitement.
+  expiresAt DateTime
+
+  views ShopStoryView[]
+
+  @@index([shopId, createdAt])
+}
+
+model ShopStoryView {
+  storyId  String    @db.Uuid
+  story    ShopStory @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  viewerId String    @db.Uuid
+  viewer   User      @relation(fields: [viewerId], references: [id], onDelete: Cascade)
+  viewedAt DateTime  @default(now())
+
+  @@id([storyId, viewerId])
+}
+
+// ============================================================
+// Enchères
+// ============================================================
+
+enum AuctionStatus {
+  active
+  ended
+  cancelled
+}
+
+model Auction {
+  id             String        @id @default(uuid()) @db.Uuid
+  productId      String        @unique @db.Uuid
+  product        Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  shopId         String        @db.Uuid
+  shop           Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  /// >0 (contrainte reprise du schéma d'origine).
+  startingPrice  Int
+  currentBid     Int?
+  currentBidderId String?      @db.Uuid
+  currentBidder  User?         @relation("AuctionWinner", fields: [currentBidderId], references: [id])
+  bidsCount      Int           @default(0)
+  status         AuctionStatus @default(active)
+  endsAt         DateTime
+  createdAt      DateTime      @default(now())
+
+  bids Bid[]
+
+  @@index([status, endsAt])
+}
+
+model Bid {
+  id        String   @id @default(uuid()) @db.Uuid
+  auctionId String   @db.Uuid
+  auction   Auction  @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  bidderId  String   @db.Uuid
+  bidder    User     @relation(fields: [bidderId], references: [id], onDelete: Cascade)
+  amount    Int
+  createdAt DateTime @default(now())
+
+  @@index([auctionId, amount])
+}
+
+model PriceHistory {
+  id        String   @id @default(uuid()) @db.Uuid
+  productId String   @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  price     Int
+  createdAt DateTime @default(now())
+
+  @@index([productId, createdAt])
+}
+
+// ============================================================
+// Back-office
+// ============================================================
+
+/// Singleton — une seule ligne, id fixe. Créée au premier démarrage par la
+/// route qui la lit si elle n'existe pas encore (voir src/lib/settings.ts).
+model PlatformSettings {
+  id                 Int      @id @default(1)
+  commissionPercent  Int      @default(5)
+  minWithdrawal      Int      @default(5000)
+  supportPhone       String?
+  supportEmail       String?
+  announcement       String?
+  announcementActive Boolean  @default(false)
+  updatedAt          DateTime @updatedAt
+}
+
+model StockMovement {
+  id        String          @id @default(uuid()) @db.Uuid
+  productId String          @db.Uuid
+  product   Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variantId String?         @db.Uuid
+  variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  delta     Int
+  reason    String
+  createdById String?       @db.Uuid
+  createdBy User?           @relation(fields: [createdById], references: [id])
+  createdAt DateTime        @default(now())
+
+  @@index([productId, createdAt])
+}
