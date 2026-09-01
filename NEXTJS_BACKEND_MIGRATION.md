@@ -100,7 +100,34 @@ telles quelles de Supabase) :
       même VPS)
 - [x] `src/lib/db.ts` — client Prisma singleton
 - [x] Auth.js : `src/lib/auth.ts`, Google + identifiants, adaptateur Prisma
-- [ ] Routes API — aucune écrite pour l'instant, à faire dans l'ordre du §3
-- [ ] Bascule des composants existants vers `fetch("/api/...")`
+- [x] **Routes API — les 29 RPC de l'inventaire sont toutes portées**
+      (`src/app/api/**/route.ts`), plus la gestion admin des comptes
+      (création/rôle/suppression/réinitialisation de mot de passe,
+      auparavant sur l'API admin Supabase). `tsc`, `eslint` et
+      `next build` passent, 58 pages + 32 routes API générées sans conflit.
+      **Aucune testée contre une vraie base** — le Postgres du VPS n'existe
+      pas encore, tout n'a été validé qu'à la compilation.
+  - Commandes : `placeOrder`, `advanceOrderStatus`, `confirmDelivery` —
+    transaction Postgres réelle + `FOR UPDATE`, `applyOrderTransition`
+    (`src/lib/orderTransition.ts`) partagée entre les deux routes qui font
+    évoluer une commande, pour ne pas dupliquer la machine à états.
+  - Offres, enchères (`placeBid` verrouille la ligne Auction — plus besoin
+    du verrou en mémoire de la tentative Parse), portefeuille (retrait,
+    points, roue, mise en avant — verrouillage `FOR UPDATE`/verrou
+    consultatif selon le cas), parrainage (classement et rang en vrai
+    `GROUP BY` côté base), social (conversations, messages, questions,
+    stories, vues), back-office (stats, rapports, paramètres, ajustement de
+    stock, rôles avec garde-fou anti-auto-démotion).
+  - `src/lib/requireAuth.ts`, `src/lib/apiError.ts`, `src/lib/settings.ts` :
+    les trois helpers partagés par toutes les routes (auth, erreurs
+    typées, paramètres plateforme avec un seul point de lecture — trois
+    copies divergentes de cette dernière logique avaient existé côté
+    Parse avant d'être unifiées, unifiée dès le départ ici).
+- [ ] Bascule des composants existants vers `fetch("/api/...")` — aucun
+      composant ne consomme encore ces routes, ils appellent toujours
+      Supabase
 - [ ] Fichiers, temps réel (voir §5)
 - [ ] Reprise des données
+- [ ] **Tester contre un Postgres réel** une fois le VPS prêt — priorité
+      avant toute bascule, en particulier `placeOrder` (verrouillage
+      multi-lignes trié pour éviter les interblocages) et `placeBid`

@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { randomInt } from "crypto";
-import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Prisma } from "@prisma/client";
+import { requireUser } from "@/lib/requireAuth";
+import { ApiError, withApiErrors } from "@/lib/apiError";
 
 /// placeOrder — équivalent de la RPC place_order de Supabase.
 ///
@@ -17,11 +18,9 @@ import { Prisma } from "@prisma/client";
 /// identifiants et quantités en sont tirés — prix, remise, frais et total
 /// sont relus et recalculés ici.
 export async function POST(request: Request) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Non connecté" }, { status: 401 });
-  }
-  const userId = session.user.id;
+  return withApiErrors(async () => {
+  const user = await requireUser();
+  const userId = user.id;
 
   const body = await request.json();
   const { items, address, zoneId, deliveryMethod, paymentMethod, couponCode } = body as {
@@ -34,11 +33,10 @@ export async function POST(request: Request) {
   };
 
   if (!Array.isArray(items) || items.length === 0) {
-    return NextResponse.json({ error: "Panier vide" }, { status: 400 });
+    throw new ApiError(400, "Panier vide");
   }
 
-  try {
-    const orderIds = await db.$transaction(async (tx) => {
+  const orderIds = await db.$transaction(async (tx) => {
       // ---- Verrouillage des produits concernés, dans un ordre stable ----
       // Trier par id avant de verrouiller est ce qui évite les interblocages
       // (deadlocks) entre deux commandes qui portent sur les mêmes produits
@@ -200,18 +198,5 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ orderIds });
-  } catch (err) {
-    if (err instanceof ApiError) return NextResponse.json({ error: err.message }, { status: err.status });
-    console.error("placeOrder:", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
-  }
-}
-
-class ApiError extends Error {
-  constructor(
-    public status: number,
-    message: string,
-  ) {
-    super(message);
-  }
+  });
 }
