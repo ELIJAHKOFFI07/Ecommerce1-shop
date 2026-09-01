@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireUser } from "@/lib/requireAuth";
 import { ApiError, withApiErrors } from "@/lib/apiError";
 import { applyOrderTransition } from "@/lib/orderTransition";
+import { TRANSACTION_OPTIONS } from "@/lib/transactionOptions";
 
 /// confirmDelivery — équivalent de la RPC confirm_delivery.
 ///
@@ -25,8 +26,9 @@ export async function POST(request: Request, ctx: { params: Promise<{ id: string
       throw new ApiError(400, "Code de retrait incorrect");
     }
 
-    await db.$transaction((tx) =>
-      applyOrderTransition(tx, order, "delivered", "Livraison confirmée par code de retrait", "seller"),
+    await db.$transaction(
+      (tx) => applyOrderTransition(tx, order, "delivered", "Livraison confirmée par code de retrait", "seller"),
+      TRANSACTION_OPTIONS,
     );
 
     return NextResponse.json({ ok: true });
