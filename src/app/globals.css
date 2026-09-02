@@ -259,21 +259,30 @@
    `max-w-[1440px]`) ne suivent pas — c'est voulu : ce sont des dimensions
    physiques, pas typographiques.
    --------------------------------------------------------------------------- */
-@media (min-width: 1024px) {
-  html {
-    font-size: 17px;
-  }
+/* Base relevée de 16 à 17 px : le client trouvait les textes trop petits, y
+   compris sur téléphone où la base par défaut du navigateur s'appliquait.
+   Comme Tailwind exprime tout en `rem`, ce seul réglage grossit textes,
+   marges et hauteurs de façon proportionnelle — inutile de reprendre chaque
+   composant. */
+html {
+  font-size: 17px;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   html {
     font-size: 18px;
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1280px) {
   html {
     font-size: 19px;
+  }
+}
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 20px;
   }
 }
 

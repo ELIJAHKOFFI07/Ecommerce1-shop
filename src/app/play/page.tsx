@@ -62,13 +62,13 @@ export default function PlayHome() {
       {/* -------------------------------------------------------------- */}
       <section className="space-y-4">
         <form onSubmit={submitSearch} className="relative">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher un produit…"
             aria-label="Rechercher un produit"
-            className="rounded-sm w-full border border-border bg-surface py-3.5 pl-12 pr-4 text-base outline-none transition-colors placeholder:text-muted-foreground focus:border-primary"
+            className="rounded-sm w-full border border-border bg-surface py-4 pl-14 pr-4 text-lg outline-none transition-colors placeholder:text-muted-foreground focus:border-primary"
           />
         </form>
 
@@ -116,7 +116,10 @@ export default function PlayHome() {
             Aucun produit pour le moment.
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4">
+          // Un produit par ligne : chaque cadre est large, l'image respire et
+          // le prix se lit sans effort. Une grille dense obligeait à plisser
+          // les yeux sur des vignettes de 150 px.
+          <div className="flex flex-col gap-5">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -139,12 +142,12 @@ function SectionTitle({
 }) {
   return (
     <div className="flex items-end justify-between gap-4">
-      <h2 className="font-display text-xl font-extrabold tracking-tight lg:text-2xl">
+      <h2 className="font-display text-2xl font-extrabold tracking-tight lg:text-3xl">
         {children}
       </h2>
       <Link
         href={href}
-        className="press inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+        className="press inline-flex shrink-0 items-center gap-1.5 text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
         Tout voir
         <ArrowRight className="h-4 w-4" />

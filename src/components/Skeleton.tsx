@@ -10,15 +10,27 @@ export function Skeleton({ className = "" }: { className?: string }) {
   );
 }
 
-/// Grille de cartes produit — accueil, recherche, boutique, listes.
-export function ProductGridSkeleton({ count = 8 }: { count?: number }) {
+/// Cartes produit empilées — accueil, recherche, boutique, listes.
+///
+/// Reproduit le bandeau de ProductCard (image carrée à gauche, infos à
+/// droite dès `sm`) : un squelette en grille alors que la page rend des
+/// bandeaux ferait sauter la mise en page à l'arrivée des données, ce que
+/// le squelette est justement là pour éviter.
+export function ProductGridSkeleton({ count = 4 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+    <div className="flex flex-col gap-5">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="space-y-2">
-          <Skeleton className="aspect-square w-full" />
-          <Skeleton className="h-4 w-4/5" />
-          <Skeleton className="h-4 w-2/5" />
+        <div
+          key={i}
+          className="flex flex-col overflow-hidden rounded-sm border border-border sm:flex-row"
+        >
+          <Skeleton className="aspect-square w-full shrink-0 rounded-none sm:aspect-auto sm:h-64 sm:w-64 lg:h-72 lg:w-72" />
+          <div className="flex flex-1 flex-col justify-center gap-3 p-5 sm:p-8">
+            <Skeleton className="h-7 w-3/4" />
+            <Skeleton className="h-9 w-40" />
+            <Skeleton className="h-5 w-1/2" />
+            <Skeleton className="h-5 w-36" />
+          </div>
         </div>
       ))}
     </div>

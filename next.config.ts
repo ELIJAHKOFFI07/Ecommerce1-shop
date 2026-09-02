@@ -23,7 +23,18 @@ const nextConfig: NextConfig = {
       ...(supabaseHost
         ? [{ protocol: "https" as const, hostname: supabaseHost }]
         : []),
+      // ImageKit — nouveau stockage (voir src/lib/storage.ts).
+      { protocol: "https" as const, hostname: "ik.imagekit.io" },
     ],
+  },
+
+  /// La racine mène droit à la boutique : il n'y a plus de page
+  /// d'atterrissage. Déclarée ici plutôt qu'avec `redirect()` dans un
+  /// composant serveur — ce dernier produit une redirection « douce »
+  /// (200 + charge RSC) alors qu'un changement de route permanent mérite
+  /// un vrai 308, traité avant tout rendu React.
+  async redirects() {
+    return [{ source: "/", destination: "/play", permanent: true }];
   },
 };
 

@@ -60,7 +60,7 @@ export default function WishlistDetailPage({
           Liste vide. Ajoutez des produits depuis leur fiche.
         </p>
       ) : (
- <div className="mt-6 grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+ <div className="mt-6 flex flex-col gap-5">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

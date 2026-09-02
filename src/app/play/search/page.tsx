@@ -200,9 +200,9 @@ function SearchInner() {
           ) : products.length === 0 ? (
  <p className="py-16 text-center text-muted">Aucun résultat.</p>
           ) : (
- <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-5 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+ <div className="flex flex-col gap-5">
               {products.map((p) => (
-                <ProductCard key={p.id} product={p} hard />
+                <ProductCard key={p.id} product={p} />
               ))}
             </div>
           )}

@@ -85,9 +85,9 @@ export default function ShopPage({
       {products.length === 0 ? (
  <p className="py-12 text-center text-muted">Aucun produit.</p>
       ) : (
- <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+ <div className="flex flex-col gap-5">
           {products.map((p) => (
-            <ProductCard key={p.id} product={p} hard />
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       )}

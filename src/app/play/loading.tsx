@@ -12,7 +12,7 @@ export default function Loading() {
     <div className="space-y-10 lg:space-y-14">
       {/* Recherche */}
       <section className="space-y-4">
-        <Skeleton className="h-[54px] w-full rounded-sm" />
+        <Skeleton className="h-[60px] w-full rounded-sm" />
         <Skeleton className="h-9 w-36 rounded-sm" />
       </section>
 
@@ -32,7 +32,7 @@ export default function Loading() {
       {/* Produits */}
       <section className="space-y-5">
         <SectionHeaderSkeleton />
-        <ProductGridSkeleton count={8} />
+        <ProductGridSkeleton count={4} />
       </section>
     </div>
   );
@@ -43,7 +43,7 @@ export default function Loading() {
 function SectionHeaderSkeleton() {
   return (
     <div className="flex items-end justify-between gap-4">
-      <Skeleton className="h-7 w-40" />
+      <Skeleton className="h-8 w-44" />
       <Skeleton className="h-5 w-24" />
     </div>
   );
