@@ -80,13 +80,24 @@ export async function applyOrderTransition(
 
   const shop = await tx.shop.findUniqueOrThrow({ where: { id: order.shopId } });
   const recipient = actor === "seller" ? order.buyerId : shop.ownerId;
+  const title = "Commande mise à jour";
+  const body = `Commande #${order.id.slice(0, 8)} : ${status}`;
+
+  // Dans la transaction : la notification doit être annulée avec le reste si
+  // la transition échoue.
   await tx.notification.create({
-    data: {
-      userId: recipient,
-      type: "order",
-      title: "Commande mise à jour",
-      body: `Commande #${order.id.slice(0, 8)} : ${status}`,
-      data: { orderId: order.id },
-    },
+    data: { userId: recipient, type: "order", title, body, data: { orderId: order.id } },
   });
+
+  // Renvoyé à l'appelant plutôt qu'envoyé ici : l'e-mail ne doit partir
+  // qu'après le commit (voir src/lib/notify.ts). Cette fonction s'exécute
+  // À L'INTÉRIEUR de la transaction, elle ne peut pas le savoir elle-même.
+  return {
+    userId: recipient,
+    type: "order" as const,
+    title,
+    body,
+    actionUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/play/orders`,
+    actionLabel: "Voir la commande",
+  };
 }

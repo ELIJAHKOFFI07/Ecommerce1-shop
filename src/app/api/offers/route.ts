@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/requireAuth";
 import { ApiError, withApiErrors } from "@/lib/apiError";
+import { notifyUser } from "@/lib/notify";
 
 /// makeOffer — équivalent de la RPC make_offer. Bornes (50 % à 100 % du
 /// prix) et limite de 3 offres par acheteur et par produit, revérifiées ici
@@ -27,14 +28,14 @@ export async function POST(request: Request) {
     const offer = await db.offer.create({
       data: { productId, buyerId: user.id, shopId: product.shopId, amount },
     });
-    await db.notification.create({
-      data: {
-        userId: product.sellerId,
-        type: "offer",
-        title: "Nouvelle offre",
-        body: `Offre de ${amount} FCFA sur « ${product.title} »`,
-        data: { productId: product.id },
-      },
+    await notifyUser({
+      userId: product.sellerId,
+      type: "offer",
+      title: "Nouvelle offre",
+      body: `Offre de ${amount} FCFA sur « ${product.title} »`,
+      data: { productId: product.id },
+      actionUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/play/offers`,
+      actionLabel: "Voir l'offre",
     });
 
     return NextResponse.json({ offerId: offer.id });

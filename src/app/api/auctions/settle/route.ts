@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { ApiError, withApiErrors } from "@/lib/apiError";
+import { notifyUser } from "@/lib/notify";
 
 /// settleExpiredAuctions — équivalent de la RPC settle_expired_auctions.
 ///
@@ -28,23 +29,23 @@ export async function POST(request: Request) {
 
       const shop = await db.shop.findUniqueOrThrow({ where: { id: auction.shopId } });
 
-      await db.notification.create({
-        data: {
-          userId: auction.currentBidderId,
-          type: "auction",
-          title: "Enchère remportée ! 🎉",
-          body: `Vous remportez « ${auction.product.title} » pour ${auction.currentBid} FCFA. Contactez le vendeur pour finaliser.`,
-          data: { auctionId: auction.id, productId: auction.productId },
-        },
+      await notifyUser({
+        userId: auction.currentBidderId,
+        type: "auction",
+        title: "Enchère remportée ! 🎉",
+        body: `Vous remportez « ${auction.product.title} » pour ${auction.currentBid} FCFA. Contactez le vendeur pour finaliser.`,
+        data: { auctionId: auction.id, productId: auction.productId },
+        actionUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/play/product/${auction.productId}`,
+        actionLabel: "Voir le produit",
       });
-      await db.notification.create({
-        data: {
-          userId: shop.ownerId,
-          type: "auction",
-          title: "Votre enchère est terminée",
-          body: `« ${auction.product.title} » part à ${auction.currentBid} FCFA.`,
-          data: { auctionId: auction.id, productId: auction.productId },
-        },
+      await notifyUser({
+        userId: shop.ownerId,
+        type: "auction",
+        title: "Votre enchère est terminée",
+        body: `« ${auction.product.title} » part à ${auction.currentBid} FCFA.`,
+        data: { auctionId: auction.id, productId: auction.productId },
+        actionUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/play/auctions`,
+        actionLabel: "Voir mes enchères",
       });
     }
 

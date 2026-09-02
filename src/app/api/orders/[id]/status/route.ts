@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/requireAuth";
 import { ApiError, withApiErrors } from "@/lib/apiError";
 import { applyOrderTransition, ORDER_TRANSITIONS } from "@/lib/orderTransition";
 import { TRANSACTION_OPTIONS } from "@/lib/transactionOptions";
+import { emailNotification } from "@/lib/notify";
 
 /// advanceOrderStatus — équivalent de la RPC advance_order_status.
 ///
@@ -43,10 +44,12 @@ export async function POST(request: Request, ctx: { params: Promise<{ id: string
       throw new ApiError(400, `Transition ${order.status} → ${status} interdite`);
     }
 
-    await db.$transaction(
+    const pendingEmail = await db.$transaction(
       (tx) => applyOrderTransition(tx, order, status, note, isSeller ? "seller" : "buyer"),
       TRANSACTION_OPTIONS,
     );
+    // Après le commit seulement : un e-mail parti ne se rétracte pas.
+    await emailNotification(pendingEmail);
 
     return NextResponse.json({ ok: true, status });
   });

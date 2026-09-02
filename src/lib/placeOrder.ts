@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { ApiError } from "@/lib/apiError";
 import { TRANSACTION_OPTIONS } from "@/lib/transactionOptions";
+import { emailNotification } from "@/lib/notify";
 
 export type PlaceOrderInput = {
   items: { productId: string; variantId?: string; quantity: number }[];
@@ -36,7 +37,11 @@ export async function placeOrder(userId: string, input: PlaceOrderInput): Promis
     throw new ApiError(400, "Panier vide");
   }
 
-  return db.$transaction(async (tx) => {
+  /// E-mails à envoyer une fois la transaction validée — accumulés pendant,
+  /// envoyés après (voir src/lib/notify.ts).
+  const pendingEmails: Parameters<typeof emailNotification>[0][] = [];
+
+  const orderIds = await db.$transaction(async (tx) => {
     // ---- Verrouillage des produits concernés, dans un ordre stable ----
     // Trier par id avant de verrouiller est ce qui évite les interblocages
     // (deadlocks) entre deux commandes qui portent sur les mêmes produits
@@ -175,6 +180,9 @@ export async function placeOrder(userId: string, input: PlaceOrderInput): Promis
       });
 
       const shop = shopById.get(shopId)!;
+      // La notification reste DANS la transaction : si la commande échoue et
+      // que tout est annulé, elle doit disparaître avec. L'e-mail, lui, part
+      // après le commit (voir plus bas et src/lib/notify.ts).
       await tx.notification.create({
         data: {
           userId: shop.ownerId,
@@ -183,6 +191,14 @@ export async function placeOrder(userId: string, input: PlaceOrderInput): Promis
           body: `Commande de ${order.total} FCFA reçue`,
           data: { orderId: order.id },
         },
+      });
+      pendingEmails.push({
+        userId: shop.ownerId,
+        type: "order",
+        title: "Nouvelle commande",
+        body: `Commande de ${order.total} FCFA reçue`,
+        actionUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/play/sell`,
+        actionLabel: "Voir la commande",
       });
 
       orderIds.push(order.id);
@@ -194,4 +210,9 @@ export async function placeOrder(userId: string, input: PlaceOrderInput): Promis
 
     return orderIds;
   }, TRANSACTION_OPTIONS);
+
+  // Commit passé : les commandes existent vraiment, on peut prévenir.
+  for (const email of pendingEmails) await emailNotification(email);
+
+  return orderIds;
 }

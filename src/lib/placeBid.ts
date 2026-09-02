@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { ApiError } from "@/lib/apiError";
 import { TRANSACTION_OPTIONS } from "@/lib/transactionOptions";
+import { notifyUser } from "@/lib/notify";
 
 /// placeBid — équivalent de la RPC place_bid. Extraite du Route Handler
 /// pour être testable directement.
@@ -59,15 +60,17 @@ export async function placeBid(userId: string, auctionId: string, amount: number
     return { updated, previousBidderId, productId: auction.productId };
   }, TRANSACTION_OPTIONS);
 
+  // Après le commit, jamais dedans : un e-mail parti ne se rétracte pas si
+  // la transaction est annulée (voir src/lib/notify.ts).
   if (result.previousBidderId && result.previousBidderId !== userId) {
-    await db.notification.create({
-      data: {
-        userId: result.previousBidderId,
-        type: "auction",
-        title: "Vous avez été surenchéri !",
-        body: `Nouvelle offre de ${amount} FCFA — réagissez vite.`,
-        data: { auctionId, productId: result.productId },
-      },
+    await notifyUser({
+      userId: result.previousBidderId,
+      type: "auction",
+      title: "Vous avez été surenchéri !",
+      body: `Nouvelle offre de ${amount} FCFA — réagissez vite.`,
+      data: { auctionId, productId: result.productId },
+      actionUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/play/auctions`,
+      actionLabel: "Surenchérir",
     });
   }
 

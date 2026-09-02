@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/requireAuth";
 import { ApiError, withApiErrors } from "@/lib/apiError";
 import { applyOrderTransition } from "@/lib/orderTransition";
 import { TRANSACTION_OPTIONS } from "@/lib/transactionOptions";
+import { emailNotification } from "@/lib/notify";
 
 /// confirmDelivery — équivalent de la RPC confirm_delivery.
 ///
@@ -26,10 +27,12 @@ export async function POST(request: Request, ctx: { params: Promise<{ id: string
       throw new ApiError(400, "Code de retrait incorrect");
     }
 
-    await db.$transaction(
+    const pendingEmail = await db.$transaction(
       (tx) => applyOrderTransition(tx, order, "delivered", "Livraison confirmée par code de retrait", "seller"),
       TRANSACTION_OPTIONS,
     );
+    // Après le commit seulement : un e-mail parti ne se rétracte pas.
+    await emailNotification(pendingEmail);
 
     return NextResponse.json({ ok: true });
   });

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/requireAuth";
 import { ApiError, withApiErrors } from "@/lib/apiError";
+import { emailNotification } from "@/lib/notify";
 
 /// Envoi de message — géré côté Supabase par une simple policy RLS
 /// (messages_insert) puisque le client écrivait directement dans la table ;
@@ -46,6 +47,16 @@ export async function POST(request: Request, ctx: { params: Promise<{ id: string
         },
       });
       return created;
+    });
+
+    // Après le commit seulement : un e-mail parti ne se rétracte pas.
+    await emailNotification({
+      userId: otherId,
+      type: "message",
+      title: "Nouveau message",
+      body: content.trim().slice(0, 120),
+      actionUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/play/messages/${conversationId}`,
+      actionLabel: "Répondre",
     });
 
     return NextResponse.json(message);

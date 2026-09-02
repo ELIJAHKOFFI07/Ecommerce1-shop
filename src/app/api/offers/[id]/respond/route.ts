@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/requireAuth";
 import { ApiError, withApiErrors } from "@/lib/apiError";
+import { notifyUser } from "@/lib/notify";
 
 /// respondToOffer — équivalent de la RPC respond_to_offer.
 export async function POST(request: Request, ctx: { params: Promise<{ id: string }> }) {
@@ -30,14 +31,14 @@ export async function POST(request: Request, ctx: { params: Promise<{ id: string
       throw new ApiError(400, "Action inconnue");
     }
 
-    await db.notification.create({
-      data: {
-        userId: offer.buyerId,
-        type: "offer",
-        title: "Réponse à votre offre",
-        body: `Votre offre sur « ${offer.product.title} » : ${action}`,
-        data: { productId: offer.productId },
-      },
+    await notifyUser({
+      userId: offer.buyerId,
+      type: "offer",
+      title: "Réponse à votre offre",
+      body: `Votre offre sur « ${offer.product.title} » : ${action}`,
+      data: { productId: offer.productId },
+      actionUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/play/offers`,
+      actionLabel: "Voir mes offres",
     });
 
     return NextResponse.json({ ok: true });
