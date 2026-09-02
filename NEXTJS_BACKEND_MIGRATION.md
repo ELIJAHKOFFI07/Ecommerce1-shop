@@ -74,21 +74,33 @@ telles quelles de Supabase) :
   propriété (le vendeur agit sur ses produits, l'acheteur sur ses
   commandes) — il n'y a plus de policy RLS pour le faire à sa place.
 
-## 5. Décisions en attente
+## 5. Décisions
 
-- **Fichiers** : stockage disque sur le VPS servi par une route Next.js
-  (`/api/files/[...]`) avec contrôle d'accès, ou par Nginx directement sur un
-  chemin public pour les images de produits (plus simple, mais alors tout ce
-  qui est sous ce chemin est public sans contrôle — acceptable pour des
-  photos de produits, pas pour autre chose). À trancher avant d'implémenter
-  l'upload.
-- **Temps réel** (messages, notifications) : pas de Realtime intégré côté
-  Postgres/Next.js. Options : polling court côté client (simple, suffisant
-  au démarrage), ou SSE via une route Next.js qui `LISTEN`/`NOTIFY` sur
-  Postgres. Non tranché.
-- **E-mail/push** : la logique déjà écrite dans `parse-server/cloud/` pour
-  l'envoi (SMTP, FCM) est indépendante de la base — réutilisable telle
-  quelle dans une route Next.js ou un script séparé, à rebrancher.
+- **Fichiers : ImageKit**, pas de stockage disque VPS. `src/lib/storage.ts`
+  (serveur, clé privée) + `POST /api/upload` (générique, authentifié) +
+  `src/lib/uploadImage.ts` (client, même signature que l'ancien module
+  Supabase Storage). Tout est rangé sous `IMAGEKIT_FOLDER` (`DreamShop/…`).
+  Manque encore `IMAGEKIT_URL_ENDPOINT` dans `.env.local`.
+- **E-mail : Brevo** (API REST, pas de SDK). `src/lib/email.ts` +
+  `src/lib/emailTemplates.ts` (repris tels quels de
+  `supabase/functions/send-notification-email/templates.ts`). Mode console
+  tant que `BREVO_API_KEY` n'est pas fournie. `src/lib/notify.ts` est le
+  point d'entrée unique création-notification + tentative d'e-mail
+  (équivalent du trigger `dispatch_notification` Supabase) — **pas encore
+  branché sur les ~15 `db.notification.create()` existants**, à faire
+  mécaniquement route par route.
+- **SMS/WhatsApp : Twilio.** `src/lib/sms.ts`, mode console de repli. Aucune
+  fonctionnalité de l'app ne l'appelle encore (pas de flux de vérification
+  téléphone trouvé dans le code hérité de Supabase) — prêt à brancher sur un
+  futur besoin (vérification de téléphone à l'inscription, alerte de
+  retrait…).
+- **Temps réel** (messages, notifications) : toujours pas tranché. Pas de
+  Realtime intégré côté Postgres/Next.js. Options : polling court côté
+  client (simple, suffisant au démarrage), ou SSE via une route Next.js qui
+  `LISTEN`/`NOTIFY` sur Postgres.
+- **Push** (Firebase Cloud Messaging) : logique déjà écrite côté
+  `parse-server/cloud/` pour l'envoi, indépendante de la base — pas encore
+  portée vers une route Next.js.
 
 ## 6. Ce qui est fait à ce jour
 
@@ -105,8 +117,7 @@ telles quelles de Supabase) :
       (création/rôle/suppression/réinitialisation de mot de passe,
       auparavant sur l'API admin Supabase). `tsc`, `eslint` et
       `next build` passent, 58 pages + 32 routes API générées sans conflit.
-      **Aucune testée contre une vraie base** — le Postgres du VPS n'existe
-      pas encore, tout n'a été validé qu'à la compilation.
+      **Testées contre le Postgres réel du VPS** (voir plus bas).
   - Commandes : `placeOrder`, `advanceOrderStatus`, `confirmDelivery` —
     transaction Postgres réelle + `FOR UPDATE`, `applyOrderTransition`
     (`src/lib/orderTransition.ts`) partagée entre les deux routes qui font
@@ -123,11 +134,18 @@ telles quelles de Supabase) :
     typées, paramètres plateforme avec un seul point de lecture — trois
     copies divergentes de cette dernière logique avaient existé côté
     Parse avant d'être unifiées, unifiée dès le départ ici).
+- [x] **Base créée sur le VPS** (`prisma migrate deploy`, 39 tables) et
+      **6/6 tests de charge passés contre elle** (`scripts/concurrency-test.ts`,
+      pas des mocks). Bug trouvé et corrigé au passage : le délai de
+      transaction Prisma par défaut (5 s) était trop court sous contention
+      réelle, relevé à 15 s (`src/lib/transactionOptions.ts`).
+- [x] **Fichiers : ImageKit**, **e-mail : Brevo**, **SMS : Twilio** — voir §5.
 - [ ] Bascule des composants existants vers `fetch("/api/...")` — aucun
       composant ne consomme encore ces routes, ils appellent toujours
-      Supabase
-- [ ] Fichiers, temps réel (voir §5)
-- [ ] Reprise des données
-- [ ] **Tester contre un Postgres réel** une fois le VPS prêt — priorité
-      avant toute bascule, en particulier `placeOrder` (verrouillage
-      multi-lignes trié pour éviter les interblocages) et `placeBid`
+      Supabase. C'est le plus gros chantier restant, mécanique mais long
+      (~60 fichiers).
+- [ ] Brancher `src/lib/notify.ts` sur les ~15 `db.notification.create()`
+      existants, pour que les notifications déclenchent aussi un e-mail
+- [ ] Temps réel, push FCM (voir §5)
+- [ ] Google OAuth : `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` manquants
+- [ ] Reprise des données Supabase → Postgres
