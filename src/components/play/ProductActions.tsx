@@ -6,13 +6,11 @@ import {
   BellRing,
   BookmarkPlus,
   Eye,
-  GitCompareArrows,
   Handshake,
   MessageCircle,
   Share2,
 } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
-import { getCompareIds, toggleCompareId } from "@/lib/compare";
 import { formatFcfa, type Product, type Wishlist } from "@/lib/types";
 
 export function ProductActions({ product }: { product: Product }) {
@@ -22,14 +20,9 @@ export function ProductActions({ product }: { product: Product }) {
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
-  const [compareCount, setCompareCount] = useState(0);
-  const [inCompare, setInCompare] = useState(false);
 
   const load = useCallback(async () => {
     const supabase = createClient();
-    const ids = getCompareIds();
-    setCompareCount(ids.length);
-    setInCompare(ids.includes(product.id));
     const { data: userData } = await supabase.auth.getUser();
     setMyId(userData.user?.id ?? null);
 
@@ -226,31 +219,6 @@ export function ProductActions({ product }: { product: Product }) {
           <Share2 className="h-3.5 w-3.5" /> WhatsApp
         </button>
 
-        <button
-          onClick={() => {
-            const next = toggleCompareId(product.id);
-            if (next == null) {
-              flash("Comparateur plein (3 max).");
-              return;
-            }
-            setInCompare(next.includes(product.id));
-            setCompareCount(next.length);
-            flash(`Comparateur : ${next.length} produit(s).`);
-          }}
-          className={actionBtn(inCompare)}
-        >
-          <GitCompareArrows className="h-3.5 w-3.5" />
-          {inCompare ? "Dans le comparateur" : "Comparer"}
-        </button>
-
-        {compareCount >= 2 && (
-          <a
-            href="/play/compare"
-            className="press rounded-full inline-flex items-center gap-1.5 bg-foreground px-3 py-1.5 text-xs font-display font-bold text-background transition-all hover:bg-surface-2"
-          >
-            Voir la comparaison ({compareCount})
-          </a>
-        )}
       </div>
 
       {status && <p className="text-xs text-accent">{status}</p>}

@@ -12,14 +12,12 @@ const SELLER_LINKS: { href: string; label: string }[] = [
   { href: "/play/sell", label: "Ouvrir une boutique" },
   { href: "/play/wallet", label: "Portefeuille & retraits" },
   { href: "/play/account", label: "Mon compte" },
-  { href: "#faq", label: "FAQ" },
 ];
 
 const ACCOUNT_LINKS: { href: string; label: string }[] = [
   { href: "/play/account", label: "Mon profil" },
   { href: "/play/orders", label: "Mes commandes" },
   { href: "/play/wishlists", label: "Mes listes" },
-  { href: "/play/referral", label: "Parrainage" },
 ];
 
 /// Pied de page minimaliste : quatre colonnes (marque, navigation, vendeurs,

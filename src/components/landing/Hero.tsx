@@ -1,17 +1,14 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { Pill } from "./Primitives";
+import { HeroSearch } from "./HeroSearch";
 
-const FEATURES = [
-  "Sans compte pour explorer",
-  "Mobile Money natif",
-  "Paiement à la livraison",
-];
-
-/// Héro minimaliste : accroche + double CTA. Une seule image lifestyle
-/// (locale, aucun domaine distant), sans arche ni cartes flottantes. Le
-/// contraste fort du CTA principal (encre sur fond) suffit à guider l'œil.
+/// Héro minimaliste : accroche, recherche, un seul CTA secondaire.
+///
+/// La recherche est passée devant les boutons : c'est par elle qu'on entre
+/// dans un catalogue, pas par une page d'atterrissage. Les trois pastilles
+/// d'arguments (« Mobile Money natif »…) ont sauté avec le reste des
+/// remplissages — elles répétaient ce que le reste de la page dit déjà.
 export function Hero() {
   return (
     <section className="bg-background">
@@ -26,28 +23,16 @@ export function Hero() {
             du meilleur deal, payez en Mobile Money ou à la livraison — même
             sans compte.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/play/search"
-              className={buttonVariants({ variant: "primary", size: "lg" })}
-            >
-              Explorer le catalogue
-              <ArrowRight className="h-4 w-4" strokeWidth={2} />
-            </Link>
+          <HeroSearch />
+
+          <div className="mt-6">
             <Link
               href="/play/sell"
               className={buttonVariants({ variant: "secondary", size: "lg" })}
             >
               Ouvrir ma boutique
+              <ArrowRight className="h-4 w-4" strokeWidth={2} />
             </Link>
-          </div>
-          <div className="mt-8 flex flex-wrap gap-2">
-            {FEATURES.map((feature) => (
-              <Pill key={feature}>
-                <Check className="h-4 w-4 text-accent" strokeWidth={2.5} />
-                {feature}
-              </Pill>
-            ))}
           </div>
         </div>
 

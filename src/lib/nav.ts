@@ -1,7 +1,6 @@
 import {
   Bell,
   Bookmark,
-  Gift,
   Handshake,
   Home,
   LayoutDashboard,
@@ -9,7 +8,6 @@ import {
   Package,
   Search,
   ShoppingCart,
-  Sparkles,
   Store,
   User,
   UserPen,
@@ -73,11 +71,7 @@ export const SECTIONS: { title: string; links: NavLink[] }[] = [
   },
   {
     title: "Gains",
-    links: [
-      { href: "/play/wallet", label: "Portefeuille", icon: Wallet },
-      { href: "/play/spin", label: "Roue de la chance", icon: Sparkles },
-      { href: "/play/referral", label: "Parrainage", icon: Gift },
-    ],
+    links: [{ href: "/play/wallet", label: "Portefeuille", icon: Wallet }],
   },
   {
     title: "Mon compte",
@@ -115,8 +109,6 @@ export const MEMBER_ONLY_PREFIXES = [
   "/play/messages",
   "/play/notifications",
   "/play/wallet",
-  "/play/spin",
-  "/play/referral",
   "/play/sell",
   "/play/checkout",
 ] as const;

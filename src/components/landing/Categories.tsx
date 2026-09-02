@@ -2,25 +2,28 @@ import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 
-/// Catégories dérivées des slugs réels de la table `categories` (seed SQL) :
-/// les liens pointent vers la recherche pré-filtrée, cohérents avec le reste
-/// du site. Images locales (aucun domaine distant à déclarer).
+/// Six catégories, pas douze : au-delà, la grille devient un mur de choix
+/// et l'acheteur ne choisit plus rien. Les six retenues couvrent l'essentiel
+/// du catalogue ; les anciennes (maison, beauté, alimentation, enfants,
+/// véhicules, immobilier) ont été fusionnées ou retirées — voir
+/// supabase/migrations/011_reduce_categories.sql.
+///
+/// Les slugs correspondent à ceux de la table `categories` : les liens
+/// pointent vers la recherche pré-filtrée. Images locales (aucun domaine
+/// distant à déclarer dans next.config.ts).
 const CATEGORIES: { name: string; slug: string; image: string }[] = [
-  { name: "Mode & Vêtements", slug: "mode", image: "/assets/product-wax.png" },
-  { name: "Téléphones & Tablettes", slug: "telephones", image: "/assets/product-phone.png" },
+  { name: "Mode", slug: "mode", image: "/assets/product-wax.png" },
+  { name: "Téléphones", slug: "telephones", image: "/assets/product-phone.png" },
   { name: "Électronique", slug: "electronique", image: "/assets/product-headphones.png" },
   { name: "Chaussures", slug: "chaussures", image: "/assets/product-sneakers.png" },
-  { name: "Sacs & Accessoires", slug: "accessoires", image: "/assets/product-bag.png" },
-  { name: "Sport & Loisirs", slug: "sport", image: "/assets/product-watch.png" },
+  { name: "Accessoires", slug: "accessoires", image: "/assets/product-bag.png" },
+  { name: "Maison", slug: "maison", image: "/assets/product-watch.png" },
 ];
 
 export function Categories() {
   return (
     <Section>
-      <SectionHeading
-        title="Explorer par catégorie"
-        subtitle="Trouvez vite ce que vous cherchez, du smartphone à la paire de sneakers."
-      />
+      <SectionHeading title="Explorer par catégorie" />
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {CATEGORIES.map((cat) => (
           <Link

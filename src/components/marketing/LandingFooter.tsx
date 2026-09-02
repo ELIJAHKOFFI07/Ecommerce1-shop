@@ -36,7 +36,6 @@ export function LandingFooter() {
             links={[
               { href: "/play/register", label: "Créer un compte" },
               { href: "/play/sell", label: "Ma boutique" },
-              { href: "/play/referral", label: "Parrainage" },
             ]}
           />
 
