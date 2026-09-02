@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/backend/client";
-import { uploadImage } from "@/lib/storage";
+import { uploadImage } from "@/lib/uploadImage";
 import { ImagePicker } from "@/components/play/ImagePicker";
 import type { Category, Product, ProductImage } from "@/lib/types";
 

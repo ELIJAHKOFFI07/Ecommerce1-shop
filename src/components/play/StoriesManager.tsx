@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
-import { uploadImage } from "@/lib/storage";
+import { uploadImage } from "@/lib/uploadImage";
 import { storyRemainingLabel, type ShopStory } from "@/lib/types";
 
 export function StoriesManager({ shopId }: { shopId: string }) {

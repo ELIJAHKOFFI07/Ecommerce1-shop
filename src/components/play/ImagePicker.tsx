@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { ImagePlus, X } from "lucide-react";
-import { MAX_IMAGE_BYTES } from "@/lib/storage";
+import { MAX_IMAGE_BYTES } from "@/lib/uploadImage";
 
 /// Zone d'ajout de photos avec aperçu.
 ///

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Pencil, Store, Zap } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { useSession } from "@/lib/session";
-import { uploadImage } from "@/lib/storage";
+import { uploadImage } from "@/lib/uploadImage";
 import {
   ORDER_STATUS_LABELS,
   formatFcfa,

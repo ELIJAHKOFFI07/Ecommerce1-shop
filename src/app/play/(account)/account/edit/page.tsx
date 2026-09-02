@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Camera } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
 import { useSession } from "@/lib/session";
-import { uploadImage } from "@/lib/storage";
+import { uploadImage } from "@/lib/uploadImage";
 import { HeaderSkeleton, Skeleton } from "@/components/Skeleton";
 import { PushToggle } from "@/components/play/PushToggle";
 

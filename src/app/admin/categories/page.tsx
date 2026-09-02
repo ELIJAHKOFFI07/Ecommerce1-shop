@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ImagePlus, Plus, Save, Trash2, X } from "lucide-react";
 import { createClient } from "@/lib/backend/client";
-import { uploadImage } from "@/lib/storage";
+import { uploadImage } from "@/lib/uploadImage";
 import { ListSkeleton } from "@/components/Skeleton";
 import type { Category } from "@/lib/types";
 
