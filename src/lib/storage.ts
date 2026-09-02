@@ -3,12 +3,27 @@ import { ImageKit } from "@imagekit/nodejs";
 /// Stockage fichiers — remplace le Storage Supabase. Tout est rangé sous
 /// IMAGEKIT_FOLDER (dossier "DreamShop" par défaut), avec un sous-dossier
 /// par type de contenu pour ne pas tout mélanger dans un seul répertoire.
-const client = new ImageKit({
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-});
+///
+/// Client instancié à la demande, pas au chargement du module : le
+/// constructeur ImageKit lève une exception si la clé privée est absente,
+/// et au chargement ça faisait échouer le BUILD entier (`next build` évalue
+/// les modules des routes pendant « Collecting page data »). Une variable
+/// d'environnement manquante doit dégrader la fonctionnalité concernée, pas
+/// empêcher le déploiement.
+let cachedClient: ImageKit | null = null;
 
+function client(): ImageKit {
+  if (!cachedClient) {
+    cachedClient = new ImageKit({ privateKey: process.env.IMAGEKIT_PRIVATE_KEY });
+  }
+  return cachedClient;
+}
+
+/// Seule la clé privée est nécessaire : la réponse d'upload ImageKit
+/// contient déjà l'URL publique complète du fichier, il n'y a donc rien à
+/// reconstruire à partir d'un « URL endpoint ».
 export function isStorageConfigured(): boolean {
-  return Boolean(process.env.IMAGEKIT_PRIVATE_KEY && process.env.IMAGEKIT_URL_ENDPOINT);
+  return Boolean(process.env.IMAGEKIT_PRIVATE_KEY);
 }
 
 /// Assainit un nom de fichier : ImageKit remplace déjà les caractères hors
@@ -34,13 +49,11 @@ function sanitizeFileName(name: string): string {
  */
 export async function uploadFile(file: File, subFolder: string) {
   if (!isStorageConfigured()) {
-    throw new Error(
-      "IMAGEKIT_PRIVATE_KEY / IMAGEKIT_URL_ENDPOINT manquants — voir .env.example.",
-    );
+    throw new Error("IMAGEKIT_PRIVATE_KEY manquante — voir .env.example.");
   }
 
   const baseFolder = process.env.IMAGEKIT_FOLDER || "DreamShop";
-  const result = await client.files.upload({
+  const result = await client().files.upload({
     file,
     fileName: sanitizeFileName(file.name || "fichier"),
     folder: `/${baseFolder}/${subFolder}`,
@@ -58,5 +71,5 @@ export async function uploadFile(file: File, subFolder: string) {
 /// ou supprimé(e), pour ne pas laisser trainer des fichiers orphelins dans
 /// la médiathèque.
 export async function deleteFile(fileId: string) {
-  await client.files.delete(fileId);
+  await client().files.delete(fileId);
 }
