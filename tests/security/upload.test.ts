@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { uploadFile } from "@/lib/storage";
 
 const file = (bytes: number[] | Buffer, name: string, type: string) =>
-  new File([Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes)], name, { type });
+  new File([new Uint8Array(Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes))], name, { type });
 
 const PNG = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0, 0, 0];
 
@@ -28,7 +28,7 @@ describe("Envoi de fichiers : le contenu prime sur l'extension", () => {
   });
 
   it("refuse un fichier trop lourd avant de lire son contenu", async () => {
-    const big = new File([Buffer.alloc(6 * 1024 * 1024, 0)], "big.png", { type: "image/png" });
+    const big = new File([new Uint8Array(6 * 1024 * 1024)], "big.png", { type: "image/png" });
     await expect(uploadFile(big, "product")).rejects.toMatchObject({ status: 413 });
   });
 

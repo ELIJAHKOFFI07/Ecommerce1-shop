@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   SuperlifeShop — système de design.
+
+   Direction : minimalisme & style suisse (recommandation ui-ux-pro-max
+   pour ce produit, variance 2, motion 2). Palette pierre : un fond
+   blanc cassé, une encre presque noire, UN accent or pour l'action
+   principale. Rien d'autre. Cormorant pour les titres et les montants,
+   Montserrat pour tout le reste.
+
+   Le client n'est « pas trop intellectuel » : chaque écran a UNE action
+   principale, en encre pleine. Les libellés sont des verbes. Les
+   montants sont gros. Pas d'icône seule sans mot.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --background: #fafaf9;
+  --foreground: #0c0a09;
+  --card: #ffffff;
+  --card-foreground: #0c0a09;
+  --primary: #1c1917;
+  --primary-foreground: #ffffff;
+  --secondary: #44403c;
+  --accent: #a16207;
+  --accent-foreground: #ffffff;
+  --muted: #f5f5f4;
+  --muted-foreground: #57534e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --destructive: #b91c1c;
+  --destructive-foreground: #ffffff;
+  --success: #15803d;
+  --warning: #b45309;
+  --ring: #1c1917;
+  --radius: 6px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+}
+
+/* Base 17 px : lisible sur téléphone pour un public peu à l'aise avec les
+   petits caractères. Tailwind travaille en rem, tout suit. */
+html {
+  font-size: 17px;
+  -webkit-text-size-adjust: 100%;
+}
+@media (min-width: 1024px) {
+  html { font-size: 18px; }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Titres et montants en Cormorant : la seule fantaisie du système. */
+.font-display {
+  font-family: var(--font-display);
+  font-feature-settings: "lnum" 1;
+}
+
+/* Chiffres tabulaires sur les montants : les colonnes s'alignent. */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Focus visible et net partout — clavier et lecteurs d'écran. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Retour tactile : léger enfoncement au clic. */
+.press { transition: transform 120ms ease, opacity 120ms ease; }
+.press:active { transform: scale(0.985); }
+
+/* Apparition douce des listes. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.rise { animation: rise 260ms ease-out both; }
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--muted) 0%, #ecebe9 40%, var(--muted) 80%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .shimmer { animation: none; }
+  .press:active { transform: none; }
+  * { transition-duration: 0.01ms !important; }
+}
+
+/* Garde-fou : jamais de défilement horizontal de la page. */
+html, body { overflow-x: hidden; }
