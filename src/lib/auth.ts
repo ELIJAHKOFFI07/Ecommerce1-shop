@@ -1,81 +1,207 @@
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import bcrypt from "bcryptjs";
-import { db } from "@/lib/db";
-import { setupNewUser } from "@/lib/newUserSetup";
+import { z } from "zod";
+import { db } from "./db";
+import { authConfig } from "./auth.config";
+import { verifyPassword } from "./password";
+import { consumeRateLimit, clientIp } from "./rateLimit";
+import { audit } from "./audit";
 
-/// Configuration Auth.js — remplace l'auth Supabase (magic link + Google).
-/// Google est conservé tel quel ; l'e-mail/mot de passe passe par un hash
-/// bcrypt stocké dans User.passwordHash (plus de RPC `handle_new_user` : la
-/// création du profil, du portefeuille et du code de parrainage se fait dans
-/// le callback `signIn`/`createUser` de l'adaptateur, voir plus bas).
-///
-/// Session en JWT, pas en base : c'est une contrainte d'Auth.js quand un
-/// provider Credentials est présent à côté de l'adaptateur — les sessions
-/// base de données ne fonctionnent qu'avec des providers OAuth purs.
+/// Verrouillage progressif : 5 échecs → 15 min, 10 échecs → 1 h, 15 → 24 h.
+/// Le compteur ne se remet à zéro qu'après une connexion réussie. Contre
+/// la force brute, c'est plus robuste qu'une limite par IP seule (un
+/// attaquant change d'IP facilement, pas de compte cible).
+function lockDurationMs(failed: number): number {
+  if (failed >= 15) return 24 * 60 * 60 * 1000;
+  if (failed >= 10) return 60 * 60 * 1000;
+  if (failed >= 5) return 15 * 60 * 1000;
+  return 0;
+}
+
+class InvalidLogin extends CredentialsSignin {
+  code = "invalid";
+}
+class LockedLogin extends CredentialsSignin {
+  code = "locked";
+}
+class BlockedLogin extends CredentialsSignin {
+  code = "blocked";
+}
+class TooMany extends CredentialsSignin {
+  code = "ratelimited";
+}
+
+const credentialsSchema = z.object({
+  email: z.string().trim().toLowerCase().email().max(254),
+  password: z.string().min(1).max(128),
+});
+
+/// Champs de session : ce qu'on met dans le JWT. Rien de sensible (pas de
+/// hash, pas de téléphone), juste ce qu'il faut pour autoriser.
+const sessionSelect = {
+  id: true,
+  name: true,
+  email: true,
+  image: true,
+  role: true,
+  status: true,
+  blocked: true,
+  memberNumber: true,
+} as const;
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(db),
-  session: { strategy: "jwt" },
-  pages: {
-    signIn: "/play/login",
-  },
+  ...authConfig,
+  // Le typage de l'adaptateur vise l'ancien générateur Prisma ; le client
+  // Prisma 7 (générateur `prisma-client`) expose la même surface.
+  adapter: PrismaAdapter(db as never),
   providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
     Credentials({
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Mot de passe", type: "password" },
-      },
-      async authorize(credentials) {
-        const email = credentials?.email;
-        const password = credentials?.password;
-        if (typeof email !== "string" || typeof password !== "string") return null;
+      credentials: { email: {}, password: {} },
+      async authorize(raw, req) {
+        const parsed = credentialsSchema.safeParse(raw);
+        // Même message pour « format invalide » et « mauvais mot de passe » :
+        // on ne dit jamais à l'appelant ce qui a échoué.
+        if (!parsed.success) throw new InvalidLogin();
+        const { email, password } = parsed.data;
+        const ip = clientIp(req);
 
-        const user = await db.user.findUnique({ where: { email } });
-        if (!user?.passwordHash) return null; // compte Google-only : pas de mot de passe à comparer
+        // Deux limites : par IP (pulvérisation sur plusieurs comptes) et par
+        // email (attaque ciblée depuis plusieurs IP).
+        try {
+          await consumeRateLimit("login", ip);
+          await consumeRateLimit("login", email);
+        } catch {
+          throw new TooMany();
+        }
 
-        const valid = await bcrypt.compare(password, user.passwordHash);
-        if (!valid) return null;
+        const user = await db.user.findUnique({
+          where: { email },
+          select: { ...sessionSelect, passwordHash: true, failedLogins: true, lockedUntil: true },
+        });
 
-        return { id: user.id, email: user.email, name: user.username, image: user.avatarUrl };
+        if (user?.lockedUntil && user.lockedUntil > new Date()) {
+          await audit("auth.locked", { userId: user.id, req, meta: { until: user.lockedUntil } });
+          throw new LockedLogin();
+        }
+
+        // verifyPassword compare toujours contre un hash, même si l'utilisateur
+        // n'existe pas — temps de réponse identique dans les deux cas.
+        const valid = await verifyPassword(password, user?.passwordHash ?? null);
+
+        if (!user || !valid) {
+          if (user) {
+            const failed = user.failedLogins + 1;
+            const lockMs = lockDurationMs(failed);
+            await db.user.update({
+              where: { id: user.id },
+              data: { failedLogins: failed, lockedUntil: lockMs ? new Date(Date.now() + lockMs) : null },
+            });
+            await audit("auth.login_failed", { userId: user.id, req, meta: { failed } });
+          } else {
+            await audit("auth.login_failed", { req, meta: { email } });
+          }
+          throw new InvalidLogin();
+        }
+
+        if (user.blocked) {
+          await audit("auth.login_failed", { userId: user.id, req, meta: { reason: "blocked" } });
+          throw new BlockedLogin();
+        }
+
+        await db.user.update({ where: { id: user.id }, data: { failedLogins: 0, lockedUntil: null } });
+        await audit("auth.login", { userId: user.id, req });
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+          role: user.role,
+          status: user.status,
+          blocked: user.blocked,
+          memberNumber: user.memberNumber,
+        };
       },
     }),
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+      ? [
+          Google({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            /// Google vérifie l'adresse e-mail : rattacher le compte Google à
+            /// l'utilisateur existant portant cet e-mail est sûr. L'inscription
+            /// par Google est bloquée dans le callback `signIn` ci-dessous.
+            allowDangerousEmailAccountLinking: true,
+          }),
+        ]
+      : []),
   ],
   callbacks: {
-    // Le token JWT porte isAdmin/isSeller pour que les Route Handlers
-    // n'aient pas à interroger la base à chaque requête juste pour savoir
-    // qui a le droit de faire quoi — seule la mutation elle-même relit la
-    // base avant d'agir (voir NEXTJS_BACKEND_MIGRATION.md §4).
+    /// Google = connexion pour un compte EXISTANT uniquement. Un inconnu
+    /// est refusé : chaque membre a un numéro et un parrain attribués à
+    /// l'inscription par formulaire ; Google ne peut pas les fournir.
+    async signIn({ user, account }) {
+      if (account?.provider !== "google") return true;
+      const email = user.email?.toLowerCase();
+      if (!email) return false;
+      const existing = await db.user.findUnique({ where: { email }, select: { id: true, blocked: true } });
+      if (!existing) return "/connexion?error=google_unknown";
+      if (existing.blocked) return "/connexion?error=blocked";
+      await audit("auth.login", { userId: existing.id, meta: { provider: "google" } });
+      return true;
+    },
+
     async jwt({ token, user }) {
-      if (user?.id) {
-        const dbUser = await db.user.findUnique({ where: { id: user.id } });
-        token.sub = user.id;
-        token.isAdmin = dbUser?.isAdmin ?? false;
-        token.isSeller = dbUser?.isSeller ?? false;
+      if (user) {
+        // Première émission : connexion par mot de passe ou Google. Pour
+        // Google, `user` vient de l'adaptateur et ne porte pas nos champs :
+        // on recharge depuis la base.
+        const fresh = await db.user.findUnique({ where: { id: user.id! }, select: sessionSelect });
+        if (!fresh) return token;
+        token.id = fresh.id;
+        token.role = fresh.role;
+        token.status = fresh.status;
+        token.blocked = fresh.blocked;
+        token.memberNumber = fresh.memberNumber;
+        token.name = fresh.name;
+        token.picture = fresh.image;
+        token.checkedAt = Date.now();
+        return token;
+      }
+      // Un JWT est sans état : un compte bloqué ou rétrogradé garderait ses
+      // droits jusqu'à expiration. On resynchronise rôle et blocage depuis
+      // la base toutes les 5 minutes — compromis entre coût et réactivité.
+      if (token.id && Date.now() - (token.checkedAt ?? 0) > 5 * 60 * 1000) {
+        const fresh = await db.user.findUnique({ where: { id: token.id }, select: sessionSelect });
+        if (!fresh || fresh.blocked) {
+          token.blocked = true;
+        } else {
+          token.role = fresh.role;
+          token.status = fresh.status;
+          token.blocked = false;
+          token.name = fresh.name;
+          token.picture = fresh.image;
+        }
+        token.checkedAt = Date.now();
       }
       return token;
     },
+
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub as string;
-        session.user.isAdmin = Boolean(token.isAdmin);
-        session.user.isSeller = Boolean(token.isSeller);
-      }
+      session.user.id = token.id;
+      session.user.role = token.role;
+      session.user.status = token.status;
+      session.user.blocked = token.blocked;
+      session.user.memberNumber = token.memberNumber;
       return session;
     },
   },
   events: {
-    // Équivalent du trigger handle_new_user de Supabase : ne se déclenche
-    // qu'à la toute première connexion (création du compte par
-    // l'adaptateur), jamais aux connexions suivantes.
-    async createUser({ user }) {
-      if (!user.id) return;
-      await setupNewUser(user.id);
+    async signOut(message) {
+      const token = "token" in message ? message.token : null;
+      if (token?.id) await audit("auth.logout", { userId: token.id });
     },
   },
 });

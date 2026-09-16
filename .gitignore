@@ -1,62 +1,26 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# dépendances
+node_modules
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-# ...sauf le modèle sans secret, qui doit être livré avec le projet
-!.env.example
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
+# next
+.next
+out
 next-env.d.ts
+*.tsbuildinfo
 
-# Compte de service Firebase : permet d'envoyer des notifications a tous les
-# utilisateurs. Ne doit jamais entrer dans le depot.
-*firebase-adminsdk*.json
-service-account*.json
-
-# Valeurs reelles des secrets : ne doit jamais entrer dans le depot.
-# Le mode d'emploi (sans valeurs) est dans guide_secrets.md, lui versionne.
+# secrets — ne JAMAIS committer
+.env
+.env.*
+!.env.example
 all_secrets.md
-SMTP_SETUP.md
+*firebase-adminsdk*.json
 
-# images test
-/screenshots
+# prisma
+prisma/generated
 
-# out
-.out/
+# tests
+coverage
 
-#Agent config
-AGENTS.md
+# outils
+.design-work/*.html
+.DS_Store
+Thumbs.db

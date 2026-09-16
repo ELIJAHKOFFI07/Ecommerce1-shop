@@ -1,0 +1,110 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Directions" },
+    { "id": "page-2", "name": "Cadres produit" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 390, "h": 844, "title": "A — Éditorial (recommandée)", "page": "page-1" },
+    { "file": "DirectionB.dc.html", "x": 490, "y": 0, "w": 390, "h": 844, "title": "B — Contraste", "page": "page-1" },
+    { "file": "DirectionC.dc.html", "x": 980, "y": 0, "w": 390, "h": 844, "title": "C — Chaleur douce", "page": "page-1" },
+    { "file": "FicheProduit.dc.html", "x": 1470, "y": 0, "w": 390, "h": 844, "title": "Fiche produit — direction A", "page": "page-1" },
+
+    { "file": "CadreA.dc.html", "x": 0, "y": 0, "w": 390, "h": 760, "title": "1 — Chevauchement", "page": "page-2" },
+    { "file": "CadreB.dc.html", "x": 490, "y": 0, "w": 390, "h": 760, "title": "2 — Catalogue", "page": "page-2" },
+    { "file": "CadreC.dc.html", "x": 980, "y": 0, "w": 390, "h": 760, "title": "3 — Arche", "page": "page-2" },
+    { "file": "CadreD.dc.html", "x": 1470, "y": 0, "w": 390, "h": 760, "title": "4 — Immersif", "page": "page-2" },
+    { "file": "CadreE.dc.html", "x": 1960, "y": 0, "w": 390, "h": 760, "title": "5 — Étiquette", "page": "page-2" }
+  ],
+  "annotations": [
+    {
+      "id": "brief",
+      "x": 0,
+      "y": -190,
+      "w": 620,
+      "page": "page-1",
+      "text": "Trois directions minimalistes pour la même page — la liste de produits — afin que la comparaison soit honnête.\nÀ valider : une seule direction, ensuite je l'applique à toute l'app."
+    },
+    {
+      "id": "note-a",
+      "x": 0,
+      "y": 900,
+      "w": 390,
+      "page": "page-1",
+      "text": "A — ÉDITORIAL\nBlanc cassé, serif Fraunces pour les prix, filets fins, photo large.\nPour : calme, haut de gamme, met la marchandise en avant.\nContre : moins de repères visuels, demande de bonnes photos."
+    },
+    {
+      "id": "note-b",
+      "x": 490,
+      "y": 900,
+      "w": 390,
+      "page": "page-1",
+      "text": "B — CONTRASTE\nNoir et blanc, Archivo, traits épais, jaune vif sur les promos.\nPour : lisible en plein soleil, prix très visibles, dense.\nContre : plus froid, le jaune peut jurer avec certaines photos."
+    },
+    {
+      "id": "note-c",
+      "x": 980,
+      "y": 900,
+      "w": 390,
+      "page": "page-1",
+      "text": "C — CHALEUR DOUCE\nCrème, cartes arrondies, terracotta.\nPour : proche de l'identité actuelle en beaucoup plus sobre, chaleureux.\nContre : le style « carte arrondie » ressemble à beaucoup d'apps."
+    },
+    {
+      "id": "note-fiche",
+      "x": 1470,
+      "y": 900,
+      "w": 390,
+      "page": "page-1",
+      "text": "La direction A appliquée à un second écran, pour vérifier qu'elle tient au-delà de la liste.\nLes prix affichés sont des exemples."
+    },
+
+    {
+      "id": "brief-cadres",
+      "x": 0,
+      "y": -210,
+      "w": 700,
+      "page": "page-2",
+      "text": "Cinq façons de cadrer un produit, même palette et même typo que la direction A : seule la FORME change.\nDu plus sage au plus affirmé. Ils se combinent — le cadre de la liste peut différer de celui d'un carrousel."
+    },
+    {
+      "id": "note-c1",
+      "x": 0,
+      "y": 820,
+      "w": 390,
+      "page": "page-2",
+      "text": "1 — CHEVAUCHEMENT\nLe bloc texte mord sur l'image et casse le rectangle.\nPour : de la personnalité sans rien ajouter ; l'image reste grande.\nContre : mange un coin de la photo — à éviter si le produit y est."
+    },
+    {
+      "id": "note-c2",
+      "x": 490,
+      "y": 820,
+      "w": 390,
+      "page": "page-2",
+      "text": "2 — CATALOGUE\nPas de cadre du tout : un filet, un numéro, une vignette.\nPour : très dense, se parcourt vite, air de catalogue soigné.\nContre : la petite image dessert les produits qui se vendent au visuel."
+    },
+    {
+      "id": "note-c3",
+      "x": 980,
+      "y": 820,
+      "w": 390,
+      "page": "page-2",
+      "text": "3 — ARCHE\nSilhouette arrondie en haut, reconnaissable au premier coup d'œil.\nPour : identitaire, mémorable, aucune couleur en plus.\nContre : forme marquée — rogne le haut des photos mal cadrées."
+    },
+    {
+      "id": "note-c4",
+      "x": 1470,
+      "y": 820,
+      "w": 390,
+      "page": "page-2",
+      "text": "4 — IMMERSIF\nImage plein cadre, texte sur un voile, prix toujours au même coin.\nPour : la marchandise occupe tout l'écran ; très moderne.\nContre : dépend entièrement de la qualité des photos vendeur."
+    },
+    {
+      "id": "note-c5",
+      "x": 1960,
+      "y": 820,
+      "w": 390,
+      "page": "page-2",
+      "text": "5 — ÉTIQUETTE\nLe prix sur une étiquette qui déborde, comme en boutique.\nPour : le prix devient le point d'accroche — utile quand on négocie.\nContre : un seul élément fort par carte, à ne pas cumuler."
+    }
+  ],
+  "launch": { "view": "canvas", "page": "page-2" }
+}

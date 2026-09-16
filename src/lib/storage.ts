@@ -1,75 +1,80 @@
-import { ImageKit } from "@imagekit/nodejs";
+import ImageKit from "@imagekit/nodejs";
+import { randomBytes } from "node:crypto";
+import { ApiError } from "./apiError";
 
-/// Stockage fichiers — remplace le Storage Supabase. Tout est rangé sous
-/// IMAGEKIT_FOLDER (dossier "DreamShop" par défaut), avec un sous-dossier
-/// par type de contenu pour ne pas tout mélanger dans un seul répertoire.
+/// Stockage des fichiers sur ImageKit (Vercel n'a pas de disque durable).
 ///
-/// Client instancié à la demande, pas au chargement du module : le
-/// constructeur ImageKit lève une exception si la clé privée est absente,
-/// et au chargement ça faisait échouer le BUILD entier (`next build` évalue
-/// les modules des routes pendant « Collecting page data »). Une variable
-/// d'environnement manquante doit dégrader la fonctionnalité concernée, pas
-/// empêcher le déploiement.
-let cachedClient: ImageKit | null = null;
+/// Sécurité des envois :
+///  - le type est vérifié par SIGNATURE BINAIRE (magic bytes), pas par
+///    l'extension ni par le Content-Type déclaré, tous deux falsifiables ;
+///  - taille plafonnée ;
+///  - nom de fichier régénéré aléatoirement : le nom d'origine n'est jamais
+///    réutilisé (traversée de chemin, caractères spéciaux, fuite d'info).
 
+export type UploadKind = "product" | "receipt" | "proof" | "avatar" | "logo";
+
+const LIMITS: Record<UploadKind, { maxBytes: number; kinds: readonly string[] }> = {
+  product: { maxBytes: 5 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp"] },
+  avatar: { maxBytes: 2 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp"] },
+  logo: { maxBytes: 2 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp", "image/svg+xml"] },
+  receipt: { maxBytes: 8 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp", "application/pdf"] },
+  proof: { maxBytes: 8 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp", "application/pdf"] },
+};
+
+/// Détection du type réel par les premiers octets.
+function sniff(buf: Buffer): string | null {
+  if (buf.length < 12) return null;
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return "image/jpeg";
+  if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) return "image/png";
+  if (buf.subarray(0, 4).toString("ascii") === "RIFF" && buf.subarray(8, 12).toString("ascii") === "WEBP") return "image/webp";
+  if (buf.subarray(0, 5).toString("ascii") === "%PDF-") return "application/pdf";
+  const head = buf.subarray(0, 256).toString("utf8").trimStart().toLowerCase();
+  if (head.startsWith("<svg") || (head.startsWith("<?xml") && head.includes("<svg"))) return "image/svg+xml";
+  return null;
+}
+
+const EXT: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/svg+xml": "svg",
+  "application/pdf": "pdf",
+};
+
+let _client: ImageKit | null = null;
 function client(): ImageKit {
-  if (!cachedClient) {
-    cachedClient = new ImageKit({ privateKey: process.env.IMAGEKIT_PRIVATE_KEY });
+  if (_client) return _client;
+  const privateKey = process.env.IMAGEKIT_PRIVATE_KEY;
+  if (!privateKey) throw new ApiError(503, "Le stockage de fichiers n'est pas configuré.");
+  _client = new ImageKit({ privateKey });
+  return _client;
+}
+
+export const isStorageConfigured = () => Boolean(process.env.IMAGEKIT_PRIVATE_KEY);
+
+export async function uploadFile(file: File, kind: UploadKind): Promise<{ url: string; fileId: string }> {
+  const rule = LIMITS[kind];
+  if (file.size > rule.maxBytes) {
+    throw new ApiError(413, `Fichier trop lourd (maximum ${Math.round(rule.maxBytes / 1024 / 1024)} Mo).`);
   }
-  return cachedClient;
-}
-
-/// Seule la clé privée est nécessaire : la réponse d'upload ImageKit
-/// contient déjà l'URL publique complète du fichier, il n'y a donc rien à
-/// reconstruire à partir d'un « URL endpoint ».
-export function isStorageConfigured(): boolean {
-  return Boolean(process.env.IMAGEKIT_PRIVATE_KEY);
-}
-
-/// Assainit un nom de fichier : ImageKit remplace déjà les caractères hors
-/// alphanumérique/./- par des underscores côté serveur, mais on le fait
-/// nous-mêmes en amont pour garder un nom prévisible dans les logs et éviter
-/// de dépendre de ce détail d'implémentation.
-function sanitizeFileName(name: string): string {
-  const ext = name.includes(".") ? name.slice(name.lastIndexOf(".")) : "";
-  const base = name.slice(0, name.length - ext.length);
-  const safeBase = base.replace(/[^a-zA-Z0-9.-]/g, "_").slice(0, 80) || "fichier";
-  return `${Date.now()}-${safeBase}${ext}`;
-}
-
-/**
- * Envoie un fichier vers ImageKit, sous IMAGEKIT_FOLDER/subFolder.
- *
- * @param file  Le fichier reçu d'un `request.formData()` de Route Handler —
- *              c'est directement un objet `File` de l'API Web, accepté tel
- *              quel par le SDK ImageKit (pas de conversion en Buffer).
- * @param subFolder  "products", "shops", "categories"… — un sous-dossier
- *              par type de contenu, pour retrouver facilement dans la
- *              médiathèque ImageKit.
- */
-export async function uploadFile(file: File, subFolder: string) {
-  if (!isStorageConfigured()) {
-    throw new Error("IMAGEKIT_PRIVATE_KEY manquante — voir .env.example.");
+  const buf = Buffer.from(await file.arrayBuffer());
+  const type = sniff(buf);
+  if (!type || !rule.kinds.includes(type)) {
+    throw new ApiError(415, "Format non accepté. Envoyez une image JPG, PNG ou WebP" + (rule.kinds.includes("application/pdf") ? " ou un PDF." : "."));
   }
-
-  const baseFolder = process.env.IMAGEKIT_FOLDER || "DreamShop";
-  const result = await client().files.upload({
-    file,
-    fileName: sanitizeFileName(file.name || "fichier"),
-    folder: `/${baseFolder}/${subFolder}`,
-    useUniqueFileName: true,
+  // SVG : on refuse tout script embarqué (XSS via image).
+  if (type === "image/svg+xml" && /<script|on\w+=|javascript:/i.test(buf.toString("utf8"))) {
+    throw new ApiError(415, "Ce SVG contient du code et a été refusé.");
+  }
+  const name = `${Date.now()}-${randomBytes(8).toString("hex")}.${EXT[type]}`;
+  const folder = `/${process.env.IMAGEKIT_FOLDER ?? "SuperlifeShop"}/${kind}`;
+  const res = await client().files.upload({
+    file: buf.toString("base64"),
+    fileName: name,
+    folder,
+    useUniqueFileName: false,
+    isPrivateFile: false,
   });
-
-  if (!result.url || !result.fileId) {
-    throw new Error("Échec de l'upload ImageKit : réponse incomplète.");
-  }
-
-  return { url: result.url, fileId: result.fileId };
-}
-
-/// Supprime un fichier — utile quand un produit/une image est remplacé(e)
-/// ou supprimé(e), pour ne pas laisser trainer des fichiers orphelins dans
-/// la médiathèque.
-export async function deleteFile(fileId: string) {
-  await client().files.delete(fileId);
+  if (!res.url || !res.fileId) throw new ApiError(502, "L'envoi du fichier a échoué.");
+  return { url: res.url, fileId: res.fileId };
 }
