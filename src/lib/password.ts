@@ -63,8 +63,12 @@ export function safeEqual(a: string, b: string): boolean {
 /// Mot de passe temporaire lisible (création de compte par l'admin).
 export function generateTempPassword(): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
-  const bytes = randomBytes(12);
-  let out = "";
-  for (const b of bytes) out += alphabet[b % alphabet.length];
-  return out;
+  // On boucle jusqu'à satisfaire la politique (lettres + chiffres) : un
+  // tirage purement aléatoire peut sortir sans chiffre.
+  for (;;) {
+    const bytes = randomBytes(12);
+    let out = "";
+    for (const b of bytes) out += alphabet[b % alphabet.length];
+    if (validatePasswordPolicy(out) === null) return out;
+  }
 }
