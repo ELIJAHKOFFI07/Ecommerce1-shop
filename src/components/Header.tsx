@@ -8,5 +8,5 @@ export async function Header() {
   const session = await auth();
   const user = session?.user;
   const isStaff = Boolean(user && ["SUPER_ADMIN", "ADMIN", "STOCK_MANAGER", "SUPPORT"].includes(user.role));
-  return <HeaderNav user={user ? { name: user.name ?? "", isStaff } : null} />;
+  return <HeaderNav user={user ? { name: user.name ?? "", memberNumber: user.memberNumber, isStaff } : null} />;
 }

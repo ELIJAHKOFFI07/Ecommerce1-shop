@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { pageModule } from "@/lib/pageAuth";
 import { LOCATION_LABEL } from "@/lib/stock";
@@ -26,9 +25,6 @@ export default async function MovementsPage({ searchParams }: { searchParams: Pr
 
   return (
     <>
-      <Link href="/admin/stock" className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" aria-hidden /> Stock
-      </Link>
       <PageTitle title="Historique des mouvements" subtitle={`${total} mouvements`} />
       {items.length === 0 ? (
         <Empty title="Aucun mouvement" />

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { pageModule } from "@/lib/pageAuth";
 import { uuid } from "@/lib/validators";
@@ -28,9 +27,6 @@ export default async function OfficePage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="space-y-6">
-      <Link href="/admin/bureaux" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" aria-hidden /> Bureaux
-      </Link>
       <PageTitle
         title={o.name}
         subtitle={[o.neighborhood, o.commune, o.city, o.country].filter(Boolean).join(", ")}

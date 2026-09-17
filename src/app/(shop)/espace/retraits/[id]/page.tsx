@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { pageUser } from "@/lib/pageAuth";
 import { uuid } from "@/lib/validators";
@@ -30,9 +29,6 @@ export default async function DeliveryPage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <Link href="/espace/retraits" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" aria-hidden /> Mes retraits
-      </Link>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="font-display text-4xl font-semibold">Retrait</h1>

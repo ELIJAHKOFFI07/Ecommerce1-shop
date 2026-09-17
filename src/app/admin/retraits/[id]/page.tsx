@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { pageModule } from "@/lib/pageAuth";
 import { uuid } from "@/lib/validators";
@@ -35,9 +34,6 @@ export default async function AdminDeliveryPage({ params }: { params: Promise<{ 
 
   return (
     <div className="space-y-6">
-      <Link href="/admin/retraits" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" aria-hidden /> Retraits
-      </Link>
       <PageTitle title={`Retrait · ${d.user.name}`} subtitle={`Demandé le ${fmtDate(d.createdAt, true)}`} action={<div className="flex items-center gap-3">{["APPROVED", "DELIVERED"].includes(d.status) && <Link href={`/espace/retraits/${d.id}/recu`} className="press inline-flex h-10 items-center rounded-md border border-border-strong bg-card px-4 text-sm font-semibold hover:bg-muted">Bon de retrait</Link>}<StatusPill status={d.status} /></div>} />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">

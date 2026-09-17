@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { invalidateCatalog } from "@/lib/catalog";
 import { withApi, parseBody, ok, notFound, ApiError } from "@/lib/apiError";
 import { requirePermission } from "@/lib/requireAuth";
 import { productUpdateSchema, uuid } from "@/lib/validators";
@@ -34,6 +35,7 @@ export const PATCH = withApi<Ctx>(async (req, { params }) => {
     data: { ...data, ...(categoryIds ? { categories: { set: categoryIds.map((cid) => ({ id: cid })) } } : {}) },
     select: adminProductSelect,
   });
+  invalidateCatalog();
   return ok(p);
 });
 
@@ -52,8 +54,10 @@ export const DELETE = withApi<Ctx>(async (_req, { params }) => {
   const hasHistory = c.orderItems || c.deliveryItems || c.stockMovements || c.userStocks || c.supplyOrders || c.conversionsFrom || c.conversionsTo;
   if (hasHistory) {
     await db.product.update({ where: { id }, data: { active: false } });
+    invalidateCatalog();
     return ok({ deleted: false, message: "Ce produit a un historique : il est retiré de la vente, pas supprimé." });
   }
   await db.product.delete({ where: { id } });
+  invalidateCatalog();
   return ok({ deleted: true });
 });

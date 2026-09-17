@@ -1,6 +1,4 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { pageModule } from "@/lib/pageAuth";
 import { uuid } from "@/lib/validators";
@@ -27,9 +25,6 @@ export default async function WalletDetailPage({ params }: { params: Promise<{ u
 
   return (
     <div className="space-y-6">
-      <Link href="/admin/portefeuilles" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" aria-hidden /> Portefeuilles
-      </Link>
       <PageTitle title={user.name} subtitle={`${user.memberNumber} · ${user.email}`} />
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
         <div className="space-y-6">

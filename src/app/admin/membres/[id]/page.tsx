@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import { db } from "@/lib/db";
 import { pageModule } from "@/lib/pageAuth";
 import { MODULES } from "@/lib/requireAuth";
@@ -46,9 +46,6 @@ export default async function MemberPage({ params, searchParams }: { params: Pro
 
   return (
     <div className="space-y-6">
-      <Link href="/admin/membres" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" aria-hidden /> Clients
-      </Link>
       {cree && <Alert tone="success">Compte créé. Un mot de passe temporaire a été envoyé à {u.email}.</Alert>}
       <PageTitle
         title={u.name}

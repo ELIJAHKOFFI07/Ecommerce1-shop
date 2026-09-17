@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { invalidateCatalog } from "@/lib/catalog";
 import { withApi, parseBody, parseQuery, ok, ApiError } from "@/lib/apiError";
 import { requirePermission } from "@/lib/requireAuth";
 import { productSchema, listQuery } from "@/lib/validators";
@@ -32,5 +33,6 @@ export const POST = withApi(async (req) => {
     data: { ...data, slug, categories: { connect: categoryIds.map((id) => ({ id })) } },
     select: adminProductSelect,
   });
+  invalidateCatalog();
   return ok(product, 201);
 });

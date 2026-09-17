@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Money } from "./ui";
 import { QuickAdd } from "./QuickAdd";
 
-export type CardProduct = { id: string; slug: string; title: string; description?: string | null; price: unknown; images: string[]; categories?: { name: string }[] };
+export type CardProduct = { id: string; slug: string; title: string; description?: string | null; price: number; tva: number; images: string[]; categories?: { name: string }[] };
 
 /// Cadre produit.
 ///
@@ -32,8 +32,8 @@ export function ProductCard({ product }: { product: CardProduct }) {
         </Link>
         {product.description && <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">{product.description}</p>}
         <div className="mt-auto flex items-end justify-between gap-3 pt-3">
-          <Money value={product.price as never} className="text-2xl" />
-          <QuickAdd product={{ productId: product.id, slug: product.slug, title: product.title, image: cover, price: Number(product.price) }} />
+          <Money value={product.price} className="text-2xl" />
+          <QuickAdd product={{ productId: product.id, slug: product.slug, title: product.title, image: cover, price: product.price, tva: product.tva }} />
         </div>
       </div>
     </article>

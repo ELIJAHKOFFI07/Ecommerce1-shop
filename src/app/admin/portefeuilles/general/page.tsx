@@ -1,6 +1,4 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { pageStaff } from "@/lib/pageAuth";
 import { Card, Empty, Money, PageTitle, StatusPill, fmtDate } from "@/components/ui";
@@ -19,9 +17,6 @@ export default async function GeneralBalancePage() {
 
   return (
     <div className="space-y-6">
-      <Link href="/admin/portefeuilles" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" aria-hidden /> Portefeuilles
-      </Link>
       <PageTitle title="Caisse" subtitle="Le solde général alimente les portefeuilles des membres. Le solde taxe reçoit la TVA encaissée." />
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="p-5">
