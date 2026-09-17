@@ -19,7 +19,7 @@ const ROLE_LABEL: Record<string, string> = { SUPER_ADMIN: "Super administrateur"
 export function AdminNav({ primary, more, userName, role }: { primary: NavItem[]; more: NavItem[]; userName: string; role: string }) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLLIElement>(null);
   const isActive = (i: NavItem) => (i.exact ? path === i.href : path.startsWith(i.href));
   const moreActive = more.some(isActive);
 
