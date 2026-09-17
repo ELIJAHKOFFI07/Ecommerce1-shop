@@ -18,7 +18,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
         ...(query ? { OR: [{ title: { contains: query, mode: "insensitive" } }, { description: { contains: query, mode: "insensitive" } }] } : {}),
         ...(categorie ? { categories: { some: { slug: categorie } } } : {}),
       },
-      select: { id: true, slug: true, title: true, price: true, images: true, categories: { select: { name: true } } },
+      select: { id: true, slug: true, title: true, description: true, price: true, images: true, categories: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
       take: 60,
     }),
@@ -55,7 +55,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
       {products.length === 0 ? (
         <Empty title="Aucun produit trouvé" hint={query ? "Essayez un autre mot." : "Le catalogue est vide pour le moment."} />
       ) : (
-        <div className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

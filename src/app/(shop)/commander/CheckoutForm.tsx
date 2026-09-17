@@ -10,6 +10,7 @@ export function CheckoutForm() {
   const { lines, ready, total, clear } = useCart();
   const router = useRouter();
   const [claimReference, setClaimReference] = useState("");
+  const [salesNo, setSalesNo] = useState("");
   const [note, setNote] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
@@ -29,7 +30,7 @@ export function CheckoutForm() {
       if (file) receiptUrl = (await uploadFile(file, "receipt")).url;
       const order = await api<{ id: string }>("/api/orders", {
         method: "POST",
-        json: { items: lines.map((l) => ({ productId: l.productId, quantity: l.quantity })), claimReference: claimReference.trim(), receiptUrl, note: note.trim() || undefined },
+        json: { items: lines.map((l) => ({ productId: l.productId, quantity: l.quantity })), claimReference: claimReference.trim(), salesNo: salesNo.trim() || undefined, receiptUrl, note: note.trim() || undefined },
       });
       clear();
       router.push(`/espace/commandes/${order.id}?envoyee=1`);
@@ -56,11 +57,15 @@ export function CheckoutForm() {
         </div>
       </Card>
 
-      <Field label="Référence du reçu" htmlFor="ref" hint="Elle figure sur votre reçu d’achat. Chaque reçu ne peut être envoyé qu’une fois.">
-        <Input id="ref" value={claimReference} onChange={(e) => setClaimReference(e.target.value)} required minLength={3} maxLength={60} placeholder="Ex. : REC-2026-0142" autoComplete="off" />
+      <Field label="Claim Reference" htmlFor="ref" hint="Sur votre facture SuperLife, ligne « Claim Reference ». Chaque facture ne peut être envoyée qu’une fois.">
+        <Input id="ref" value={claimReference} onChange={(e) => setClaimReference(e.target.value)} required minLength={3} maxLength={60} placeholder="Ex. : MYTEDIVOIRSPC2512f2f83" autoComplete="off" autoCapitalize="characters" />
       </Field>
 
-      <Field label="Photo du reçu (facultatif)" htmlFor="file" hint="JPG, PNG ou PDF, 8 Mo maximum.">
+      <Field label="Sales No (facultatif)" htmlFor="sales" hint="Ligne « Sales No » de la facture — aide l’administration à vérifier plus vite.">
+        <Input id="sales" value={salesNo} onChange={(e) => setSalesNo(e.target.value)} maxLength={60} placeholder="Ex. : MYTEDIVOIRCSB251200487" autoComplete="off" autoCapitalize="characters" />
+      </Field>
+
+      <Field label="Facture SuperLife (PDF ou photo)" htmlFor="file" hint="Le PDF reçu par e-mail, ou une photo nette. 8 Mo maximum.">
         <input id="file" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="block w-full text-sm file:mr-4 file:h-11 file:cursor-pointer file:rounded-md file:border file:border-border-strong file:bg-card file:px-4 file:font-semibold" />
       </Field>
 

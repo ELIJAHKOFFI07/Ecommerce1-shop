@@ -26,7 +26,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const o = await db.order.findFirst({
     where: { id: parsed.data, userId: me.id },
     select: {
-      id: true, orderNumber: true, status: true, subTotal: true, taxTotal: true, total: true, claimReference: true, receiptUrl: true, note: true, rejectionReason: true, createdAt: true, validatedAt: true,
+      id: true, orderNumber: true, status: true, subTotal: true, taxTotal: true, total: true, claimReference: true, salesNo: true, receiptUrl: true, note: true, rejectionReason: true, createdAt: true, validatedAt: true,
       items: { select: { id: true, quantity: true, unitPrice: true, totalPrice: true, product: { select: { title: true, slug: true, images: true } } } },
     },
   });
@@ -44,7 +44,14 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
           <h1 className="font-display text-4xl font-semibold">{o.orderNumber}</h1>
           <p className="mt-1 text-muted-foreground">Envoyée le {fmtDate(o.createdAt, true)}</p>
         </div>
-        <StatusPill status={o.status} />
+        <div className="flex items-center gap-3">
+          {["VALIDATED", "DELIVERED"].includes(o.status) && (
+            <Link href={`/espace/commandes/${o.id}/recu`} className="press inline-flex h-10 items-center rounded-md border border-border-strong bg-card px-4 text-sm font-semibold hover:bg-muted">
+              Reçu
+            </Link>
+          )}
+          <StatusPill status={o.status} />
+        </div>
       </div>
 
       <Alert tone={o.status === "REJECTED" ? "error" : o.status === "VALIDATED" ? "success" : "info"}>
@@ -81,7 +88,8 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
       </Card>
 
       <Card className="px-5 py-2">
-        <Row label="Référence du reçu" value={o.claimReference} />
+        <Row label="Claim Reference" value={<span className="font-mono">{o.claimReference}</span>} />
+        {o.salesNo && <Row label="Sales No" value={<span className="font-mono">{o.salesNo}</span>} />}
         {o.receiptUrl && (
           <Row
             label="Reçu joint"

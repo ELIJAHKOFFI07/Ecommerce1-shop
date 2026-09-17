@@ -6,7 +6,7 @@ import { createOrder } from "@/lib/orders";
 import { audit } from "@/lib/audit";
 
 export const orderSelect = {
-  id: true, orderNumber: true, status: true, subTotal: true, taxTotal: true, total: true, claimReference: true,
+  id: true, orderNumber: true, status: true, subTotal: true, taxTotal: true, total: true, claimReference: true, salesNo: true,
   receiptUrl: true, note: true, rejectionReason: true, validatedAt: true, createdAt: true,
   items: { select: { id: true, quantity: true, unitPrice: true, totalPrice: true, product: { select: { id: true, title: true, slug: true, images: true } } } },
 } as const;

@@ -43,16 +43,16 @@ function Gallery({ images, title }: { images: string[]; title: string }) {
   }
   return (
     <div className="space-y-3">
-      <div className="aspect-square overflow-hidden rounded-lg bg-muted">
+      <div className="aspect-square overflow-hidden rounded-lg bg-[#f4f2ee] p-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={images[0]} alt={title} className="h-full w-full object-cover" />
+        <img src={images[0]} alt={title} className="h-full w-full object-contain" />
       </div>
       {images.length > 1 && (
         <div className="grid grid-cols-4 gap-3">
           {images.slice(1, 5).map((src, i) => (
-            <div key={src} className="aspect-square overflow-hidden rounded-md bg-muted">
+            <div key={src} className="aspect-square overflow-hidden rounded-md bg-[#f4f2ee] p-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt={`${title} — vue ${i + 2}`} loading="lazy" className="h-full w-full object-cover" />
+              <img src={src} alt={`${title} — vue ${i + 2}`} loading="lazy" className="h-full w-full object-contain" />
             </div>
           ))}
         </div>

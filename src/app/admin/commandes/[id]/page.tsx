@@ -16,7 +16,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
   const o = await db.order.findUnique({
     where: { id: parsed.data },
     select: {
-      id: true, orderNumber: true, status: true, subTotal: true, taxTotal: true, total: true, claimReference: true, receiptUrl: true, note: true, rejectionReason: true, createdAt: true, validatedAt: true,
+      id: true, orderNumber: true, status: true, subTotal: true, taxTotal: true, total: true, claimReference: true, salesNo: true, receiptUrl: true, note: true, rejectionReason: true, createdAt: true, validatedAt: true,
       user: { select: { id: true, name: true, memberNumber: true, phone: true, email: true } },
       items: { select: { id: true, quantity: true, unitPrice: true, totalPrice: true, product: { select: { id: true, title: true, stockVirtuel: true } } } },
     },
@@ -29,7 +29,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
       <Link href="/admin/commandes" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" aria-hidden /> Commandes
       </Link>
-      <PageTitle title={o.orderNumber} subtitle={`Envoyée le ${fmtDate(o.createdAt, true)}`} action={<StatusPill status={o.status} />} />
+      <PageTitle title={o.orderNumber} subtitle={`Envoyée le ${fmtDate(o.createdAt, true)}`} action={<div className="flex items-center gap-3">{["VALIDATED", "DELIVERED"].includes(o.status) && <Link href={`/espace/commandes/${o.id}/recu`} className="press inline-flex h-10 items-center rounded-md border border-border-strong bg-card px-4 text-sm font-semibold hover:bg-muted">Reçu</Link>}<StatusPill status={o.status} /></div>} />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="space-y-6">
@@ -55,7 +55,8 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
           </Card>
 
           <Card className="px-5 py-2">
-            <Row label="Référence du reçu" value={<span className="font-mono">{o.claimReference}</span>} />
+            <Row label="Claim Reference" value={<span className="font-mono">{o.claimReference}</span>} />
+            {o.salesNo && <Row label="Sales No" value={<span className="font-mono">{o.salesNo}</span>} />}
             <Row
               label="Reçu joint"
               value={

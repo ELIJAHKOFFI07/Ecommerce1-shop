@@ -38,7 +38,14 @@ export default async function DeliveryPage({ params }: { params: Promise<{ id: s
           <h1 className="font-display text-4xl font-semibold">Retrait</h1>
           <p className="mt-1 text-muted-foreground">Demandé le {fmtDate(d.createdAt, true)}</p>
         </div>
-        <StatusPill status={d.status} />
+        <div className="flex items-center gap-3">
+          {["APPROVED", "DELIVERED"].includes(d.status) && (
+            <Link href={`/espace/retraits/${d.id}/recu`} className="press inline-flex h-10 items-center rounded-md border border-border-strong bg-card px-4 text-sm font-semibold hover:bg-muted">
+              Bon de retrait
+            </Link>
+          )}
+          <StatusPill status={d.status} />
+        </div>
       </div>
       <Alert tone={d.status === "REJECTED" ? "error" : d.status === "APPROVED" ? "success" : "info"}>
         {EXPLAIN[d.status]}

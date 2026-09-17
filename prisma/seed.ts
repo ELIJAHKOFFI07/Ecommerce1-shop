@@ -1,7 +1,6 @@
 import "dotenv/config";
-import { PrismaClient } from "./generated/client";
-import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
+import { db } from "../src/lib/db";
 import { randomBytes } from "node:crypto";
 
 /// Amorçage : modules de permission, paramètres, et le premier SUPER_ADMIN.
@@ -10,8 +9,6 @@ import { randomBytes } from "node:crypto";
 /// `SEED_ADMIN_PASSWORD` ; s'il est absent, un mot de passe aléatoire est
 /// généré et affiché UNE fois en console — à changer à la première
 /// connexion. Relancer le seed ne recrée pas l'admin s'il existe.
-const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
-
 const MODULES = [
   { slug: "products", name: "Produits", description: "Catalogue et fiches produit" },
   { slug: "categories", name: "Catégories", description: "Arborescence du catalogue" },

@@ -247,6 +247,7 @@ model Order {
   taxTotal        Decimal     @db.Decimal(15, 2)
   total           Decimal     @db.Decimal(15, 2)
   claimReference  String      @unique
+  salesNo         String?
   receiptUrl      String?
   note            String?
   rejectionReason String?

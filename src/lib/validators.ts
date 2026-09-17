@@ -90,6 +90,7 @@ export const listQuery = z.object({
 export const orderCreateSchema = z.object({
   items: z.array(z.object({ productId: uuid, quantity })).min(1).max(50),
   claimReference: z.string().trim().min(3).max(60).regex(/^[A-Za-z0-9-_/ ]+$/),
+  salesNo: z.string().trim().min(3).max(60).regex(/^[A-Za-z0-9-_/ ]+$/).optional().or(z.literal("").transform(() => undefined)),
   receiptUrl: httpsUrl.optional(),
   note: optionalLongText,
 });

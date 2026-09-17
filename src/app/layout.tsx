@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: { default: "SuperlifeShop", template: "%s · SuperlifeShop" },
   description: "Boutique et espace membre SuperlifeShop.",
   robots: { index: false, follow: false },
+  icons: { icon: "/favicon.ico", apple: "/icon-192.png" },
+  manifest: "/manifest.webmanifest",
 };
 
 export const viewport: Viewport = {

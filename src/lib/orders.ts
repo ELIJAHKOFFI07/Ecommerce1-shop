@@ -15,6 +15,7 @@ export async function createOrder(input: {
   userId: string;
   items: { productId: string; quantity: number }[];
   claimReference: string;
+  salesNo?: string;
   receiptUrl?: string;
   note?: string;
 }) {
@@ -52,6 +53,7 @@ export async function createOrder(input: {
         orderNumber,
         userId: input.userId,
         claimReference: input.claimReference,
+        salesNo: input.salesNo,
         receiptUrl: input.receiptUrl,
         note: input.note,
         subTotal,
