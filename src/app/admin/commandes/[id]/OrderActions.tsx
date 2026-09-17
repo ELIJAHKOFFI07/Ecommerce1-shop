@@ -3,14 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-import { Alert, Button, Card, Field, Textarea } from "@/components/ui";
+import { Alert, Button, Card, Field, Input, Textarea } from "@/components/ui";
+import { ActionButton } from "@/components/admin";
 
 /// Actions sur une commande. Une seule action principale par état :
 /// « Valider » en attente, « Marquer livrée » une fois validée. Le rejet
 /// exige un motif — le membre le lira.
-export function OrderActions({ id, status, shortage }: { id: string; status: string; shortage: string[] }) {
+export function OrderActions({ id, status, shortage, refs }: { id: string; status: string; shortage: string[]; refs: { claimReference: string; salesNo: string } }) {
   const router = useRouter();
-  const [mode, setMode] = useState<"idle" | "reject">("idle");
+  const [mode, setMode] = useState<"idle" | "reject" | "edit">("idle");
+  const [edit, setEdit] = useState(refs);
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +31,32 @@ export function OrderActions({ id, status, shortage }: { id: string; status: str
     }
   }
 
-  if (!["PENDING", "VALIDATED"].includes(status)) return null;
+  async function saveRefs(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError(null);
+    try {
+      await api(`/api/admin/orders/${id}`, { method: "PATCH", json: { claimReference: edit.claimReference.trim(), salesNo: edit.salesNo.trim() || null } });
+      setMode("idle");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const deletable = ["PENDING", "REJECTED", "CANCELLED"].includes(status);
+  if (!["PENDING", "VALIDATED"].includes(status)) {
+    return deletable ? (
+      <Card className="space-y-3 p-5">
+        <h2 className="font-semibold">Gestion</h2>
+        <ActionButton path={`/api/admin/orders/${id}`} method="DELETE" variant="ghost" confirm="Supprimer définitivement cette commande ?" redirect="/admin/commandes" className="w-full">
+          Supprimer la commande
+        </ActionButton>
+      </Card>
+    ) : null;
+  }
 
   return (
     <Card className="space-y-4 p-5">
@@ -59,6 +86,19 @@ export function OrderActions({ id, status, shortage }: { id: string; status: str
             </Button>
           </div>
         </form>
+      ) : mode === "edit" ? (
+        <form onSubmit={saveRefs} className="space-y-3">
+          <Field label="Claim Reference" htmlFor="cr">
+            <Input id="cr" value={edit.claimReference} onChange={(e) => setEdit({ ...edit, claimReference: e.target.value })} required minLength={3} maxLength={60} />
+          </Field>
+          <Field label="Sales No" htmlFor="sn">
+            <Input id="sn" value={edit.salesNo} onChange={(e) => setEdit({ ...edit, salesNo: e.target.value })} maxLength={60} />
+          </Field>
+          <div className="flex gap-2">
+            <Button type="submit" disabled={busy}>Enregistrer</Button>
+            <Button variant="ghost" onClick={() => setMode("idle")}>Annuler</Button>
+          </div>
+        </form>
       ) : status === "PENDING" ? (
         <div className="space-y-2">
           <Button full size="lg" onClick={() => go("VALIDATED")} disabled={busy || shortage.length > 0}>
@@ -68,6 +108,12 @@ export function OrderActions({ id, status, shortage }: { id: string; status: str
           <Button full variant="secondary" onClick={() => setMode("reject")} disabled={busy}>
             Rejeter
           </Button>
+          <Button full variant="ghost" onClick={() => setMode("edit")} disabled={busy}>
+            Corriger les références
+          </Button>
+          <ActionButton path={`/api/admin/orders/${id}`} method="DELETE" variant="ghost" confirm="Supprimer définitivement cette commande ?" redirect="/admin/commandes" className="w-full">
+            Supprimer
+          </ActionButton>
         </div>
       ) : (
         <div className="space-y-2">

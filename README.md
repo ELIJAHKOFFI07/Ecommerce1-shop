@@ -60,6 +60,8 @@ avec un message clair et les e-mails s'affichent en console.
 | `npm test` / `npm run test:security` | vitest — tests de sécurité |
 | `npm run db:migrate` | applique les migrations (`prisma migrate deploy`) |
 | `npm run db:seed` | modules, paramètres, super-admin |
+| `npm run db:seed:products` | les 7 produits SuperLife (hors vente, prix à saisir) |
+| `npm run db:seed:test` | **jeu de test** : un compte par rôle, bureau, formations, stock, commandes, retraits, soldes — jamais en production |
 
 **Avant tout commit** : `npm run typecheck && npm run lint && npm test && npm run build`.
 Ne lancez jamais `next build` pendant que `npm run dev` tourne (même
@@ -96,6 +98,22 @@ docs/
   SECURITE.md            menaces → mesures → fichiers
   STOCK.md               les quatre stocks
 ```
+
+## Comptes de test (`npm run db:seed:test`)
+
+Mot de passe commun : `Superlife2026test` (variable `SEED_TEST_PASSWORD`).
+
+| Rôle | E-mail | Ce qu'il voit |
+|---|---|---|
+| ADMIN | admin@test.superlife | tous les modules, en écriture |
+| STOCK_MANAGER | stock@test.superlife | produits, stock, retraits ; commandes en lecture |
+| SUPPORT | support@test.superlife | commandes, retraits, clients, portefeuilles — lecture seule |
+| CLIENT chef d'équipe | chef@test.superlife | responsable du Bureau de Cocody, commande validée, retrait remis |
+| CLIENT indépendante | membre1@test.superlife | commande validée, retrait en attente |
+| CLIENT membre | membre2@test.superlife | commande en attente + une rejetée |
+| CLIENT bloqué | bloque@test.superlife | ne peut pas se connecter |
+
+Les prix fixés par ce seed sont **fictifs** (tests uniquement).
 
 ## Conventions
 

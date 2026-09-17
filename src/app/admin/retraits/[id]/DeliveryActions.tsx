@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { formatFcfa } from "@/lib/money";
 import { Alert, Button, Card, Field, Input, Select, Textarea } from "@/components/ui";
+import { ActionButton } from "@/components/admin";
 
 /// Le parcours admin d'un retrait, dans l'ordre : approuver → fixer la TVA
 /// → encaisser la TVA → remettre. Chaque étape n'affiche que l'action
@@ -32,7 +33,17 @@ export function DeliveryActions({ id, status, tva, tvaPaid, balance, problems }:
     }
   }
 
-  if (status === "DELIVERED" || status === "REJECTED") return null;
+  if (status === "DELIVERED") return null;
+  if (status === "REJECTED") {
+    return tvaPaid ? null : (
+      <Card className="space-y-3 p-5">
+        <h2 className="font-semibold">Gestion</h2>
+        <ActionButton path={`/api/admin/deliveries/${id}`} method="DELETE" variant="ghost" confirm="Supprimer définitivement ce retrait ?" redirect="/admin/retraits" className="w-full">
+          Supprimer le retrait
+        </ActionButton>
+      </Card>
+    );
+  }
 
   return (
     <Card className="space-y-5 p-5">
@@ -75,6 +86,9 @@ export function DeliveryActions({ id, status, tva, tvaPaid, balance, problems }:
           <Button full variant="secondary" onClick={() => setMode("reject")} disabled={busy}>
             Refuser
           </Button>
+          <ActionButton path={`/api/admin/deliveries/${id}`} method="DELETE" variant="ghost" confirm="Supprimer définitivement ce retrait ?" redirect="/admin/retraits" className="w-full">
+            Supprimer
+          </ActionButton>
         </div>
       ) : (
         <div className="space-y-5">

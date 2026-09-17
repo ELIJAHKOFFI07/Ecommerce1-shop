@@ -37,11 +37,23 @@ export const PATCH = withApi<Ctx>(async (req, { params }) => {
   return ok(p);
 });
 
-/// Pas de suppression physique : un produit lié à des commandes ou des
-/// mouvements de stock doit rester consultable. On le désactive.
+/// Suppression réelle si le produit n'a AUCUN historique (jamais commandé,
+/// jamais de mouvement). Sinon il reste consultable : on le retire de la
+/// vente. La réponse dit lequel des deux s'est produit.
 export const DELETE = withApi<Ctx>(async (_req, { params }) => {
   await requirePermission("products", "edit");
   const id = uuid.parse((await params).id);
-  await db.product.update({ where: { id }, data: { active: false } });
-  return ok({ ok: true });
+  const p = await db.product.findUnique({
+    where: { id },
+    select: { _count: { select: { orderItems: true, deliveryItems: true, stockMovements: true, userStocks: true, supplyOrders: true, conversionsFrom: true, conversionsTo: true } } },
+  });
+  if (!p) throw notFound("Produit");
+  const c = p._count;
+  const hasHistory = c.orderItems || c.deliveryItems || c.stockMovements || c.userStocks || c.supplyOrders || c.conversionsFrom || c.conversionsTo;
+  if (hasHistory) {
+    await db.product.update({ where: { id }, data: { active: false } });
+    return ok({ deleted: false, message: "Ce produit a un historique : il est retiré de la vente, pas supprimé." });
+  }
+  await db.product.delete({ where: { id } });
+  return ok({ deleted: true });
 });

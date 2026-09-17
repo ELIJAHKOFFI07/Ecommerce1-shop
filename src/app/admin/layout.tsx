@@ -13,13 +13,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const primary: NavItem[] = [
     { href: "/admin", label: "Tableau de bord", exact: true },
     ...(has("orders") ? [{ href: "/admin/commandes", label: "Commandes" }] : []),
+    ...(has("orders") ? [{ href: "/admin/recus", label: "Reçus" }] : []),
     ...(has("deliveries") ? [{ href: "/admin/retraits", label: "Retraits" }] : []),
     ...(has("products") ? [{ href: "/admin/produits", label: "Produits" }] : []),
     ...(has("stock") ? [{ href: "/admin/stock", label: "Stock" }] : []),
-    ...(has("users") ? [{ href: "/admin/membres", label: "Membres" }] : []),
-    ...(has("wallet") ? [{ href: "/admin/portefeuilles", label: "Portefeuilles" }] : []),
+    ...(has("users") ? [{ href: "/admin/membres", label: "Clients" }] : []),
+    ...(has("wallet") ? [{ href: "/admin/comptabilite", label: "Comptabilité" }] : []),
   ];
   const more: NavItem[] = [
+    ...(has("wallet") ? [{ href: "/admin/portefeuilles", label: "Portefeuilles" }] : []),
     ...(has("categories") ? [{ href: "/admin/categories", label: "Catégories" }] : []),
     ...(has("conversions") ? [{ href: "/admin/conversions", label: "Conversions" }] : []),
     ...(has("offices") ? [{ href: "/admin/bureaux", label: "Bureaux" }] : []),

@@ -6,7 +6,7 @@ import { pageModule } from "@/lib/pageAuth";
 import { uuid } from "@/lib/validators";
 import { LOCATION_LABEL } from "@/lib/stock";
 import { Card, PageTitle, fmtDate, ButtonLink } from "@/components/ui";
-import { Table, td } from "@/components/admin";
+import { Table, td, ActionButton } from "@/components/admin";
 import { ProductForm } from "../ProductForm";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +36,7 @@ export default async function AdminProductPage({ params }: { params: Promise<{ i
       <Link href="/admin/produits" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" aria-hidden /> Produits
       </Link>
-      <PageTitle title={p.title} subtitle={p.sku} action={canEdit ? <ButtonLink href={`/admin/stock/actions?produit=${p.id}`} variant="secondary">Ajuster le stock</ButtonLink> : undefined} />
+      <PageTitle title={p.title} subtitle={p.sku} action={canEdit ? <div className="flex flex-wrap gap-2"><ButtonLink href={`/admin/stock/actions?produit=${p.id}`} variant="secondary">Ajuster le stock</ButtonLink><ActionButton path={`/api/admin/products/${p.id}`} method="DELETE" variant="ghost" confirm={`Supprimer « ${p.title} » ? S’il a un historique, il sera seulement retiré de la vente.`} redirect="/admin/produits">Supprimer</ActionButton></div> : undefined} />
 
       <div className="grid gap-4 sm:grid-cols-4">
         {(["VIRTUEL", "DISPONIBLE", "BUREAU", "ENTREPOT"] as const).map((loc) => {

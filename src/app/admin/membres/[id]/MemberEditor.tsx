@@ -9,7 +9,7 @@ import { ActionButton } from "@/components/admin";
 type U = { id: string; name: string; phone: string; city: string; role: string; status: string; blocked: boolean; officeId: string };
 type Perm = { slug: string; canView: boolean; canEdit: boolean };
 
-export function MemberEditor({ user, offices, isSelf, isSuperAdmin, modules, permissions }: { user: U; offices: { id: string; name: string }[]; isSelf: boolean; isSuperAdmin: boolean; modules: { slug: string; name: string }[]; permissions: Perm[] }) {
+export function MemberEditor({ user, offices, isSelf, isSuperAdmin, modules, permissions, canDelete }: { user: U; offices: { id: string; name: string }[]; isSelf: boolean; isSuperAdmin: boolean; modules: { slug: string; name: string }[]; permissions: Perm[]; canDelete: boolean }) {
   const router = useRouter();
   const [f, setF] = useState({ name: user.name, phone: user.phone, city: user.city, role: user.role, status: user.status, officeId: user.officeId });
   const [perms, setPerms] = useState<Record<string, Perm>>(Object.fromEntries(modules.map((m) => [m.slug, permissions.find((p) => p.slug === m.slug) ?? { slug: m.slug, canView: false, canEdit: false }])));
@@ -109,6 +109,14 @@ export function MemberEditor({ user, offices, isSelf, isSuperAdmin, modules, per
           <ActionButton path={`/api/admin/users/${user.id}`} method="PATCH" body={{ blocked: !user.blocked }} variant={user.blocked ? "secondary" : "destructive"} confirm={user.blocked ? "Débloquer ce compte ?" : "Bloquer ce compte ? La personne ne pourra plus se connecter."} className="w-full">
             {user.blocked ? "Débloquer le compte" : "Bloquer le compte"}
           </ActionButton>
+        )}
+        {!isSelf && (
+          <>
+            <ActionButton path={`/api/admin/users/${user.id}`} method="DELETE" variant="ghost" confirm={`Supprimer définitivement le compte de ${user.name} ?`} redirect="/admin/membres" disabled={!canDelete} className="w-full">
+              Supprimer le compte
+            </ActionButton>
+            {!canDelete && <p className="text-xs text-muted-foreground">Ce compte a un historique (commandes, retraits, solde ou filleuls) : il se bloque, il ne se supprime pas.</p>}
+          </>
         )}
       </Card>
     </div>

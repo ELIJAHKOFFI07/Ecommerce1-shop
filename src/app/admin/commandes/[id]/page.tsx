@@ -82,7 +82,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
             {o.user.phone && <Row label="Téléphone" value={o.user.phone} />}
             <Row label="E-mail" value={o.user.email} />
           </Card>
-          {canEdit && <OrderActions id={o.id} status={o.status} shortage={shortage.map((s) => s.product.title)} />}
+          {canEdit && <OrderActions id={o.id} status={o.status} shortage={shortage.map((s) => s.product.title)} refs={{ claimReference: o.claimReference, salesNo: o.salesNo ?? "" }} />}
         </div>
       </div>
     </div>

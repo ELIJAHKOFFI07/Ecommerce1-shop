@@ -48,3 +48,26 @@ export const PATCH = withApi<Ctx>(async (req, { params }) => {
   if (input.blocked !== undefined && input.blocked !== target.blocked) await audit(input.blocked ? "user.blocked" : "user.unblocked", { userId: admin.id, target: id, req });
   return ok(user);
 });
+
+/// Suppression d'un compte. Refusée si le compte porte de l'historique
+/// (commandes, retraits, mouvements, filleuls) : ces lignes doivent
+/// rester lisibles. Dans ce cas, bloquez le compte. Un compte vide
+/// (créé par erreur, jamais utilisé) se supprime.
+export const DELETE = withApi<Ctx>(async (req, { params }) => {
+  const admin = await requirePermission("users", "edit");
+  const id = uuid.parse((await params).id);
+  if (id === admin.id) throw new ApiError(400, "Vous ne pouvez pas supprimer votre propre compte.");
+  const u = await db.user.findUnique({
+    where: { id },
+    select: { role: true, name: true, _count: { select: { orders: true, deliveries: true, referrals: true, walletTransactions: true, stocks: true } } },
+  });
+  if (!u) throw notFound("Membre");
+  if (admin.role !== "SUPER_ADMIN" && u.role !== "CLIENT") throw new ApiError(403, "Seul le super administrateur supprime un compte de l’équipe.");
+  const c = u._count;
+  if (c.orders || c.deliveries || c.referrals || c.walletTransactions || c.stocks) {
+    throw new ApiError(400, "Ce compte a un historique (commandes, retraits, solde ou filleuls). Bloquez-le plutôt que de le supprimer.");
+  }
+  await db.user.delete({ where: { id } });
+  await audit("user.blocked", { userId: admin.id, target: id, req, meta: { deleted: u.name } });
+  return ok({ ok: true });
+});
