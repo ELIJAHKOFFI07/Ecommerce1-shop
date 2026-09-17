@@ -9,9 +9,30 @@ import { PrismaPg } from "@prisma/adapter-pg";
 /// directement à Postgres, sans moteur binaire à embarquer.
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
+/// TLS vers le VPS : le certificat Postgres est auto-signé (docs/VPS.md §1).
+/// Le pilote `pg` traite `sslmode=require` comme une vérification stricte
+/// de l'autorité et refuse ce certificat. On demande donc explicitement
+/// « chiffré, sans vérifier l'émetteur » : la connexion est protégée contre
+/// l'écoute passive, ce qui est l'objectif ; l'authentification du serveur
+/// repose sur le mot de passe SCRAM. Pour une vérification complète,
+/// installez le certificat côté client et passez `sslmode=verify-full`.
+function connection() {
+  const raw = process.env.DATABASE_URL ?? "";
+  try {
+    const url = new URL(raw);
+    const mode = url.searchParams.get("sslmode");
+    if (mode === "require" || mode === "prefer") {
+      url.searchParams.delete("sslmode");
+      return { connectionString: url.toString(), ssl: { rejectUnauthorized: false } };
+    }
+  } catch {
+    /* URL vide au build : Prisma lèvera au premier appel réel */
+  }
+  return { connectionString: raw };
+}
+
 function create() {
-  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-  return new PrismaClient({ adapter });
+  return new PrismaClient({ adapter: new PrismaPg(connection()) });
 }
 
 export const db = globalForPrisma.prisma ?? create();
