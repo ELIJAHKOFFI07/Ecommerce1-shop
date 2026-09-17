@@ -39,7 +39,7 @@ export function MemberEditor({ user, offices, isSelf, isSuperAdmin, modules, per
   return (
     <div className="space-y-6">
       <Card className="p-5">
-        <h2 className="mb-4 font-semibold">Modifier</h2>
+        <h2 className="mb-4 font-semibold">Modifier le compte{isSuperAdmin ? ", le rôle et les accès" : ""}</h2>
         <form onSubmit={save} className="space-y-4">
           <Field label="Nom" htmlFor="n">
             <Input id="n" value={f.name} onChange={set("name")} required maxLength={120} />

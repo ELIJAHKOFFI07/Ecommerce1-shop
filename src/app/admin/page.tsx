@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { pageStaff } from "@/lib/pageAuth";
-import { Card, Money, PageTitle, Alert } from "@/components/ui";
+import { Card, Money, PageTitle, Alert, ButtonLink } from "@/components/ui";
+import { visibleModules } from "@/lib/pageAuth";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,7 @@ export const dynamic = "force-dynamic";
 /// ensuite. Chaque tuile mène à la liste correspondante.
 export default async function AdminHome({ searchParams }: { searchParams: Promise<{ refus?: string }> }) {
   const user = await pageStaff();
+  const mods = await visibleModules(user);
   const { refus } = await searchParams;
   // Composant serveur : lire l'heure au rendu est exactement ce qu'on veut
   // (la règle vise les composants client re-rendus).
@@ -30,6 +32,15 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
     <>
       <PageTitle title="Tableau de bord" subtitle={`Bonjour, ${user.name?.split(" ")[0] ?? ""}`} />
       {refus && <div className="mb-6"><Alert tone="error">Vous n’avez pas accès à ce module.</Alert></div>}
+
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Actions rapides</h2>
+      <div className="mb-10 flex flex-wrap gap-3">
+        {mods.has("products") && <ButtonLink href="/admin/produits/nouveau">+ Ajouter un produit</ButtonLink>}
+        {mods.has("stock") && <ButtonLink href="/admin/stock/actions?onglet=ajouter" variant="secondary">+ Ajouter du stock</ButtonLink>}
+        {mods.has("users") && <ButtonLink href="/admin/membres/nouveau" variant="secondary">+ Créer un utilisateur</ButtonLink>}
+        {mods.has("users") && <ButtonLink href="/admin/membres" variant="secondary">Gérer les utilisateurs et rôles</ButtonLink>}
+        {mods.has("orders") && <ButtonLink href="/admin/commandes?status=PENDING" variant="secondary">Vérifier les reçus</ButtonLink>}
+      </div>
 
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">À traiter</h2>
       <div className="grid gap-4 sm:grid-cols-3">

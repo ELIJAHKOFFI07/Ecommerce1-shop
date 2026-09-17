@@ -19,15 +19,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         item("/admin", "Tableau de bord", true),
         ...(has("orders") ? [item("/admin/commandes", "Commandes"), item("/admin/recus", "Reçus")] : []),
         ...(has("deliveries") ? [item("/admin/retraits", "Retraits")] : []),
-        ...(has("users") ? [item("/admin/membres", "Clients")] : []),
+        ...(has("users") ? [item("/admin/membres", "Utilisateurs et rôles")] : []),
       ],
     },
     {
       title: "Catalogue et stock",
       items: [
-        ...(has("products") ? [item("/admin/produits", "Produits")] : []),
+        ...(has("products") ? [item("/admin/produits", "Produits (ajouter, modifier)")] : []),
         ...(has("categories") ? [item("/admin/categories", "Catégories")] : []),
-        ...(has("stock") ? [item("/admin/stock", "Stock"), item("/admin/stock/reappro", "Commandes fournisseur"), item("/admin/stock/mouvements", "Historique du stock")] : []),
+        ...(has("stock") ? [item("/admin/stock", "Stock (niveaux)"), item("/admin/stock/actions?onglet=ajouter", "Ajouter du stock"), item("/admin/stock/reappro", "Commandes fournisseur"), item("/admin/stock/mouvements", "Historique du stock")] : []),
         ...(has("conversions") ? [item("/admin/conversions", "Conversions")] : []),
       ],
     },

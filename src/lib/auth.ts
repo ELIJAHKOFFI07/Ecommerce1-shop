@@ -8,6 +8,7 @@ import { authConfig } from "./auth.config";
 import { verifyPassword } from "./password";
 import { consumeRateLimit, clientIp } from "./rateLimit";
 import { audit } from "./audit";
+import { ApiError } from "./apiError";
 
 /// Verrouillage progressif : 5 échecs → 15 min, 10 échecs → 1 h, 15 → 24 h.
 /// Le compteur ne se remet à zéro qu'après une connexion réussie. Contre
@@ -72,8 +73,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         try {
           await consumeRateLimit("login", ip);
           await consumeRateLimit("login", email);
-        } catch {
-          throw new TooMany();
+        } catch (err) {
+          // Seule la limite (429) devient « trop de tentatives » ; une panne
+          // de base doit rester visible dans les journaux, pas déguisée.
+          if (err instanceof ApiError && err.status === 429) throw new TooMany();
+          console.error("[auth] limitation de débit indisponible", err);
+          throw err;
         }
 
         const user = await db.user.findUnique({

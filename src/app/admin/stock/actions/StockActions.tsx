@@ -15,9 +15,9 @@ const LOCS = [
 
 /// Deux opérations sur un même écran, à onglets : transférer entre deux
 /// emplacements, ou ajuster un emplacement (+/−) avec un motif.
-export function StockActions({ products, initialProductId }: { products: P[]; initialProductId?: string }) {
+export function StockActions({ products, initialProductId, initialTab = "transfer" }: { products: P[]; initialProductId?: string; initialTab?: "transfer" | "adjust" }) {
   const router = useRouter();
-  const [tab, setTab] = useState<"transfer" | "adjust">("transfer");
+  const [tab, setTab] = useState<"transfer" | "adjust">(initialTab);
   const [productId, setProductId] = useState(initialProductId && products.some((p) => p.id === initialProductId) ? initialProductId : products[0]?.id ?? "");
   const p = products.find((x) => x.id === productId);
   const [from, setFrom] = useState<string>("ENTREPOT");
@@ -57,7 +57,7 @@ export function StockActions({ products, initialProductId }: { products: P[]; in
       <div className="mb-5 flex gap-1 rounded-md bg-muted p-1" role="tablist">
         {(["transfer", "adjust"] as const).map((t) => (
           <button key={t} type="button" role="tab" aria-selected={tab === t} onClick={() => setTab(t)} className={cx("flex-1 cursor-pointer rounded px-3 py-2 text-sm font-semibold", tab === t ? "bg-card shadow-sm" : "text-muted-foreground")}>
-            {t === "transfer" ? "Transférer" : "Ajuster"}
+            {t === "transfer" ? "Transférer" : "Ajouter / retirer"}
           </button>
         ))}
       </div>

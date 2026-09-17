@@ -36,11 +36,11 @@ export default async function MembersPage({ searchParams }: { searchParams: Prom
 
   return (
     <>
-      <PageTitle title="Clients" subtitle={`${total} au total`} action={canEdit ? <ButtonLink href="/admin/membres/nouveau">Créer un compte</ButtonLink> : undefined} />
+      <PageTitle title="Utilisateurs et rôles" subtitle={`${total} au total — cliquez sur un cadre pour modifier le compte, le rôle et les accès`} action={canEdit ? <ButtonLink href="/admin/membres/nouveau">+ Créer un utilisateur</ButtonLink> : undefined} />
       <div className="mb-6 space-y-3">
         <Suspense>
           <SearchBox placeholder="Nom, numéro de membre, e-mail ou téléphone" />
-          <FilterTabs param="role" options={[{ value: "", label: "Clients" }, { value: "staff", label: "Équipe" }, { value: "blocked", label: "Bloqués" }]} />
+          <FilterTabs param="role" options={[{ value: "", label: "Membres" }, { value: "staff", label: "Équipe (admins)" }, { value: "blocked", label: "Bloqués" }]} />
         </Suspense>
       </div>
       {items.length === 0 ? (

@@ -28,9 +28,12 @@ export default async function StockPage({ searchParams }: { searchParams: Promis
         action={
           canEdit ? (
             <div className="flex flex-wrap gap-2">
-              <ButtonLink href="/admin/stock/reappro">Commande fournisseur</ButtonLink>
+              <ButtonLink href="/admin/stock/actions?onglet=ajouter">+ Ajouter du stock</ButtonLink>
+              <ButtonLink href="/admin/stock/reappro" variant="secondary">
+                Commande fournisseur
+              </ButtonLink>
               <ButtonLink href="/admin/stock/actions" variant="secondary">
-                Transfert / ajustement
+                Transférer
               </ButtonLink>
               <ButtonLink href="/admin/stock/mouvements" variant="ghost">
                 Historique
