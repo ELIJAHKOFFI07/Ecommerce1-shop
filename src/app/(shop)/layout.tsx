@@ -10,7 +10,7 @@ export default function ShopLayout({ children }: { children: React.ReactNode }) 
       <CartProvider>
         <div className="flex min-h-dvh flex-col">
           <Header />
-          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 lg:py-8">
+          <main id="contenu" tabIndex={-1} className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 outline-none sm:px-6 lg:py-8">
             <BackBar roots={["/", "/espace"]} />
             {children}
           </main>

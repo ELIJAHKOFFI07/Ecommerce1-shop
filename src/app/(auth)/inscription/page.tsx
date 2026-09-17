@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { api } from "@/lib/api";
 import { Button, Field, Input, Alert } from "@/components/ui";
+import { PasswordInput } from "@/components/PasswordInput";
 
 /// Inscription en un seul écran : nom, téléphone, e-mail, mot de passe,
 /// parrain. Après succès, connexion automatique — pas de deuxième écran.
@@ -44,7 +45,7 @@ export default function RegisterPage() {
           <Input id="email" type="email" autoComplete="email" inputMode="email" value={f.email} onChange={set("email")} required />
         </Field>
         <Field label="Mot de passe" htmlFor="password" hint="10 caractères minimum, avec des lettres et des chiffres.">
-          <Input id="password" type="password" autoComplete="new-password" value={f.password} onChange={set("password")} required minLength={10} maxLength={128} />
+          <PasswordInput id="password" autoComplete="new-password" value={f.password} onChange={set("password")} required minLength={10} maxLength={128} />
         </Field>
         <Field label="Ville (facultatif)" htmlFor="city">
           <Input id="city" autoComplete="address-level2" value={f.city} onChange={set("city")} maxLength={120} />

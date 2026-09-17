@@ -49,7 +49,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="min-h-dvh">
       <AdminNav sections={sections} userName={user.name ?? ""} role={user.role} />
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
+      <main id="contenu" tabIndex={-1} className="mx-auto max-w-7xl px-4 py-6 outline-none sm:px-6 lg:py-8">
         <BackBar roots={["/admin"]} />
         {children}
       </main>

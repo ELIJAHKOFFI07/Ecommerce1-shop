@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { Alert, Button, Card, Field, Input } from "@/components/ui";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export function ProfileForm({ initial }: { initial: { name: string; pseudo: string; phone: string; city: string } }) {
   const router = useRouter();
@@ -79,13 +80,13 @@ export function PasswordForm() {
     <Card className="p-5">
       <form onSubmit={submit} className="space-y-4">
         <Field label="Mot de passe actuel" htmlFor="cur">
-          <Input id="cur" type="password" autoComplete="current-password" value={f.currentPassword} onChange={set("currentPassword")} required />
+          <PasswordInput id="cur" autoComplete="current-password" value={f.currentPassword} onChange={set("currentPassword")} required />
         </Field>
         <Field label="Nouveau mot de passe" htmlFor="new" hint="10 caractères minimum, lettres et chiffres.">
-          <Input id="new" type="password" autoComplete="new-password" value={f.newPassword} onChange={set("newPassword")} required minLength={10} />
+          <PasswordInput id="new" autoComplete="new-password" value={f.newPassword} onChange={set("newPassword")} required minLength={10} />
         </Field>
         <Field label="Confirmer" htmlFor="conf">
-          <Input id="conf" type="password" autoComplete="new-password" value={f.confirm} onChange={set("confirm")} required />
+          <PasswordInput id="conf" autoComplete="new-password" value={f.confirm} onChange={set("confirm")} required />
         </Field>
         {msg && <Alert tone={msg.tone}>{msg.text}</Alert>}
         <Button type="submit" variant="secondary" disabled={busy}>

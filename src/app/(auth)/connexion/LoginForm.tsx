@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Button, Field, Input, Alert } from "@/components/ui";
+import { PasswordInput } from "@/components/PasswordInput";
 
 /// Messages d'erreur volontairement peu précis côté identifiants
 /// (« e-mail ou mot de passe incorrect ») : on ne dit jamais lequel.
@@ -52,7 +53,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
           <Input id="email" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </Field>
         <Field label="Mot de passe" htmlFor="password">
-          <Input id="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <PasswordInput id="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </Field>
         {error && <Alert tone="error">{error}</Alert>}
         <Button type="submit" size="lg" full disabled={busy}>

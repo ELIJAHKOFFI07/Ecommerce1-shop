@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { Button, Field, Input, Alert } from "@/components/ui";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export default function ResetPasswordPage() {
   return (
@@ -58,10 +59,10 @@ function ResetForm() {
       ) : (
         <form onSubmit={submit} className="mt-8 space-y-5">
           <Field label="Nouveau mot de passe" htmlFor="password" hint="10 caractères minimum, avec des lettres et des chiffres.">
-            <Input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={10} maxLength={128} />
+            <PasswordInput id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={10} maxLength={128} />
           </Field>
           <Field label="Confirmer" htmlFor="confirm">
-            <Input id="confirm" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
+            <PasswordInput id="confirm" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
           </Field>
           {error && <Alert tone="error">{error}</Alert>}
           <Button type="submit" size="lg" full disabled={busy}>

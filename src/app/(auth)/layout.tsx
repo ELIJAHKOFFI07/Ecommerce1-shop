@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <Image src="/logo-wide.png" alt="SuperLife Côte d’Ivoire" width={658} height={120} priority className="h-11 w-auto" />
         </Link>
       </header>
-      <main className="mx-auto w-full max-w-md flex-1 px-4 py-6 sm:py-10">
+      <main id="contenu" tabIndex={-1} className="mx-auto w-full max-w-md flex-1 px-4 py-6 outline-none sm:py-10">
         <BackBar roots={[]} />
         {children}
       </main>

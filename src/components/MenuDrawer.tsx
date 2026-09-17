@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -21,15 +21,21 @@ export function MenuDrawer({ sections, userName, subtitle, signOut = true }: { s
   const [openedOn, setOpenedOn] = useState<string | null>(null);
   const open = openedOn === path;
   const setOpen = (v: boolean) => setOpenedOn(v ? path : null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+    // Le focus entre dans le panneau, et revient au bouton à la fermeture.
+    closeRef.current?.focus();
+    const trigger = triggerRef.current;
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      trigger?.focus();
     };
   }, [open]);
 
@@ -37,7 +43,7 @@ export function MenuDrawer({ sections, userName, subtitle, signOut = true }: { s
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="menu-panel" className="press inline-flex h-11 cursor-pointer items-center gap-2 rounded-md border border-border-strong bg-card px-4 text-sm font-semibold hover:bg-muted">
+      <button ref={triggerRef} type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="menu-panel" className="press inline-flex h-11 cursor-pointer items-center gap-2 rounded-md border border-border-strong bg-card px-4 text-sm font-semibold hover:bg-muted">
         <Menu className="h-5 w-5" aria-hidden /> Menu
       </button>
 
@@ -56,7 +62,7 @@ export function MenuDrawer({ sections, userName, subtitle, signOut = true }: { s
                   <p className="font-semibold">Menu</p>
                 )}
               </div>
-              <button type="button" aria-label="Fermer" onClick={() => setOpen(false)} className="grid h-11 w-11 cursor-pointer place-items-center rounded-md hover:bg-muted">
+              <button ref={closeRef} type="button" aria-label="Fermer" onClick={() => setOpen(false)} className="grid h-11 w-11 cursor-pointer place-items-center rounded-md hover:bg-muted">
                 <X className="h-5 w-5" aria-hidden />
               </button>
             </div>

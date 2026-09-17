@@ -96,6 +96,9 @@ body {
   outline-offset: 2px;
 }
 
+/* Pas de délai de 300 ms au toucher sur les contrôles (tap-delay). */
+button, a, input, select, textarea, label { touch-action: manipulation; }
+
 /* Retour tactile : léger enfoncement au clic. */
 .press { transition: transform 120ms ease, opacity 120ms ease; }
 .press:active { transform: scale(0.985); }
