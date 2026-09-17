@@ -134,7 +134,7 @@ export function StockActions({ products, initialProductId }: { products: P[]; in
           <Textarea id="note" value={note} onChange={(e) => setNote(e.target.value)} maxLength={2000} className="min-h-20" />
         </Field>
         {msg && <Alert tone={msg.tone}>{msg.text}</Alert>}
-        <Button type="submit" full disabled={busy || !productId || (tab === "transfer" && from === to)}>
+        <Button type="submit" full disabled={busy || !productId || (tab === "transfer" && from === to)} loading={busy}>
           {busy ? "…" : tab === "transfer" ? "Transférer" : "Enregistrer l’ajustement"}
         </Button>
       </form>

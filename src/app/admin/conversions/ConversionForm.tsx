@@ -68,7 +68,7 @@ export function ConversionForm({ products }: { products: P[] }) {
           <Input id="c" value={f.comment} onChange={set("comment")} maxLength={2000} />
         </Field>
         {msg && <Alert tone={msg.tone}>{msg.text}</Alert>}
-        <Button type="submit" full disabled={busy || f.fromProductId === f.toProductId}>
+        <Button type="submit" full disabled={busy || f.fromProductId === f.toProductId} loading={busy}>
           Enregistrer
         </Button>
       </form>

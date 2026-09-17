@@ -65,7 +65,7 @@ function ResetForm() {
             <PasswordInput id="confirm" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
           </Field>
           {error && <Alert tone="error">{error}</Alert>}
-          <Button type="submit" size="lg" full disabled={busy}>
+          <Button type="submit" size="lg" full disabled={busy} loading={busy}>
             {busy ? "Enregistrement…" : "Enregistrer"}
           </Button>
         </form>

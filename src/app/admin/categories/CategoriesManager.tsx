@@ -34,7 +34,7 @@ export function CategoriesManager({ categories, canEdit }: { categories: Cat[]; 
       {canEdit && (
         <form onSubmit={create} className="flex gap-2">
           <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nouvelle catégorie" aria-label="Nom de la catégorie" required maxLength={120} />
-          <Button type="submit" disabled={busy}>
+          <Button type="submit" disabled={busy} loading={busy}>
             Ajouter
           </Button>
         </form>

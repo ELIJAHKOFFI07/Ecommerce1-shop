@@ -77,7 +77,7 @@ export function NewMemberForm({ offices, isSuperAdmin }: { offices: { id: string
           </Field>
         </div>
         {error && <Alert tone="error">{error}</Alert>}
-        <Button type="submit" size="lg" disabled={busy}>
+        <Button type="submit" size="lg" disabled={busy} loading={busy}>
           {busy ? "Création…" : "Créer le compte"}
         </Button>
       </form>

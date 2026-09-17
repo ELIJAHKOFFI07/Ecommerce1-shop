@@ -55,7 +55,7 @@ export function SupplyManager({ orders, products, canEdit }: { orders: Order[]; 
               <Input id="n" value={note} onChange={(e) => setNote(e.target.value)} maxLength={2000} />
             </Field>
             {error && <Alert tone="error">{error}</Alert>}
-            <Button type="submit" full disabled={busy || !productId}>
+            <Button type="submit" full disabled={busy || !productId} loading={busy}>
               Enregistrer la commande
             </Button>
           </form>
@@ -133,7 +133,7 @@ function ReceiveForm({ order }: { order: Order }) {
       {sum !== order.quantity && <p className="text-sm text-destructive">Total {sum} ≠ {order.quantity}.</p>}
       {error && <Alert tone="error">{error}</Alert>}
       <div className="flex flex-wrap gap-2">
-        <Button type="submit" disabled={busy || sum !== order.quantity}>
+        <Button type="submit" disabled={busy || sum !== order.quantity} loading={busy}>
           Marquer reçue
         </Button>
         <ActionButton path={`/api/admin/stock/supply/${order.id}`} method="PATCH" body={{ status: "CANCELLED" }} variant="ghost" confirm="Annuler cette commande fournisseur ?">

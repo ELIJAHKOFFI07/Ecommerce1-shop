@@ -94,7 +94,7 @@ export function MemberEditor({ user, offices, isSelf, isSuperAdmin, modules, per
             </fieldset>
           )}
           {msg && <Alert tone={msg.tone}>{msg.text}</Alert>}
-          <Button type="submit" full disabled={busy}>
+          <Button type="submit" full disabled={busy} loading={busy}>
             {busy ? "…" : "Enregistrer"}
           </Button>
         </form>

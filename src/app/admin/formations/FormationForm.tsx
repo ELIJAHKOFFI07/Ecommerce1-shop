@@ -87,7 +87,7 @@ export function FormationForm({ offices, fixedOfficeId }: { offices: { id: strin
           <Input id="n" value={f.notes} onChange={set("notes")} maxLength={2000} />
         </Field>
         {msg && <Alert tone={msg.tone}>{msg.text}</Alert>}
-        <Button type="submit" full disabled={busy || !f.officeId}>
+        <Button type="submit" full disabled={busy || !f.officeId} loading={busy}>
           Ajouter
         </Button>
       </form>

@@ -71,7 +71,7 @@ export function NewDeliveryForm({ stocks, defaultName, defaultPhone }: { stocks:
       </div>
 
       {error && <Alert tone="error">{error}</Alert>}
-      <Button type="submit" size="lg" full disabled={busy || items.length === 0}>
+      <Button type="submit" size="lg" full disabled={busy || items.length === 0} loading={busy}>
         {busy ? "Envoi…" : `Demander le retrait${items.length ? ` (${items.reduce((n, i) => n + i.quantity, 0)})` : ""}`}
       </Button>
     </form>

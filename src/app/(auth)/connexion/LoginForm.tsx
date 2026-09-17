@@ -56,7 +56,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
           <PasswordInput id="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </Field>
         {error && <Alert tone="error">{error}</Alert>}
-        <Button type="submit" size="lg" full disabled={busy}>
+        <Button type="submit" size="lg" full disabled={busy} loading={busy}>
           {busy ? "Connexion…" : "Se connecter"}
         </Button>
       </form>

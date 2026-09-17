@@ -78,7 +78,7 @@ export function OrderActions({ id, status, shortage, refs }: { id: string; statu
             <Textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} required minLength={3} maxLength={2000} autoFocus />
           </Field>
           <div className="flex gap-2">
-            <Button type="submit" variant="destructive" disabled={busy}>
+            <Button type="submit" variant="destructive" disabled={busy} loading={busy}>
               Confirmer le rejet
             </Button>
             <Button variant="ghost" onClick={() => setMode("idle")}>
@@ -95,7 +95,7 @@ export function OrderActions({ id, status, shortage, refs }: { id: string; statu
             <Input id="sn" value={edit.salesNo} onChange={(e) => setEdit({ ...edit, salesNo: e.target.value })} maxLength={60} />
           </Field>
           <div className="flex gap-2">
-            <Button type="submit" disabled={busy}>Enregistrer</Button>
+            <Button type="submit" disabled={busy} loading={busy}>Enregistrer</Button>
             <Button variant="ghost" onClick={() => setMode("idle")}>Annuler</Button>
           </div>
         </form>

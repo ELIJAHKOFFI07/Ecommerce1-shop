@@ -46,7 +46,7 @@ export function ProfileForm({ initial }: { initial: { name: string; pseudo: stri
           <Input id="pseudo" value={f.pseudo} onChange={set("pseudo")} maxLength={30} />
         </Field>
         {msg && <Alert tone={msg.tone}>{msg.text}</Alert>}
-        <Button type="submit" disabled={busy}>
+        <Button type="submit" disabled={busy} loading={busy}>
           {busy ? "Enregistrement…" : "Enregistrer"}
         </Button>
       </form>
@@ -89,7 +89,7 @@ export function PasswordForm() {
           <PasswordInput id="conf" autoComplete="new-password" value={f.confirm} onChange={set("confirm")} required />
         </Field>
         {msg && <Alert tone={msg.tone}>{msg.text}</Alert>}
-        <Button type="submit" variant="secondary" disabled={busy}>
+        <Button type="submit" variant="secondary" disabled={busy} loading={busy}>
           {busy ? "Modification…" : "Changer le mot de passe"}
         </Button>
       </form>

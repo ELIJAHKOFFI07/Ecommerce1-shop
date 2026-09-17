@@ -147,7 +147,7 @@ export function ProductForm({ initial, categories }: { initial?: ProductInput; c
       </Card>
 
       {error && <Alert tone="error">{error}</Alert>}
-      <Button type="submit" size="lg" disabled={busy || uploading}>
+      <Button type="submit" size="lg" disabled={busy || uploading} loading={busy}>
         {busy ? "Enregistrement…" : f.id ? "Enregistrer" : "Créer le produit"}
       </Button>
     </form>

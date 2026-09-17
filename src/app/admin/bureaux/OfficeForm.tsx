@@ -48,7 +48,7 @@ export function OfficeForm() {
           </Field>
         </div>
         {error && <Alert tone="error">{error}</Alert>}
-        <Button type="submit" full disabled={busy}>
+        <Button type="submit" full disabled={busy} loading={busy}>
           Créer le bureau
         </Button>
       </form>

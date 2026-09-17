@@ -57,7 +57,7 @@ export function CreditForm({ userId, generalBalance }: { userId: string; general
           <input id="p" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" onChange={(e) => setProof(e.target.files?.[0] ?? null)} className="block w-full text-sm file:mr-3 file:h-10 file:cursor-pointer file:rounded-md file:border file:border-border-strong file:bg-card file:px-3 file:font-semibold" />
         </Field>
         {msg && <Alert tone={msg.tone}>{msg.text}</Alert>}
-        <Button type="submit" full disabled={busy || !amount}>
+        <Button type="submit" full disabled={busy || !amount} loading={busy}>
           {busy ? "…" : "Créditer"}
         </Button>
       </form>

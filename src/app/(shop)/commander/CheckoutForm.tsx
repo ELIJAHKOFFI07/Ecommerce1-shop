@@ -75,7 +75,7 @@ export function CheckoutForm() {
 
       {error && <Alert tone="error">{error}</Alert>}
 
-      <Button type="submit" size="lg" full disabled={busy}>
+      <Button type="submit" size="lg" full disabled={busy} loading={busy}>
         {busy ? "Envoi en cours…" : "Envoyer le reçu"}
       </Button>
     </form>

@@ -70,7 +70,7 @@ export function DeliveryActions({ id, status, tva, tvaPaid, balance, problems }:
             <Textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} required minLength={3} autoFocus />
           </Field>
           <div className="flex gap-2">
-            <Button type="submit" variant="destructive" disabled={busy}>
+            <Button type="submit" variant="destructive" disabled={busy} loading={busy}>
               Confirmer le refus
             </Button>
             <Button variant="ghost" onClick={() => setMode("idle")}>
@@ -107,7 +107,7 @@ export function DeliveryActions({ id, status, tva, tvaPaid, balance, problems }:
                   className="flex gap-2"
                 >
                   <Input type="number" inputMode="numeric" min={0} step={1} value={tvaInput} onChange={(e) => setTvaInput(e.target.value)} placeholder="Montant en F" aria-label="Montant de la TVA" />
-                  <Button type="submit" variant="secondary" disabled={busy}>
+                  <Button type="submit" variant="secondary" disabled={busy} loading={busy}>
                     Fixer
                   </Button>
                 </form>
@@ -127,7 +127,7 @@ export function DeliveryActions({ id, status, tva, tvaPaid, balance, problems }:
                       <option value="MOBILE_MONEY">Mobile Money</option>
                       <option value="OTHER">Autre</option>
                     </Select>
-                    <Button type="submit" full disabled={busy}>
+                    <Button type="submit" full disabled={busy} loading={busy}>
                       Encaisser {formatFcfa(tva)}
                     </Button>
                   </form>

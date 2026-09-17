@@ -54,7 +54,7 @@ export function SettingsForm({ initial, canEdit }: { initial: S; canEdit: boolea
         </label>
         {msg && <Alert tone={msg.tone}>{msg.text}</Alert>}
         {canEdit && (
-          <Button type="submit" disabled={busy}>
+          <Button type="submit" disabled={busy} loading={busy}>
             {busy ? "…" : "Enregistrer"}
           </Button>
         )}

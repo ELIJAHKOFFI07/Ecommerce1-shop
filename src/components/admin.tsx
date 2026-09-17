@@ -57,8 +57,8 @@ export function ActionButton({
 
   return (
     <div className={cx("inline-flex flex-col gap-2", className)}>
-      <Button variant={variant} size={size} onClick={run} disabled={busy || disabled}>
-        {busy ? "…" : children}
+      <Button variant={variant} size={size} onClick={run} disabled={busy || disabled} loading={busy}>
+        {children}
       </Button>
       {error && <Alert tone="error">{error}</Alert>}
     </div>

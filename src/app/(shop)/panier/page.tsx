@@ -40,9 +40,9 @@ export default function CartPage() {
         <ul className="divide-y divide-border">
           {lines.map((l) => (
             <li key={l.productId} className="flex gap-4 py-5">
-              <Link href={`/produit/${l.slug}`} className="h-24 w-24 shrink-0 overflow-hidden rounded-md bg-[#f4f2ee] p-2">
+              <Link href={`/produit/${l.slug}`} className="scene relative h-24 w-24 shrink-0 overflow-hidden rounded-[10px] p-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                {l.image ? <img src={l.image} alt="" className="h-full w-full object-contain" /> : null}
+                {l.image ? <img src={l.image} alt="" className="relative z-10 h-full w-full object-contain drop-shadow-md" /> : null}
               </Link>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-3">
@@ -75,8 +75,14 @@ export default function CartPage() {
           ))}
         </ul>
 
-        <Card className="h-fit p-6 lg:sticky lg:top-24">
-          <h2 className="font-semibold">Aperçu de la commande</h2>
+        <Card className="vitrine h-fit overflow-hidden border-0 p-0 lg:sticky lg:top-24">
+          <div className="socle relative px-6 py-5 text-[#f5f0e8]">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#f5f0e8]/60">Aperçu de la commande</p>
+            <Money value={total + tax} className="mt-1 block text-4xl leading-none text-[#e5b35d]" />
+            <p className="mt-1 text-sm text-[#f5f0e8]/70">{count} article{count > 1 ? "s" : ""}, TVA comprise</p>
+          </div>
+          <div className="p-6 pt-4">
+          <h2 className="sr-only">Détail</h2>
           <div className="mt-3 divide-y divide-border text-sm">
             {lines.map((l) => (
               <div key={l.productId} className="flex justify-between gap-3 py-2">
@@ -114,6 +120,7 @@ export default function CartPage() {
           <Button variant="ghost" full className="mt-2" onClick={() => history.back()}>
             Continuer mes achats
           </Button>
+          </div>
         </Card>
       </div>
     </>

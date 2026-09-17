@@ -54,7 +54,7 @@ export default function RegisterPage() {
           <Input id="sponsor" value={f.sponsorMemberNumber} onChange={set("sponsorMemberNumber")} maxLength={30} placeholder="SL-123456" autoCapitalize="characters" />
         </Field>
         {error && <Alert tone="error">{error}</Alert>}
-        <Button type="submit" size="lg" full disabled={busy}>
+        <Button type="submit" size="lg" full disabled={busy} loading={busy}>
           {busy ? "Création…" : "Créer mon compte"}
         </Button>
       </form>

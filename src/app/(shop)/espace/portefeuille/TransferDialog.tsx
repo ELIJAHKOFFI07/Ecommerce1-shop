@@ -82,7 +82,7 @@ export function TransferDialog({ balance }: { balance: number }) {
           {found === null && <Alert tone="error">Aucun membre trouvé. Vérifiez le numéro.</Alert>}
           {error && <Alert tone="error">{error}</Alert>}
           <div className="flex gap-3">
-            <Button type="submit" disabled={busy}>
+            <Button type="submit" disabled={busy} loading={busy}>
               {busy ? "Recherche…" : "Rechercher"}
             </Button>
             <Button variant="ghost" onClick={reset}>
@@ -107,7 +107,7 @@ export function TransferDialog({ balance }: { balance: number }) {
           </Field>
           {error && <Alert tone="error">{error}</Alert>}
           <div className="flex gap-3">
-            <Button type="submit" disabled={busy || !amount}>
+            <Button type="submit" disabled={busy || !amount} loading={busy}>
               {busy ? "Envoi…" : `Envoyer ${amount ? formatFcfa(Number(amount)) : ""}`}
             </Button>
             <Button variant="ghost" onClick={reset}>

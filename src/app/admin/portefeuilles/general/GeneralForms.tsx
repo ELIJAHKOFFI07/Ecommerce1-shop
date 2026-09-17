@@ -67,7 +67,7 @@ export function GeneralForms({ taxBalance, generalBalance }: { taxBalance: numbe
           <Field label="Description" htmlFor="d">
             <Input id="d" value={description} onChange={(e) => setDescription(e.target.value)} required maxLength={2000} placeholder="Ex. : apport du 15/09" />
           </Field>
-          <Button type="submit" full disabled={busy}>
+          <Button type="submit" full disabled={busy} loading={busy}>
             Enregistrer
           </Button>
         </form>
@@ -78,7 +78,7 @@ export function GeneralForms({ taxBalance, generalBalance }: { taxBalance: numbe
           <Field label="Montant (F)" htmlFor="ta" hint={`Solde taxe : ${formatFcfa(taxBalance)}`}>
             <Input id="ta" type="number" inputMode="numeric" min={1} max={taxBalance} step={1} value={taxAmount} onChange={(e) => setTaxAmount(e.target.value)} required />
           </Field>
-          <Button type="submit" variant="secondary" full disabled={busy || taxBalance <= 0}>
+          <Button type="submit" variant="secondary" full disabled={busy || taxBalance <= 0} loading={busy}>
             Transférer
           </Button>
         </form>

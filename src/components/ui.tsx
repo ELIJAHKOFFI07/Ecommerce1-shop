@@ -24,10 +24,17 @@ const BTN_VARIANT = {
   ghost: "text-foreground hover:bg-muted",
   destructive: "bg-destructive text-destructive-foreground hover:brightness-95",
 };
-type BtnProps = { variant?: keyof typeof BTN_VARIANT; size?: keyof typeof BTN_SIZE; full?: boolean };
+type BtnProps = { variant?: keyof typeof BTN_VARIANT; size?: keyof typeof BTN_SIZE; full?: boolean; loading?: boolean };
 
-export function Button({ variant = "primary", size = "md", full, className, ...rest }: ComponentProps<"button"> & BtnProps) {
-  return <button type="button" className={cx(BTN_BASE, BTN_SIZE[size], BTN_VARIANT[variant], full && "w-full", className)} {...rest} />;
+/// `loading` : cercle qui tourne à la place de l'icône, bouton désactivé,
+/// libellé conservé (le membre voit ce qui est en cours).
+export function Button({ variant = "primary", size = "md", full, loading, className, children, disabled, ...rest }: ComponentProps<"button"> & BtnProps) {
+  return (
+    <button type="button" aria-busy={loading || undefined} disabled={disabled || loading} className={cx(BTN_BASE, BTN_SIZE[size], BTN_VARIANT[variant], full && "w-full", className)} {...rest}>
+      {loading && <span className="spinner" aria-hidden />}
+      {children}
+    </button>
+  );
 }
 
 export function ButtonLink({ variant = "primary", size = "md", full, className, ...rest }: ComponentProps<typeof Link> & BtnProps) {
