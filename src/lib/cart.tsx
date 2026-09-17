@@ -26,11 +26,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [ready, setReady] = useState(false);
 
+  // Lecture du localStorage APRÈS montage : le rendu serveur n'y a pas
+  // accès, lire au rendu créerait un décalage d'hydratation. Le setState
+  // dans l'effet est donc voulu.
   useEffect(() => {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (Array.isArray(parsed)) setLines(parsed.filter((l) => l && typeof l.productId === "string" && l.quantity > 0));
       }
     } catch {

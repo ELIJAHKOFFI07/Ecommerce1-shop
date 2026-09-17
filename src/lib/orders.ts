@@ -1,7 +1,7 @@
 import type { OrderStatus } from "../../prisma/generated/client";
 import { db, TX } from "./db";
 import { ApiError } from "./apiError";
-import { dec } from "./money";
+import { dec } from "./decimal";
 import { nextOrderNumber } from "./ids";
 import { move, adjustUserStock } from "./stock";
 

@@ -2,7 +2,7 @@ import { Prisma } from "../../prisma/generated/client";
 import type { PaymentMethod } from "../../prisma/generated/client";
 import { db, TX, type Tx } from "./db";
 import { ApiError } from "./apiError";
-import { dec } from "./money";
+import { dec } from "./decimal";
 
 /// Toutes les opérations financières. Règles :
 ///  - une transaction Postgres par opération, tout ou rien ;

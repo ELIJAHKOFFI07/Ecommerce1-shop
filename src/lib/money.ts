@@ -1,12 +1,9 @@
-import { Prisma } from "../../prisma/generated/client";
+/// Formatage monétaire — module PUR, sans import Prisma : il est utilisé
+/// par les composants client et ne doit tirer aucun code serveur.
+export type DecimalLike = { toString(): string } | number | string;
 
-export const Decimal = Prisma.Decimal;
-export type DecimalLike = Prisma.Decimal | number | string;
-
-export const dec = (v: DecimalLike) => new Prisma.Decimal(v);
-
-/// Format monétaire unique de l'app : « 18 000 F ». Espace fine insécable
-/// entre les milliers, pas de décimales (le FCFA n'en a pas en pratique).
+/// Format unique de l'app : « 18 000 F ». Pas de décimales (le FCFA n'en
+/// a pas en pratique).
 export function formatFcfa(v: DecimalLike | null | undefined): string {
   if (v === null || v === undefined) return "—";
   const n = typeof v === "number" ? v : Number(v.toString());
