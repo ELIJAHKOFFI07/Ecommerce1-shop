@@ -13,7 +13,7 @@ export function AdminNav({ sections, userName, role }: { sections: MenuSection[]
     <header className="sticky top-0 z-40 border-b border-border bg-background print:hidden">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/admin" className="flex shrink-0 items-center gap-2" aria-label="Administration — tableau de bord">
-          <Image src="/logo-wide.png" alt="SuperLife Côte d’Ivoire" width={658} height={120} priority className="h-9 w-auto" />
+          <Image src="/logo-wide.png" alt="SuperLife Côte d’Ivoire" width={658} height={120} priority className="h-9 w-auto rounded-md dark-logo" />
           <span className="rounded bg-primary px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">admin</span>
         </Link>
         <div className="flex items-center gap-2">

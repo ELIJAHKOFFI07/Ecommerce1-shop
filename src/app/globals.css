@@ -34,7 +34,42 @@
   --warning: #b45309;
   --ring: #1c1917;
   --radius: 6px;
+  color-scheme: light;
 }
+
+/* Mode sombre : mêmes rôles, tons pierre foncés (pas d'inversion brute),
+   accent or éclairci pour garder 4,5:1 sur fond sombre. */
+:root[data-theme="dark"] {
+  --background: #141210;
+  --foreground: #f5f0e8;
+  --card: #1d1a17;
+  --card-foreground: #f5f0e8;
+  --primary: #f5f0e8;
+  --primary-foreground: #1c1917;
+  --secondary: #e7e0d6;
+  --accent: #e5b35d;
+  --accent-foreground: #1c1917;
+  --muted: #26221e;
+  --muted-foreground: #b3aa9d;
+  --border: #2d2823;
+  --border-strong: #3d362f;
+  --destructive: #f87171;
+  --destructive-foreground: #1c1917;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --ring: #f5f0e8;
+  color-scheme: dark;
+}
+:root[data-theme="dark"] .shimmer {
+  background: linear-gradient(90deg, var(--muted) 0%, #322c26 40%, var(--muted) 80%);
+  background-size: 800px 100%;
+}
+/* Les pastilles de statut utilisent des teintes claires : on les assombrit. */
+:root[data-theme="dark"] .bg-amber-50 { background-color: rgba(251, 191, 36, 0.14); color: #fcd34d; border-color: rgba(251, 191, 36, 0.3); }
+:root[data-theme="dark"] .bg-green-50 { background-color: rgba(74, 222, 128, 0.14); color: #86efac; border-color: rgba(74, 222, 128, 0.3); }
+:root[data-theme="dark"] .bg-red-50 { background-color: rgba(248, 113, 113, 0.14); color: #fca5a5; border-color: rgba(248, 113, 113, 0.3); }
+:root[data-theme="dark"] .bg-stone-100 { background-color: #2d2823; color: #d6cfc4; border-color: #3d362f; }
+:root[data-theme="dark"] .bg-white\/70 { background-color: rgba(29, 26, 23, 0.8); color: #d6cfc4; }
 
 @theme inline {
   --color-background: var(--background);
@@ -196,6 +231,9 @@ html, body { overflow-x: hidden; }
   height: 2px;
   background: linear-gradient(90deg, transparent 0%, #e5b35d 30%, #e5b35d 70%, transparent 100%);
 }
+
+/* Logo sur fond sombre : léger fond crème pour garder le logotype lisible. */
+:root[data-theme="dark"] .dark-logo { background: #f5f0e8; padding: 2px 6px; }
 
 /* Indicateur circulaire de chargement. */
 @keyframes spin { to { transform: rotate(360deg); } }

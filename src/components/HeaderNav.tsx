@@ -31,7 +31,7 @@ export function HeaderNav({ user }: { user: { name: string; memberNumber: string
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur print:hidden">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center" aria-label="SuperlifeShop — accueil">
-          <Image src="/logo-wide.png" alt="SuperLife Côte d’Ivoire" width={658} height={120} priority className="h-9 w-auto sm:h-10" />
+          <Image src="/logo-wide.png" alt="SuperLife Côte d’Ivoire" width={658} height={120} priority className="h-9 w-auto rounded-md sm:h-10 dark-logo" />
         </Link>
         <div className="flex shrink-0 items-center gap-2">
           <CartBadge />
