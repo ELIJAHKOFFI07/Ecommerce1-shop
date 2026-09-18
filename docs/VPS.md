@@ -10,7 +10,7 @@ toute connexion externe : Vercel ne peut pas se connecter. Il faut :
 
 1. forcer le chiffrement TLS,
 2. n'accepter que des connexions chiffrées, par mot de passe,
-3. créer un utilisateur et une base dédiés à SuperlifeShop,
+3. créer un utilisateur et une base dédiés à DreamShop,
 4. limiter les adresses autorisées autant que possible,
 5. appliquer la migration et l'amorçage.
 
@@ -28,7 +28,7 @@ PGDATA=$(sudo -u postgres psql -tAc "SHOW data_directory")
 cd "$PGDATA"
 openssl req -new -x509 -days 3650 -nodes -text \
   -out server.crt -keyout server.key \
-  -subj "/CN=superlifeshop-db"
+  -subj "/CN=dreamshopshop-db"
 chown postgres:postgres server.key server.crt
 chmod 600 server.key
 ```
@@ -49,13 +49,13 @@ Dans `pg_hba.conf`, **ajoutez en fin de fichier** (l'ordre compte : les
 lignes `local` et `127.0.0.1` existantes restent au-dessus) :
 
 ```conf
-# SuperlifeShop depuis Vercel — TLS obligatoire, mot de passe SCRAM
-hostssl  superlifeshop  superlifeshop  0.0.0.0/0  scram-sha-256
+# DreamShop depuis Vercel — TLS obligatoire, mot de passe SCRAM
+hostssl  dreamshopshop  dreamshopshop  0.0.0.0/0  scram-sha-256
 # Tout le reste, non chiffré, est refusé :
 hostnossl all all 0.0.0.0/0 reject
 ```
 
-`hostssl` + `superlifeshop superlifeshop` : seul CET utilisateur, sur
+`hostssl` + `dreamshopshop dreamshopshop` : seul CET utilisateur, sur
 CETTE base, en TLS. Un attaquant qui scanne le port 5432 tombe sur une
 authentification SCRAM d'un seul utilisateur — pas sur `postgres`.
 
@@ -74,10 +74,10 @@ sudo -u postgres psql -c "SHOW ssl"   # doit afficher : on
 
 ```bash
 sudo -u postgres psql <<'SQL'
-CREATE USER superlifeshop WITH PASSWORD 'GENEREZ_UN_MOT_DE_PASSE_LONG';
-CREATE DATABASE superlifeshop OWNER superlifeshop;
-REVOKE ALL ON DATABASE superlifeshop FROM PUBLIC;
-GRANT ALL PRIVILEGES ON DATABASE superlifeshop TO superlifeshop;
+CREATE USER dreamshopshop WITH PASSWORD 'GENEREZ_UN_MOT_DE_PASSE_LONG';
+CREATE DATABASE dreamshopshop OWNER dreamshopshop;
+REVOKE ALL ON DATABASE dreamshopshop FROM PUBLIC;
+GRANT ALL PRIVILEGES ON DATABASE dreamshopshop TO dreamshopshop;
 SQL
 ```
 
@@ -134,13 +134,13 @@ Pour que `<HOST>` apparaisse dans les journaux, dans `postgresql.conf` :
 Depuis votre PC (pas depuis le VPS) :
 
 ```bash
-psql "postgresql://superlifeshop:MOT_DE_PASSE@72.62.31.97:5432/superlifeshop?sslmode=require" -c "select version()"
+psql "postgresql://dreamshopshop:MOT_DE_PASSE@72.62.31.97:5432/dreamshopshop?sslmode=require" -c "select version()"
 ```
 
 Doit répondre. Et **sans** TLS, doit refuser :
 
 ```bash
-psql "postgresql://superlifeshop:MOT_DE_PASSE@72.62.31.97:5432/superlifeshop?sslmode=disable" -c "select 1"
+psql "postgresql://dreamshopshop:MOT_DE_PASSE@72.62.31.97:5432/dreamshopshop?sslmode=disable" -c "select 1"
 # → FATAL: no pg_hba.conf entry ... SSL off   ← c'est le comportement attendu
 ```
 
@@ -162,18 +162,18 @@ super-admin. Connectez-vous et changez-le immédiatement (Profil).
 Une base sans sauvegarde est une base perdue. Sur le VPS :
 
 ```bash
-mkdir -p /var/backups/superlifeshop
-cat >/etc/cron.daily/superlifeshop-backup <<'EOF'
+mkdir -p /var/backups/dreamshopshop
+cat >/etc/cron.daily/dreamshopshop-backup <<'EOF'
 #!/bin/sh
-D=/var/backups/superlifeshop
-sudo -u postgres pg_dump -Fc superlifeshop > "$D/superlifeshop-$(date +%F).dump"
+D=/var/backups/dreamshopshop
+sudo -u postgres pg_dump -Fc dreamshopshop > "$D/dreamshopshop-$(date +%F).dump"
 find "$D" -name '*.dump' -mtime +14 -delete
 EOF
-chmod +x /etc/cron.daily/superlifeshop-backup
+chmod +x /etc/cron.daily/dreamshopshop-backup
 ```
 
-Copiez régulièrement `/var/backups/superlifeshop` hors du VPS (scp, rclone
-vers un stockage objet). Restauration : `pg_restore -d superlifeshop fichier.dump`.
+Copiez régulièrement `/var/backups/dreamshopshop` hors du VPS (scp, rclone
+vers un stockage objet). Restauration : `pg_restore -d dreamshopshop fichier.dump`.
 
 ## 8. PgBouncer
 
@@ -188,7 +188,7 @@ connecte directement au port 5432. Vous pouvez le désactiver :
 
 | Variable | Valeur |
 |---|---|
-| `DATABASE_URL` | `postgresql://superlifeshop:MDP_ENCODE@72.62.31.97:5432/superlifeshop?sslmode=require` |
+| `DATABASE_URL` | `postgresql://dreamshopshop:MDP_ENCODE@72.62.31.97:5432/dreamshopshop?sslmode=require` |
 | `AUTH_SECRET` | `openssl rand -base64 32` |
 | `AUTH_URL`, `NEXT_PUBLIC_APP_URL` | URL de production Vercel |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | docs/SERVICES.md §1 |

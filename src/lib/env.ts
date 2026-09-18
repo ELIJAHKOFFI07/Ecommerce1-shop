@@ -17,7 +17,7 @@ const schema = z.object({
   GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
   IMAGEKIT_PUBLIC_KEY: z.string().optional(),
   IMAGEKIT_PRIVATE_KEY: z.string().optional(),
-  IMAGEKIT_FOLDER: z.string().default("SuperlifeShop"),
+  IMAGEKIT_FOLDER: z.string().default("DreamShop"),
   GMAIL_USER: z.string().email().optional(),
   GMAIL_APP_PASSWORD: z.string().optional(),
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),

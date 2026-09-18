@@ -9,7 +9,7 @@ import { cx } from "./ui";
 /// 1,6 s (« Ajouté ») puis redevient disponible — pas de fenêtre, pas de
 /// notification qui se superpose à la page. `tone="gold"` pour le socle
 /// sombre de la vitrine.
-export function QuickAdd({ product, tone = "ink" }: { product: Omit<CartLine, "quantity">; tone?: "ink" | "gold" }) {
+export function QuickAdd({ product, tone = "ink", disabled }: { product: Omit<CartLine, "quantity">; tone?: "ink" | "gold"; disabled?: boolean }) {
   const { add } = useCart();
   const [done, setDone] = useState(false);
   useEffect(() => {
@@ -26,10 +26,11 @@ export function QuickAdd({ product, tone = "ink" }: { product: Omit<CartLine, "q
         setDone(true);
       }}
       aria-live="polite"
-      className={cx("press inline-flex h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-md px-4 text-sm font-bold transition-colors duration-300", done ? "bg-success text-white" : idle)}
+      disabled={disabled}
+      className={cx("disabled:opacity-40 disabled:pointer-events-none","press inline-flex h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-md px-4 text-sm font-bold transition-colors duration-300", done ? "bg-success text-white" : idle)}
     >
       {done ? <Check className="h-4 w-4" aria-hidden /> : <Plus className="h-4 w-4" aria-hidden />}
-      {done ? "Ajouté" : "Ajouter"}
+      {done ? "Ajouté" : disabled ? "Épuisé" : "Ajouter"}
     </button>
   );
 }

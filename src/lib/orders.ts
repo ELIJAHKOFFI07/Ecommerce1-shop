@@ -1,122 +1,112 @@
-import type { OrderStatus } from "../../prisma/generated/client";
-import { db, TX } from "./db";
+import type { OrderStatus, PaymentMethod } from "../../prisma/generated/client";
+import { db, TX, type Tx } from "./db";
 import { ApiError } from "./apiError";
 import { dec } from "./decimal";
-import { nextOrderNumber } from "./ids";
-import { move, adjustUserStock } from "./stock";
+import { move } from "./stock";
 
-/// Création d'une commande (envoi de reçu) par un membre.
-///
-/// Les prix viennent EXCLUSIVEMENT du catalogue au moment de la commande.
-/// Superlife acceptait un `unitPrice` fourni par le client « pour les
-/// imports » — c'est une faille : n'importe qui pouvait déclarer un reçu
-/// à 1 F. Ici le client n'envoie que des identifiants et des quantités.
+/// Numéro de commande : DS-AAAAMMJJ-NNNN, compteur du jour sous verrou
+/// consultatif pour que deux commandes simultanées ne se doublent pas.
+async function nextOrderNumber(tx: Tx): Promise<string> {
+  await tx.$executeRaw`SELECT pg_advisory_xact_lock(4242)`;
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const count = await tx.order.count({ where: { createdAt: { gte: start } } });
+  const ymd = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+  return `DS-${ymd}-${String(count + 1).padStart(4, "0")}`;
+}
+
+/// Création d'une commande. Les prix viennent EXCLUSIVEMENT du catalogue ;
+/// le stock est vérifié (pas réservé) : il est décrémenté à la
+/// confirmation par l'admin. L'adresse est copiée dans la commande.
 export async function createOrder(input: {
   userId: string;
   items: { productId: string; quantity: number }[];
-  claimReference: string;
-  salesNo?: string;
-  receiptUrl?: string;
+  paymentMethod: PaymentMethod;
+  address: { fullName: string; phone: string; city: string; commune?: string | null; details: string };
   note?: string;
 }) {
   return db.$transaction(async (tx) => {
-    const settings = await tx.settings.findUnique({ where: { id: 1 }, select: { allowReceiptSending: true } });
-    if (settings && !settings.allowReceiptSending) {
-      throw new ApiError(403, "L'envoi des reçus est temporairement suspendu par l'administration.");
-    }
-    const dup = await tx.order.findUnique({ where: { claimReference: input.claimReference }, select: { id: true } });
-    if (dup) throw new ApiError(409, "Ce reçu a déjà été enregistré. Vérifiez la référence.");
-
-    // Fusion des lignes en double (même produit deux fois).
     const merged = new Map<string, number>();
     for (const it of input.items) merged.set(it.productId, (merged.get(it.productId) ?? 0) + it.quantity);
 
     const products = await tx.product.findMany({
       where: { id: { in: [...merged.keys()] }, active: true },
-      select: { id: true, price: true, tva: true, title: true },
+      select: { id: true, title: true, price: true, images: true, stock: true },
     });
-    if (products.length !== merged.size) throw new ApiError(400, "Un des produits n'existe pas ou n'est plus disponible.");
+    if (products.length !== merged.size) throw new ApiError(400, "Un des produits n'est plus disponible.");
+    for (const p of products) {
+      const q = merged.get(p.id)!;
+      if (p.stock < q) throw new ApiError(400, `« ${p.title} » : il ne reste que ${p.stock} unité(s).`);
+    }
 
+    const settings = await tx.settings.upsert({ where: { id: 1 }, create: { id: 1 }, update: {}, select: { shippingFee: true, freeShippingThreshold: true } });
     let subTotal = dec(0);
-    let taxTotal = dec(0);
     const lines = products.map((p) => {
       const qty = merged.get(p.id)!;
-      const lineTotal = dec(p.price).mul(qty);
-      subTotal = subTotal.add(lineTotal);
-      taxTotal = taxTotal.add(lineTotal.mul(dec(p.tva)).div(100));
-      return { productId: p.id, quantity: qty, unitPrice: p.price, totalPrice: lineTotal };
+      const total = dec(p.price).mul(qty);
+      subTotal = subTotal.add(total);
+      return { productId: p.id, title: p.title, image: p.images[0] ?? null, quantity: qty, unitPrice: p.price, totalPrice: total };
     });
+    const free = settings.freeShippingThreshold !== null && subTotal.greaterThanOrEqualTo(settings.freeShippingThreshold);
+    const shippingFee = free ? dec(0) : dec(settings.shippingFee);
 
-    const orderNumber = await nextOrderNumber(tx);
     return tx.order.create({
       data: {
-        orderNumber,
+        orderNumber: await nextOrderNumber(tx),
         userId: input.userId,
-        claimReference: input.claimReference,
-        salesNo: input.salesNo,
-        receiptUrl: input.receiptUrl,
-        note: input.note,
+        paymentMethod: input.paymentMethod,
         subTotal,
-        taxTotal: taxTotal.toDecimalPlaces(2),
-        total: subTotal.add(taxTotal).toDecimalPlaces(2),
+        shippingFee,
+        total: subTotal.add(shippingFee),
+        shipFullName: input.address.fullName,
+        shipPhone: input.address.phone,
+        shipCity: input.address.city,
+        shipCommune: input.address.commune ?? null,
+        shipDetails: input.address.details,
+        note: input.note,
         items: { create: lines },
       },
-      include: { items: { include: { product: { select: { title: true, images: true } } } } },
+      include: { items: true },
     });
   }, TX);
 }
 
-/// Transitions autorisées. Une commande validée ne peut plus être rejetée
-/// (le stock a bougé) : on l'annule ou on la rembourse.
+/// Transitions. Confirmer décrémente le stock ; annuler une commande
+/// confirmée le restitue. Livrée et annulée sont finales.
 const TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
-  PENDING: ["VALIDATED", "REJECTED", "CANCELLED"],
-  VALIDATED: ["DELIVERED", "CANCELLED", "REFUNDED"],
+  PENDING: ["CONFIRMED", "CANCELLED"],
+  CONFIRMED: ["SHIPPED", "CANCELLED"],
+  SHIPPED: ["DELIVERED", "CANCELLED"],
   DELIVERED: [],
   CANCELLED: [],
-  REFUNDED: [],
-  REJECTED: [],
 };
 
-export async function transitionOrder(input: { orderId: string; status: OrderStatus; rejectionReason?: string; adminId: string }) {
+export async function transitionOrder(input: { orderId: string; status: OrderStatus; cancelReason?: string; actorId: string; byCustomer?: boolean }) {
   return db.$transaction(async (tx) => {
-    // Verrou sur la commande : deux admins qui valident en même temps ne
-    // doivent pas décrémenter le stock deux fois.
     const rows = await tx.$queryRaw<{ id: string }[]>`SELECT "id" FROM "Order" WHERE "id" = ${input.orderId}::uuid FOR UPDATE`;
     if (!rows[0]) throw new ApiError(404, "Commande introuvable.");
-    const order = await tx.order.findUnique({ where: { id: input.orderId }, include: { items: true } });
-    if (!order) throw new ApiError(404, "Commande introuvable.");
-    if (!TRANSITIONS[order.status].includes(input.status)) {
-      throw new ApiError(400, `Passage de « ${order.status} » à « ${input.status} » impossible.`);
-    }
-    if (input.status === "REJECTED" && !input.rejectionReason?.trim()) {
-      throw new ApiError(400, "Indiquez le motif du rejet — le membre le verra.");
-    }
+    const order = await tx.order.findUniqueOrThrow({ where: { id: input.orderId }, include: { items: true } });
+    if (!TRANSITIONS[order.status].includes(input.status)) throw new ApiError(400, `Passage de « ${order.status} » à « ${input.status} » impossible.`);
+    // Un client ne peut qu'annuler, et seulement tant que ce n'est pas expédié.
+    if (input.byCustomer && (input.status !== "CANCELLED" || order.status === "SHIPPED")) throw new ApiError(400, "Cette commande ne peut plus être annulée.");
+    if (input.status === "CANCELLED" && !input.cancelReason?.trim()) throw new ApiError(400, "Indiquez le motif de l'annulation.");
 
-    // Validation : stock virtuel et disponible diminuent, stock personnel augmente.
-    if (order.status === "PENDING" && input.status === "VALIDATED") {
-      for (const it of order.items) {
-        const note = `Validation commande ${order.orderNumber}`;
-        await move(tx, { productId: it.productId, location: "VIRTUEL", quantity: -it.quantity, reason: "SALE", note, userId: input.adminId });
-        await move(tx, { productId: it.productId, location: "DISPONIBLE", quantity: -it.quantity, reason: "SALE", note, userId: input.adminId });
-        await adjustUserStock(tx, order.userId, it.productId, it.quantity);
-      }
+    if (input.status === "CONFIRMED") {
+      for (const it of order.items) await move(tx, { productId: it.productId, quantity: -it.quantity, reason: "SALE", note: `Commande ${order.orderNumber}`, userId: input.actorId });
     }
-    // Annulation/remboursement d'une commande validée : retour au stock.
-    if (order.status === "VALIDATED" && (input.status === "CANCELLED" || input.status === "REFUNDED")) {
-      for (const it of order.items) {
-        const note = `Annulation commande ${order.orderNumber}`;
-        await adjustUserStock(tx, order.userId, it.productId, -it.quantity);
-        await move(tx, { productId: it.productId, location: "VIRTUEL", quantity: it.quantity, reason: "RETURN", note, userId: input.adminId });
-        await move(tx, { productId: it.productId, location: "DISPONIBLE", quantity: it.quantity, reason: "RETURN", note, userId: input.adminId });
-      }
+    if (input.status === "CANCELLED" && order.status !== "PENDING") {
+      for (const it of order.items) await move(tx, { productId: it.productId, quantity: it.quantity, reason: "RETURN", note: `Annulation ${order.orderNumber}`, userId: input.actorId });
     }
-
     return tx.order.update({
       where: { id: order.id },
       data: {
         status: input.status,
-        rejectionReason: input.status === "REJECTED" ? input.rejectionReason : order.rejectionReason,
-        validatedAt: input.status === "VALIDATED" ? new Date() : order.validatedAt,
+        cancelReason: input.status === "CANCELLED" ? input.cancelReason : order.cancelReason,
+        confirmedAt: input.status === "CONFIRMED" ? new Date() : order.confirmedAt,
+        shippedAt: input.status === "SHIPPED" ? new Date() : order.shippedAt,
+        deliveredAt: input.status === "DELIVERED" ? new Date() : order.deliveredAt,
+        // Paiement à la livraison : livrée = payée.
+        paymentStatus: input.status === "DELIVERED" && order.paymentMethod === "CASH_ON_DELIVERY" ? "PAID" : order.paymentStatus,
       },
     });
   }, TX);

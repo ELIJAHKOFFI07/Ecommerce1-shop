@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
 
-const KEY = "superlifeshop.theme";
+const KEY = "dreamshop.theme";
 type Theme = "light" | "dark";
 
 /// Bascule clair / sombre. Le choix est appliqué sur <html data-theme> et

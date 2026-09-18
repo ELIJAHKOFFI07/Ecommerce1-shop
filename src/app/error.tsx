@@ -13,7 +13,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center px-4 text-center">
       <p className="font-display text-2xl font-bold">
-        Superlife<span className="text-accent">Shop</span>
+        Dream<span className="text-accent">Shop</span>
       </p>
       <h1 className="font-display mt-8 text-4xl font-semibold">Un problème est survenu</h1>
       <p className="mt-3 text-muted-foreground">Le service est momentanément indisponible. Réessayez dans un instant.</p>

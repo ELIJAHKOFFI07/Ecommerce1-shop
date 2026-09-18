@@ -1,10 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { db } from "@/lib/db";
 import { consumeRateLimit } from "@/lib/rateLimit";
-import { creditWallet, transferWallet, adjustGeneralBalance, getBalance } from "@/lib/wallet";
+import { adjustStock } from "@/lib/stock";
 import { createOrder, transitionOrder } from "@/lib/orders";
 import { hashPassword } from "@/lib/password";
-import { ApiError } from "@/lib/apiError";
 
 /// Tests contre la vraie base (tunnel SSH). Se sautent si injoignable.
 let dbUp = false;
@@ -17,41 +16,32 @@ try {
 
 const suffix = Date.now().toString(36);
 const ids: { users: string[]; products: string[] } = { users: [], products: [] };
+const ADDR = { fullName: "Test", phone: "+2250700000000", city: "Abidjan", details: "Cocody, villa test" };
 
 async function mkUser(role: "SUPER_ADMIN" | "CLIENT" = "CLIENT") {
   const u = await db.user.create({
-    data: {
-      memberNumber: `T-${suffix}-${ids.users.length}`,
-      name: `Test ${ids.users.length}`,
-      email: `test-${suffix}-${ids.users.length}@example.test`,
-      role,
-      passwordHash: await hashPassword("Abidjan2024plateau"),
-      wallet: { create: {} },
-    },
+    data: { name: `Test ${ids.users.length}`, email: `test-${suffix}-${ids.users.length}@example.test`, role, passwordHash: await hashPassword("Abidjan2024plateau") },
   });
   ids.users.push(u.id);
   return u;
 }
 
-async function mkProduct(stockVirtuel = 100) {
-  const p = await db.product.create({
-    data: { sku: `T-${suffix}-${ids.products.length}`, title: "Produit test", slug: `t-${suffix}-${ids.products.length}`, price: 5000, tva: 20, stockVirtuel, stockDisponible: stockVirtuel },
-  });
+async function mkProduct(stock = 100, admin?: string) {
+  const p = await db.product.create({ data: { sku: `T-${suffix}-${ids.products.length}`, title: "Produit test", slug: `t-${suffix}-${ids.products.length}`, price: 5000 } });
   ids.products.push(p.id);
+  if (stock > 0) await adjustStock({ productId: p.id, quantity: stock, reason: "RECEPTION", userId: admin ?? (await mkUser("SUPER_ADMIN")).id });
   return p;
 }
 
 describe.skipIf(!dbUp)("Intégration sécurité (base réelle)", () => {
   beforeAll(async () => {
-    await db.settings.upsert({ where: { id: 1 }, create: { id: 1 }, update: {} });
+    await db.settings.upsert({ where: { id: 1 }, create: { id: 1, shippingFee: 1500 }, update: { shippingFee: 1500, freeShippingThreshold: null } });
   });
 
   afterAll(async () => {
-    await db.walletTransaction.deleteMany({ where: { OR: [{ userId: { in: ids.users } }, { adminId: { in: ids.users } }] } });
     await db.orderItem.deleteMany({ where: { order: { userId: { in: ids.users } } } });
     await db.order.deleteMany({ where: { userId: { in: ids.users } } });
     await db.stockMovement.deleteMany({ where: { productId: { in: ids.products } } });
-    await db.userStock.deleteMany({ where: { userId: { in: ids.users } } });
     await db.auditLog.deleteMany({ where: { userId: { in: ids.users } } });
     await db.product.deleteMany({ where: { id: { in: ids.products } } });
     await db.user.deleteMany({ where: { id: { in: ids.users } } });
@@ -68,63 +58,54 @@ describe.skipIf(!dbUp)("Intégration sécurité (base réelle)", () => {
   it("limitation de débit : atomique sous concurrence (20 requêtes simultanées → 5 passent)", async () => {
     const key = `burst-${suffix}`;
     const results = await Promise.allSettled(Array.from({ length: 20 }, () => consumeRateLimit("login", key)));
-    const passed = results.filter((r) => r.status === "fulfilled").length;
-    expect(passed).toBe(5);
+    expect(results.filter((r) => r.status === "fulfilled").length).toBe(5);
   });
 
-  it("portefeuille : 10 débits concurrents ne dépassent jamais le solde", async () => {
-    const admin = await mkUser("SUPER_ADMIN");
-    const a = await mkUser();
-    const b = await mkUser();
-    await adjustGeneralBalance({ type: "CREDIT", amount: 100_000, adminId: admin.id, description: "test" });
-    await creditWallet({ userId: a.id, amount: 10_000, adminId: admin.id });
-    // 10 transferts de 3 000 depuis 10 000 : seuls 3 peuvent réussir.
-    const results = await Promise.allSettled(Array.from({ length: 10 }, () => transferWallet({ senderId: a.id, receiverId: b.id, amount: 3000 })));
-    const okCount = results.filter((r) => r.status === "fulfilled").length;
-    expect(okCount).toBe(3);
-    expect((await getBalance(a.id)).toNumber()).toBe(1000);
-    expect((await getBalance(b.id)).toNumber()).toBe(9000);
-  });
-
-  it("portefeuille : le crédit est refusé si le solde général est insuffisant", async () => {
-    const admin = await mkUser("SUPER_ADMIN");
-    const u = await mkUser();
-    const s = await db.settings.findUniqueOrThrow({ where: { id: 1 } });
-    await expect(creditWallet({ userId: u.id, amount: Number(s.generalBalance) + 1, adminId: admin.id })).rejects.toBeInstanceOf(ApiError);
-  });
-
-  it("commande : le prix vient du catalogue, pas du client, et la référence de reçu est unique", async () => {
+  it("commande : le prix et les frais de port viennent du serveur, pas du client", async () => {
     const u = await mkUser();
     const p = await mkProduct();
-    const o = await createOrder({ userId: u.id, items: [{ productId: p.id, quantity: 2 }], claimReference: `REC-${suffix}` });
+    const o = await createOrder({ userId: u.id, items: [{ productId: p.id, quantity: 2 }], paymentMethod: "CASH_ON_DELIVERY", address: ADDR });
     expect(o.subTotal.toNumber()).toBe(10_000);
-    expect(o.taxTotal.toNumber()).toBe(2000);
-    expect(o.total.toNumber()).toBe(12_000);
-    await expect(createOrder({ userId: u.id, items: [{ productId: p.id, quantity: 1 }], claimReference: `REC-${suffix}` })).rejects.toMatchObject({ status: 409 });
+    expect(o.shippingFee.toNumber()).toBe(1500);
+    expect(o.total.toNumber()).toBe(11_500);
+    expect(o.orderNumber).toMatch(/^DS-\d{8}-\d{4}$/);
   });
 
-  it("commande : deux validations simultanées ne décrémentent le stock qu'une fois", async () => {
+  it("commande : refusée si le stock est insuffisant", async () => {
+    const u = await mkUser();
+    const p = await mkProduct(1);
+    await expect(createOrder({ userId: u.id, items: [{ productId: p.id, quantity: 2 }], paymentMethod: "CASH_ON_DELIVERY", address: ADDR })).rejects.toMatchObject({ status: 400 });
+  });
+
+  it("commande : deux confirmations simultanées ne décrémentent le stock qu'une fois", async () => {
     const admin = await mkUser("SUPER_ADMIN");
     const u = await mkUser();
-    const p = await mkProduct(10);
-    const o = await createOrder({ userId: u.id, items: [{ productId: p.id, quantity: 4 }], claimReference: `REC2-${suffix}` });
+    const p = await mkProduct(10, admin.id);
+    const o = await createOrder({ userId: u.id, items: [{ productId: p.id, quantity: 4 }], paymentMethod: "CASH_ON_DELIVERY", address: ADDR });
     const results = await Promise.allSettled([
-      transitionOrder({ orderId: o.id, status: "VALIDATED", adminId: admin.id }),
-      transitionOrder({ orderId: o.id, status: "VALIDATED", adminId: admin.id }),
+      transitionOrder({ orderId: o.id, status: "CONFIRMED", actorId: admin.id }),
+      transitionOrder({ orderId: o.id, status: "CONFIRMED", actorId: admin.id }),
     ]);
     expect(results.filter((r) => r.status === "fulfilled").length).toBe(1);
     const after = await db.product.findUniqueOrThrow({ where: { id: p.id } });
-    expect(after.stockVirtuel).toBe(6);
-    const us = await db.userStock.findUniqueOrThrow({ where: { userId_productId: { userId: u.id, productId: p.id } } });
-    expect(us.quantity).toBe(4);
+    expect(after.stock).toBe(6);
   });
 
-  it("commande : une commande validée ne peut plus être rejetée", async () => {
+  it("commande : l'annulation d'une commande confirmée restitue le stock, et une commande livrée est figée", async () => {
     const admin = await mkUser("SUPER_ADMIN");
     const u = await mkUser();
-    const p = await mkProduct(10);
-    const o = await createOrder({ userId: u.id, items: [{ productId: p.id, quantity: 1 }], claimReference: `REC3-${suffix}` });
-    await transitionOrder({ orderId: o.id, status: "VALIDATED", adminId: admin.id });
-    await expect(transitionOrder({ orderId: o.id, status: "REJECTED", rejectionReason: "x", adminId: admin.id })).rejects.toMatchObject({ status: 400 });
+    const p = await mkProduct(10, admin.id);
+    const o = await createOrder({ userId: u.id, items: [{ productId: p.id, quantity: 3 }], paymentMethod: "CASH_ON_DELIVERY", address: ADDR });
+    await transitionOrder({ orderId: o.id, status: "CONFIRMED", actorId: admin.id });
+    await transitionOrder({ orderId: o.id, status: "CANCELLED", cancelReason: "test", actorId: admin.id });
+    expect((await db.product.findUniqueOrThrow({ where: { id: p.id } })).stock).toBe(10);
+
+    const o2 = await createOrder({ userId: u.id, items: [{ productId: p.id, quantity: 1 }], paymentMethod: "CASH_ON_DELIVERY", address: ADDR });
+    await transitionOrder({ orderId: o2.id, status: "CONFIRMED", actorId: admin.id });
+    await transitionOrder({ orderId: o2.id, status: "SHIPPED", actorId: admin.id });
+    await expect(transitionOrder({ orderId: o2.id, status: "CANCELLED", cancelReason: "x", actorId: u.id, byCustomer: true })).rejects.toMatchObject({ status: 400 });
+    const d = await transitionOrder({ orderId: o2.id, status: "DELIVERED", actorId: admin.id });
+    expect(d.paymentStatus).toBe("PAID");
+    await expect(transitionOrder({ orderId: o2.id, status: "CANCELLED", cancelReason: "x", actorId: admin.id })).rejects.toMatchObject({ status: 400 });
   });
 });

@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
-import { Button, Field, Input, Alert } from "@/components/ui";
+import { Button, Field, Alert } from "@/components/ui";
 import { PasswordInput } from "@/components/PasswordInput";
 
 export default function ResetPasswordPage() {

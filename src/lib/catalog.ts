@@ -1,15 +1,10 @@
 import { unstable_cache, revalidateTag } from "next/cache";
 import { db } from "./db";
 
-/// Catalogue public, en cache.
-///
-/// La base est sur un VPS distant : chaque page de boutique coûtait un
-/// aller-retour (~1 s). Le catalogue change rarement (quand l'admin édite
-/// un produit ou une catégorie) : on le met en cache côté serveur, tag
-/// « catalog », et chaque écriture admin l'invalide. Entre deux
-/// modifications, la boutique se sert sans toucher à la base. Le
-/// filtrage par catégorie et la recherche se font ensuite dans le
-/// navigateur, sans requête.
+/// Catalogue public, en cache serveur (tag « catalog »), invalidé à chaque
+/// écriture admin sur produits, catégories ou stock. La boutique se sert
+/// sans toucher à la base ; recherche et filtres se font dans le
+/// navigateur.
 export type CatalogProduct = {
   id: string;
   slug: string;
@@ -17,27 +12,31 @@ export type CatalogProduct = {
   title: string;
   description: string | null;
   price: number;
-  tva: number;
+  compareAtPrice: number | null;
   images: string[];
+  featured: boolean;
+  inStock: boolean;
   categories: { name: string; slug: string }[];
 };
-export type CatalogCategory = { name: string; slug: string; count: number };
+export type CatalogCategory = { name: string; slug: string; image: string | null; count: number };
 
 export const CATALOG_TAG = "catalog";
 
 export const getCatalog = unstable_cache(
-  async (): Promise<{ products: CatalogProduct[]; categories: CatalogCategory[] }> => {
-    const [products, categories] = await Promise.all([
+  async (): Promise<{ products: CatalogProduct[]; categories: CatalogCategory[]; settings: { siteName: string; shippingFee: number; freeShippingThreshold: number | null } }> => {
+    const [products, categories, settings] = await Promise.all([
       db.product.findMany({
         where: { active: true },
-        select: { id: true, slug: true, sku: true, title: true, description: true, price: true, tva: true, images: true, categories: { select: { name: true, slug: true } } },
-        orderBy: { createdAt: "desc" },
+        select: { id: true, slug: true, sku: true, title: true, description: true, price: true, compareAtPrice: true, images: true, featured: true, stock: true, categories: { select: { name: true, slug: true } } },
+        orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
       }),
-      db.category.findMany({ select: { name: true, slug: true, _count: { select: { products: { where: { active: true } } } } }, orderBy: { name: "asc" } }),
+      db.category.findMany({ select: { name: true, slug: true, image: true, _count: { select: { products: { where: { active: true } } } } }, orderBy: [{ position: "asc" }, { name: "asc" }] }),
+      db.settings.upsert({ where: { id: 1 }, create: { id: 1 }, update: {}, select: { siteName: true, shippingFee: true, freeShippingThreshold: true } }),
     ]);
     return {
-      products: products.map((p) => ({ ...p, price: Number(p.price), tva: Number(p.tva) })),
-      categories: categories.filter((c) => c._count.products > 0).map((c) => ({ name: c.name, slug: c.slug, count: c._count.products })),
+      products: products.map(({ stock, ...p }) => ({ ...p, price: Number(p.price), compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null, inStock: stock > 0 })),
+      categories: categories.filter((c) => c._count.products > 0).map((c) => ({ name: c.name, slug: c.slug, image: c.image, count: c._count.products })),
+      settings: { siteName: settings.siteName, shippingFee: Number(settings.shippingFee), freeShippingThreshold: settings.freeShippingThreshold ? Number(settings.freeShippingThreshold) : null },
     };
   },
   ["catalog"],
@@ -49,7 +48,6 @@ export async function getProductBySlug(slug: string): Promise<CatalogProduct | n
   return products.find((p) => p.slug === slug) ?? null;
 }
 
-/// À appeler après toute écriture sur Product ou Category.
 export function invalidateCatalog() {
   revalidateTag(CATALOG_TAG, "max");
 }

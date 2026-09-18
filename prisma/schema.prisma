@@ -1,13 +1,10 @@
-// SuperlifeShop — schéma Postgres.
+// DreamShop — schéma Postgres.
 //
-// Porté depuis Superlife-management (MySQL) avec trois changements :
-//  1. Postgres + UUID partout (cuid → uuid natif).
-//  2. Les enums remplacent les String libres (statut retrait, méthode paiement).
-//  3. Trois tables de sécurité ajoutées : RateLimit (fenêtre glissante par
-//     IP/route), AuditLog, et le verrouillage de compte porté par User
-//     (failedLogins / lockedUntil) contre la force brute.
-//
-// Toute valeur monétaire est Decimal(15,2) : jamais de Float pour l'argent.
+// Un e-commerce classique : catalogue public, panier, commande avec
+// adresse de livraison, paiement à la livraison ou par Mobile Money
+// (confirmé par l'admin), stock simple décrémenté à la confirmation.
+// Sécurité : RateLimit, AuditLog, verrouillage de compte.
+// Toute valeur monétaire est Decimal(15,2).
 
 generator client {
   provider = "prisma-client"
@@ -28,67 +25,33 @@ enum Role {
   CLIENT
 }
 
-enum UserStatus {
-  MEMBRE
-  INDEPENDANT
-  CHEF_EQUIPE
-}
-
 model User {
-  id                String     @id @default(uuid()) @db.Uuid
-  memberNumber      String     @unique
+  id                String    @id @default(uuid()) @db.Uuid
   name              String
-  pseudo            String?    @unique
-  email             String     @unique
+  email             String    @unique
   emailVerified     DateTime?
   image             String?
   passwordHash      String?
-  role              Role       @default(CLIENT)
-  status            UserStatus @default(MEMBRE)
-  blocked           Boolean    @default(false)
+  role              Role      @default(CLIENT)
+  blocked           Boolean   @default(false)
   phone             String?
-  city              String?
-  country           String     @default("Côte d'Ivoire")
-  // Parrainage : arbre auto-référencé.
-  sponsorId         String?    @db.Uuid
-  sponsor           User?      @relation("Sponsorship", fields: [sponsorId], references: [id], onDelete: SetNull)
-  referrals         User[]     @relation("Sponsorship")
-  // Bureau régional (membre). Un responsable est aussi membre de son bureau.
-  officeId          String?    @db.Uuid
-  office            Office?    @relation("OfficeMembers", fields: [officeId], references: [id], onDelete: SetNull)
-  managedOffice     Office?    @relation("OfficeManager")
-  // Sécurité : verrouillage progressif après échecs de connexion.
-  failedLogins      Int        @default(0)
+  failedLogins      Int       @default(0)
   lockedUntil       DateTime?
   passwordChangedAt DateTime?
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  accounts             Account[]
-  permissions          UserPermission[]
-  wallet               Wallet?
-  walletTransactions   WalletTransaction[] @relation("TxUser")
-  adminTransactions    WalletTransaction[] @relation("TxAdmin")
-  orders               Order[]
-  stocks               UserStock[]
-  stockMovements       StockMovement[]
-  deliveries           Delivery[]          @relation("DeliveryUser")
-  approvedDeliveries   Delivery[]          @relation("DeliveryApprovedBy")
-  deliveredDeliveries  Delivery[]          @relation("DeliveryDeliveredBy")
-  clientConversions    ProductConversion[] @relation("ConvClient")
-  adminConversions     ProductConversion[] @relation("ConvAdmin")
-  createdSupplyOrders  SupplyOrder[]       @relation("SupplyCreator")
-  receivedSupplyOrders SupplyOrder[]       @relation("SupplyReceiver")
-  passwordResetTokens  PasswordResetToken[]
-  auditLogs            AuditLog[]
+  accounts            Account[]
+  permissions         UserPermission[]
+  addresses           Address[]
+  orders              Order[]
+  stockMovements      StockMovement[]
+  passwordResetTokens PasswordResetToken[]
+  auditLogs           AuditLog[]
 
-  @@index([sponsorId])
-  @@index([officeId])
   @@index([role])
 }
 
-/// Comptes OAuth (Google). Un compte Google ne crée JAMAIS un utilisateur :
-/// il est rattaché à un User existant dont l'email correspond (voir auth.ts).
 model Account {
   id                String  @id @default(uuid()) @db.Uuid
   userId            String  @db.Uuid
@@ -108,9 +71,6 @@ model Account {
   @@index([userId])
 }
 
-/// Jeton de réinitialisation : on stocke le HASH sha256 du jeton, jamais le
-/// jeton lui-même. Une fuite de la base ne permet donc pas de réinitialiser
-/// les mots de passe. Usage unique + expiration 30 min.
 model PasswordResetToken {
   id        String    @id @default(uuid()) @db.Uuid
   userId    String    @db.Uuid
@@ -123,17 +83,12 @@ model PasswordResetToken {
   @@index([userId])
 }
 
-/// Limitation de débit persistante : Vercel étant sans état entre deux
-/// requêtes, un compteur en mémoire ne protégerait rien. Une ligne par clé ;
-/// la clé est `route:ip` ou `route:email`.
 model RateLimit {
   key     String   @id
   count   Int      @default(0)
   resetAt DateTime
 }
 
-/// Journal d'audit des actions sensibles (connexion, changement de rôle,
-/// crédit de portefeuille, validation de commande…). Jamais supprimé.
 model AuditLog {
   id        String   @id @default(uuid()) @db.Uuid
   userId    String?  @db.Uuid
@@ -149,8 +104,6 @@ model AuditLog {
   @@index([action])
   @@index([createdAt])
 }
-
-// ───────────────────────── Permissions par module ─────────────────────────
 
 model Module {
   id          String           @id @default(uuid()) @db.Uuid
@@ -175,96 +128,142 @@ model UserPermission {
 // ───────────────────────── Catalogue ─────────────────────────
 
 model Category {
-  id        String     @id @default(uuid()) @db.Uuid
+  id        String    @id @default(uuid()) @db.Uuid
   name      String
-  slug      String     @unique
+  slug      String    @unique
   image     String?
-  parentId  String?    @db.Uuid
-  parent    Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
-  children  Category[] @relation("CategoryTree")
+  position  Int       @default(0)
   products  Product[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
-/// Quatre niveaux de stock (voir docs/STOCK.md) :
-///  - stockVirtuel    : commandé au fournisseur, vendable
-///  - stockDisponible : physiquement possédé (bureau + entrepôt)
-///  - stockBureau     : au bureau, retirable par les membres
-///  - stockEntrepot   : à l'entrepôt
+/// `compareAtPrice` : ancien prix barré (promotion). `stock` : unités
+/// disponibles à la vente, décrémentées à la CONFIRMATION d'une commande,
+/// restituées à l'annulation d'une commande confirmée.
 model Product {
-  id              String   @id @default(uuid()) @db.Uuid
-  sku             String   @unique
-  title           String
-  slug            String   @unique
-  description     String?
-  price           Decimal  @db.Decimal(15, 2)
-  tva             Decimal  @default(20) @db.Decimal(5, 2)
-  commission      Decimal  @default(0) @db.Decimal(15, 2)
-  images          String[] @default([])
-  active          Boolean  @default(true)
-  stockVirtuel    Int      @default(0)
-  stockDisponible Int      @default(0)
-  stockBureau     Int      @default(0)
-  stockEntrepot   Int      @default(0)
-  lowStockAlert   Int      @default(5)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id             String   @id @default(uuid()) @db.Uuid
+  sku            String   @unique
+  title          String
+  slug           String   @unique
+  description    String?
+  price          Decimal  @db.Decimal(15, 2)
+  compareAtPrice Decimal? @db.Decimal(15, 2)
+  images         String[] @default([])
+  active         Boolean  @default(true)
+  featured       Boolean  @default(false)
+  stock          Int      @default(0)
+  lowStockAlert  Int      @default(5)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  categories      Category[]
-  orderItems      OrderItem[]
-  deliveryItems   DeliveryItem[]
-  stockMovements  StockMovement[]
-  userStocks      UserStock[]
-  supplyOrders    SupplyOrder[]
-  conversionsFrom ProductConversion[] @relation("ConvFrom")
-  conversionsTo   ProductConversion[] @relation("ConvTo")
+  categories     Category[]
+  orderItems     OrderItem[]
+  stockMovements StockMovement[]
 
   @@index([active])
+  @@index([featured])
+}
+
+enum StockMovementReason {
+  RECEPTION
+  SALE
+  RETURN
+  ADJUSTMENT
+  LOSS
+}
+
+model StockMovement {
+  id        String              @id @default(uuid()) @db.Uuid
+  productId String              @db.Uuid
+  quantity  Int
+  reason    StockMovementReason
+  note      String?
+  userId    String?             @db.Uuid
+  createdAt DateTime            @default(now())
+  product   Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([productId])
+  @@index([createdAt])
 }
 
 // ───────────────────────── Commandes ─────────────────────────
 
-enum OrderStatus {
-  PENDING
-  VALIDATED
-  DELIVERED
-  CANCELLED
-  REFUNDED
-  REJECTED
+model Address {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  label     String   @default("Domicile")
+  fullName  String
+  phone     String
+  city      String
+  commune   String?
+  details   String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
-/// Une commande est l'envoi d'un reçu d'achat par un membre. L'admin la
-/// valide : le stock virtuel diminue et le stock personnel du membre
-/// augmente. Les montants sont TOUJOURS recalculés côté serveur depuis le
-/// prix catalogue — jamais repris du client.
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  MOBILE_MONEY
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+/// L'adresse est COPIÉE dans la commande : modifier son carnet
+/// d'adresses ne réécrit pas une commande passée.
 model Order {
-  id              String      @id @default(uuid()) @db.Uuid
-  orderNumber     String      @unique
-  userId          String      @db.Uuid
-  status          OrderStatus @default(PENDING)
-  subTotal        Decimal     @db.Decimal(15, 2)
-  taxTotal        Decimal     @db.Decimal(15, 2)
-  total           Decimal     @db.Decimal(15, 2)
-  claimReference  String      @unique
-  salesNo         String?
-  receiptUrl      String?
+  id              String        @id @default(uuid()) @db.Uuid
+  orderNumber     String        @unique
+  userId          String        @db.Uuid
+  status          OrderStatus   @default(PENDING)
+  paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus @default(UNPAID)
+  paymentRef      String?
+  subTotal        Decimal       @db.Decimal(15, 2)
+  shippingFee     Decimal       @default(0) @db.Decimal(15, 2)
+  total           Decimal       @db.Decimal(15, 2)
+  shipFullName    String
+  shipPhone       String
+  shipCity        String
+  shipCommune     String?
+  shipDetails     String
   note            String?
-  rejectionReason String?
-  validatedAt     DateTime?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  user            User        @relation(fields: [userId], references: [id])
+  cancelReason    String?
+  confirmedAt     DateTime?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  user            User          @relation(fields: [userId], references: [id])
   items           OrderItem[]
 
   @@index([userId])
   @@index([status])
+  @@index([createdAt])
 }
 
 model OrderItem {
   id         String  @id @default(uuid()) @db.Uuid
   orderId    String  @db.Uuid
   productId  String  @db.Uuid
+  title      String
+  image      String?
   quantity   Int
   unitPrice  Decimal @db.Decimal(15, 2)
   totalPrice Decimal @db.Decimal(15, 2)
@@ -274,257 +273,18 @@ model OrderItem {
   @@index([orderId])
 }
 
-// ───────────────────────── Stock ─────────────────────────
-
-enum StockMovementReason {
-  RECEPTION
-  SALE
-  RETURN
-  ADJUSTMENT
-  TRANSFER
-  CONVERSION
-  LOSS
-}
-
-enum StockLocation {
-  VIRTUEL
-  DISPONIBLE
-  BUREAU
-  ENTREPOT
-}
-
-model StockMovement {
-  id        String              @id @default(uuid()) @db.Uuid
-  productId String              @db.Uuid
-  location  StockLocation
-  quantity  Int
-  reason    StockMovementReason
-  note      String?
-  userId    String?             @db.Uuid
-  createdAt DateTime            @default(now())
-  product   Product             @relation(fields: [productId], references: [id])
-  user      User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([productId])
-  @@index([createdAt])
-}
-
-/// Stock personnel d'un membre : produits achetés, pas encore retirés.
-model UserStock {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @db.Uuid
-  productId String   @db.Uuid
-  quantity  Int      @default(0)
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product   Product  @relation(fields: [productId], references: [id])
-
-  @@unique([userId, productId])
-}
-
-enum SupplyOrderStatus {
-  PENDING
-  RECEIVED
-  CANCELLED
-}
-
-model SupplyOrder {
-  id               String            @id @default(uuid()) @db.Uuid
-  productId        String            @db.Uuid
-  quantity         Int
-  quantityBureau   Int?
-  quantityEntrepot Int?
-  status           SupplyOrderStatus @default(PENDING)
-  note             String?
-  createdById      String            @db.Uuid
-  receivedById     String?           @db.Uuid
-  receivedAt       DateTime?
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  product          Product           @relation(fields: [productId], references: [id])
-  createdBy        User              @relation("SupplyCreator", fields: [createdById], references: [id])
-  receivedBy       User?             @relation("SupplyReceiver", fields: [receivedById], references: [id])
-
-  @@index([status])
-}
-
-model ProductConversion {
-  id            String   @id @default(uuid()) @db.Uuid
-  fromProductId String   @db.Uuid
-  fromQuantity  Int
-  toProductId   String   @db.Uuid
-  toQuantity    Int
-  clientId      String   @db.Uuid
-  adminId       String   @db.Uuid
-  comment       String?
-  createdAt     DateTime @default(now())
-  fromProduct   Product  @relation("ConvFrom", fields: [fromProductId], references: [id])
-  toProduct     Product  @relation("ConvTo", fields: [toProductId], references: [id])
-  client        User     @relation("ConvClient", fields: [clientId], references: [id])
-  admin         User     @relation("ConvAdmin", fields: [adminId], references: [id])
-
-  @@index([clientId])
-}
-
-// ───────────────────────── Retraits ─────────────────────────
-
-enum DeliveryStatus {
-  PENDING
-  APPROVED
-  DELIVERED
-  REJECTED
-}
-
-enum PaymentMethod {
-  WALLET
-  CASH
-  MOBILE_MONEY
-  OTHER
-}
-
-/// Retrait physique au bureau des produits du stock personnel.
-/// PENDING → APPROVED → DELIVERED (le stock bureau et le stock personnel
-/// ne bougent qu'à DELIVERED). La TVA se paie depuis le portefeuille.
-model Delivery {
-  id               String         @id @default(uuid()) @db.Uuid
-  userId           String         @db.Uuid
-  status           DeliveryStatus @default(PENDING)
-  recipientName    String?
-  recipientPhone   String?
-  tva              Decimal?       @db.Decimal(15, 2)
-  tvaPaid          Boolean        @default(false)
-  tvaPaymentMethod PaymentMethod?
-  rejectionReason  String?
-  approvedAt       DateTime?
-  approvedById     String?        @db.Uuid
-  deliveredAt      DateTime?
-  deliveredById    String?        @db.Uuid
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  user             User           @relation("DeliveryUser", fields: [userId], references: [id])
-  approvedBy       User?          @relation("DeliveryApprovedBy", fields: [approvedById], references: [id])
-  deliveredBy      User?          @relation("DeliveryDeliveredBy", fields: [deliveredById], references: [id])
-  items            DeliveryItem[]
-
-  @@index([userId])
-  @@index([status])
-}
-
-model DeliveryItem {
-  id         String   @id @default(uuid()) @db.Uuid
-  deliveryId String   @db.Uuid
-  productId  String   @db.Uuid
-  quantity   Int
-  delivery   Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
-  product    Product  @relation(fields: [productId], references: [id])
-
-  @@index([deliveryId])
-}
-
-// ───────────────────────── Portefeuille ─────────────────────────
-
-enum WalletTransactionType {
-  CREDIT
-  DEBIT
-  REFUND
-  TRANSFER
-}
-
-model Wallet {
-  id           String              @id @default(uuid()) @db.Uuid
-  userId       String              @unique @db.Uuid
-  balance      Decimal             @default(0) @db.Decimal(15, 2)
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
-  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions WalletTransaction[]
-}
-
-/// `userId` null = mouvement du solde général (action super-admin).
-model WalletTransaction {
-  id            String                @id @default(uuid()) @db.Uuid
-  walletId      String?               @db.Uuid
-  userId        String?               @db.Uuid
-  amount        Decimal               @db.Decimal(15, 2)
-  type          WalletTransactionType
-  description   String?
-  referenceId   String?
-  adminId       String?               @db.Uuid
-  paymentMethod PaymentMethod?
-  proofUrl      String?
-  createdAt     DateTime              @default(now())
-  wallet        Wallet?               @relation(fields: [walletId], references: [id], onDelete: SetNull)
-  user          User?                 @relation("TxUser", fields: [userId], references: [id], onDelete: SetNull)
-  admin         User?                 @relation("TxAdmin", fields: [adminId], references: [id], onDelete: SetNull)
-
-  @@index([userId])
-  @@index([createdAt])
-}
-
-// ───────────────────────── Bureaux & formations ─────────────────────────
-
-model Office {
-  id           String      @id @default(uuid()) @db.Uuid
-  name         String      @unique
-  managerId    String      @unique @db.Uuid
-  country      String      @default("Côte d'Ivoire")
-  city         String?
-  commune      String?
-  neighborhood String?
-  manager      User        @relation("OfficeManager", fields: [managerId], references: [id])
-  members      User[]      @relation("OfficeMembers")
-  formations   Formation[]
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-}
-
-enum FormationType {
-  TRAINING
-  CONFERENCE
-}
-
-enum FormationStatus {
-  UPCOMING
-  IN_PROGRESS
-  PAST
-  CANCELLED
-}
-
-/// TRAINING = récurrent (dayOfWeek 1-7 + timeSlot).
-/// CONFERENCE = daté (date + timeSlot + location).
-model Formation {
-  id        String          @id @default(uuid()) @db.Uuid
-  type      FormationType   @default(TRAINING)
-  title     String
-  dayOfWeek Int?
-  date      DateTime?
-  timeSlot  String?
-  location  String?
-  notes     String?
-  status    FormationStatus @default(UPCOMING)
-  officeId  String          @db.Uuid
-  office    Office          @relation(fields: [officeId], references: [id], onDelete: Cascade)
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-
-  @@index([officeId])
-}
-
 // ───────────────────────── Paramètres ─────────────────────────
 
-/// Singleton (id = 1). Porte les trois compteurs financiers globaux :
-/// generalBalance (caisse), taxBalance (TVA encaissée), systemBalance.
 model Settings {
-  id                  Int      @id @default(1)
-  siteName            String   @default("SuperlifeShop")
-  siteEmail           String?
-  sitePhone           String?
-  logo                String?
-  currency            String   @default("FCFA")
-  taxRate             Decimal  @default(20) @db.Decimal(5, 2)
-  generalBalance      Decimal  @default(0) @db.Decimal(15, 2)
-  taxBalance          Decimal  @default(0) @db.Decimal(15, 2)
-  systemBalance       Decimal  @default(0) @db.Decimal(15, 2)
-  allowReceiptSending Boolean  @default(true)
-  updatedAt           DateTime @updatedAt
+  id                    Int      @id @default(1)
+  siteName              String   @default("DreamShop")
+  siteEmail             String?
+  sitePhone             String?
+  siteAddress           String?
+  currency              String   @default("FCFA")
+  shippingFee           Decimal  @default(0) @db.Decimal(15, 2)
+  freeShippingThreshold Decimal? @db.Decimal(15, 2)
+  mobileMoneyNumber     String?
+  mobileMoneyName       String?
+  updatedAt             DateTime @updatedAt
 }

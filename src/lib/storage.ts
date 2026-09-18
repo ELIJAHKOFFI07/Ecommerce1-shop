@@ -11,14 +11,13 @@ import { ApiError } from "./apiError";
 ///  - nom de fichier régénéré aléatoirement : le nom d'origine n'est jamais
 ///    réutilisé (traversée de chemin, caractères spéciaux, fuite d'info).
 
-export type UploadKind = "product" | "receipt" | "proof" | "avatar" | "logo";
+export type UploadKind = "product" | "category" | "avatar" | "logo";
 
 const LIMITS: Record<UploadKind, { maxBytes: number; kinds: readonly string[] }> = {
   product: { maxBytes: 5 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp"] },
   avatar: { maxBytes: 2 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp"] },
   logo: { maxBytes: 2 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp", "image/svg+xml"] },
-  receipt: { maxBytes: 8 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp", "application/pdf"] },
-  proof: { maxBytes: 8 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp", "application/pdf"] },
+  category: { maxBytes: 3 * 1024 * 1024, kinds: ["image/jpeg", "image/png", "image/webp"] },
 };
 
 /// Détection du type réel par les premiers octets.
@@ -67,7 +66,7 @@ export async function uploadFile(file: File, kind: UploadKind): Promise<{ url: s
     throw new ApiError(415, "Ce SVG contient du code et a été refusé.");
   }
   const name = `${Date.now()}-${randomBytes(8).toString("hex")}.${EXT[type]}`;
-  const folder = `/${process.env.IMAGEKIT_FOLDER ?? "SuperlifeShop"}/${kind}`;
+  const folder = `/${process.env.IMAGEKIT_FOLDER ?? "DreamShop"}/${kind}`;
   const res = await client().files.upload({
     file: buf.toString("base64"),
     fileName: name,

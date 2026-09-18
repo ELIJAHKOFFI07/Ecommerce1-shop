@@ -47,9 +47,7 @@ const sessionSelect = {
   email: true,
   image: true,
   role: true,
-  status: true,
   blocked: true,
-  memberNumber: true,
 } as const;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -124,9 +122,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           image: user.image,
           role: user.role,
-          status: user.status,
           blocked: user.blocked,
-          memberNumber: user.memberNumber,
         };
       },
     }),
@@ -144,17 +140,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       : []),
   ],
   callbacks: {
-    /// Google = connexion pour un compte EXISTANT uniquement. Un inconnu
-    /// est refusé : chaque membre a un numéro et un parrain attribués à
-    /// l'inscription par formulaire ; Google ne peut pas les fournir.
+    /// Google : connexion, et inscription d'un nouveau client (e-commerce
+    /// classique — pas de parrainage à saisir). Un compte bloqué est refusé.
     async signIn({ user, account }) {
       if (account?.provider !== "google") return true;
       const email = user.email?.toLowerCase();
       if (!email) return false;
       const existing = await db.user.findUnique({ where: { email }, select: { id: true, blocked: true } });
-      if (!existing) return "/connexion?error=google_unknown";
-      if (existing.blocked) return "/connexion?error=blocked";
-      await audit("auth.login", { userId: existing.id, meta: { provider: "google" } });
+      if (existing?.blocked) return "/connexion?error=blocked";
+      await audit(existing ? "auth.login" : "auth.register", { userId: existing?.id, meta: { provider: "google" } });
       return true;
     },
 
@@ -167,9 +161,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!fresh) return token;
         token.id = fresh.id;
         token.role = fresh.role;
-        token.status = fresh.status;
         token.blocked = fresh.blocked;
-        token.memberNumber = fresh.memberNumber;
         token.name = fresh.name;
         token.picture = fresh.image;
         token.checkedAt = Date.now();
@@ -184,7 +176,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.blocked = true;
         } else {
           token.role = fresh.role;
-          token.status = fresh.status;
           token.blocked = false;
           token.name = fresh.name;
           token.picture = fresh.image;
@@ -197,9 +188,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.role = token.role;
-      session.user.status = token.status;
       session.user.blocked = token.blocked;
-      session.user.memberNumber = token.memberNumber;
       return session;
     },
   },

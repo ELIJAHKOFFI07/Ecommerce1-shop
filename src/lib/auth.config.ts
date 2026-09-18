@@ -28,6 +28,6 @@ export const authConfig = {
 /// le proxy est un confort, pas la barrière de sécurité.
 /// Le panier est libre : on ne demande la connexion qu'au moment de
 /// valider (« Envoyer mon reçu »).
-export const MEMBER_PREFIXES = ["/espace", "/commander"];
+export const MEMBER_PREFIXES = ["/compte", "/commander"];
 export const ADMIN_PREFIXES = ["/admin"];
 export const ADMIN_ROLES = new Set(["SUPER_ADMIN", "ADMIN", "STOCK_MANAGER", "SUPPORT"]);

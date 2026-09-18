@@ -22,11 +22,11 @@ export const proxy = auth((req: NextRequest & { auth: unknown }) => {
     return NextResponse.redirect(url);
   }
   if (needsAdmin && user && !ADMIN_ROLES.has(user.role)) {
-    return NextResponse.redirect(new URL("/espace", req.nextUrl.origin));
+    return NextResponse.redirect(new URL("/compte", req.nextUrl.origin));
   }
   // Un membre connecté n'a rien à faire sur les pages de connexion.
   if (user && (pathname === "/connexion" || pathname === "/inscription")) {
-    return NextResponse.redirect(new URL("/espace", req.nextUrl.origin));
+    return NextResponse.redirect(new URL("/compte", req.nextUrl.origin));
   }
   return NextResponse.next();
 });

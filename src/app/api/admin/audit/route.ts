@@ -18,7 +18,7 @@ export const GET = withApi(async (req) => {
   const [items, total] = await Promise.all([
     db.auditLog.findMany({
       where,
-      select: { id: true, action: true, target: true, ip: true, meta: true, createdAt: true, user: { select: { name: true, memberNumber: true } } },
+      select: { id: true, action: true, target: true, ip: true, meta: true, createdAt: true, user: { select: { name: true, email: true } } },
       orderBy: { createdAt: "desc" },
       skip: (q.page - 1) * q.limit,
       take: q.limit,

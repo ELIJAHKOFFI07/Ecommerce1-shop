@@ -19,7 +19,7 @@ export function Catalog({ products, categories, initialQuery, initialCategory }:
     if (nextQ.trim()) p.set("q", nextQ.trim());
     if (nextCat) p.set("categorie", nextCat);
     const s = p.toString();
-    window.history.replaceState(null, "", s ? `/?${s}` : "/");
+    window.history.replaceState(null, "", (s ? `/?${s}` : "/") + "#catalogue");
   }
 
   const list = useMemo(() => {

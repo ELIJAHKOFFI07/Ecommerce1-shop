@@ -1,20 +1,31 @@
 import { db } from "@/lib/db";
-import { withApi, ok, notFound } from "@/lib/apiError";
-import { requireUser, assertOwnerOrStaff } from "@/lib/requireAuth";
-import { uuid } from "@/lib/validators";
+import { withApi, parseBody, ok, notFound } from "@/lib/apiError";
+import { requireUser } from "@/lib/requireAuth";
+import { uuid, longText } from "@/lib/validators";
+import { transitionOrder } from "@/lib/orders";
+import { audit } from "@/lib/audit";
 import { orderSelect } from "../route";
+import { z } from "zod";
 
-export const GET = withApi<{ params: Promise<{ id: string }> }>(async (_req, { params }) => {
+type Ctx = { params: Promise<{ id: string }> };
+
+export const GET = withApi<Ctx>(async (_req, { params }) => {
   const me = await requireUser();
   const id = uuid.parse((await params).id);
-  const order = await db.order.findUnique({ where: { id }, select: { ...orderSelect, userId: true, user: { select: { name: true, memberNumber: true } } } });
+  // Filtré par userId : la commande d'un autre est introuvable (404, pas 403).
+  const order = await db.order.findFirst({ where: { id, userId: me.id }, select: orderSelect });
   if (!order) throw notFound("Commande");
-  // Un 404 plutôt qu'un 403 quand ce n'est pas la sienne : ne pas confirmer
-  // à un curieux que l'identifiant existe.
-  try {
-    assertOwnerOrStaff(me, order.userId);
-  } catch {
-    throw notFound("Commande");
-  }
+  return ok(order);
+});
+
+/// Le client annule lui-même tant que la commande n'est pas expédiée.
+export const PATCH = withApi<Ctx>(async (req, { params }) => {
+  const me = await requireUser();
+  const id = uuid.parse((await params).id);
+  const { cancelReason } = await parseBody(req, z.object({ cancelReason: longText.min(3) }));
+  const own = await db.order.findFirst({ where: { id, userId: me.id }, select: { id: true } });
+  if (!own) throw notFound("Commande");
+  const order = await transitionOrder({ orderId: id, status: "CANCELLED", cancelReason, actorId: me.id, byCustomer: true });
+  await audit("order.status", { userId: me.id, target: id, req, meta: { status: "CANCELLED", byCustomer: true } });
   return ok(order);
 });

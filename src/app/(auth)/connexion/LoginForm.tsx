@@ -14,13 +14,12 @@ const ERRORS: Record<string, string> = {
   locked: "Trop d’échecs : ce compte est temporairement verrouillé. Réessayez plus tard ou réinitialisez votre mot de passe.",
   blocked: "Ce compte est bloqué. Contactez l’administration.",
   ratelimited: "Trop de tentatives. Patientez quelques minutes.",
-  google_unknown: "Aucun compte SuperlifeShop n’est associé à cette adresse Google. Inscrivez-vous d’abord.",
   CredentialsSignin: "E-mail ou mot de passe incorrect.",
 };
 
 export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
   const params = useSearchParams();
-  const next = params.get("suite") || "/espace";
+  const next = params.get("suite") || "/compte";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -40,13 +39,13 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
       return;
     }
     // Rechargement complet : le proxy et l'en-tête lisent la session serveur.
-    window.location.assign(next.startsWith("/") ? next : "/espace");
+    window.location.assign(next.startsWith("/") ? next : "/compte");
   }
 
   return (
     <div>
       <h1 className="font-display text-4xl font-semibold">Connexion</h1>
-      <p className="mt-2 text-muted-foreground">Accédez à votre espace membre.</p>
+      <p className="mt-2 text-muted-foreground">Retrouvez vos commandes et vos adresses.</p>
 
       <form onSubmit={submit} className="mt-8 space-y-5">
         <Field label="E-mail" htmlFor="email">
@@ -75,7 +74,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
           <Button variant="secondary" size="lg" full onClick={() => signIn("google", { callbackUrl: next })}>
             <GoogleMark /> Continuer avec Google
           </Button>
-          <p className="mt-2 text-center text-xs text-muted-foreground">Réservé aux membres déjà inscrits avec cette adresse.</p>
+          
         </>
       )}
 

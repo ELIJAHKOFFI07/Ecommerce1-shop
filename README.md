@@ -1,26 +1,28 @@
-# SuperlifeShop
+# DreamShop
 
-Boutique et espace membre de **SuperlifeShop** (vente directe par réseau
-de membres, Côte d'Ivoire). Reconstruction complète de
-*Superlife-management* : Next.js 16 pour le front **et** l'API, Postgres
-sur VPS, sans Supabase.
+Boutique en ligne **DreamShop** (Côte d'Ivoire) : tout type de produits,
+consultation libre, connexion au moment de commander, paiement à la
+livraison ou par Mobile Money. Next.js 16 pour le front **et** l'API,
+Postgres sur VPS.
 
 ## Ce que fait l'application
 
-**Membre** — voit la boutique, met des produits au panier, **envoie son
-reçu d'achat** (référence obligatoire) ; une fois validé par
-l'administration, les produits entrent dans son **stock personnel** ; il
-demande alors un **retrait** au bureau ; il consulte son **solde** (alimenté
-par l'administration), transfère à un autre membre, voit son bureau et
-ses formations.
+**Visiteur** — voit la boutique, les rayons, les produits à la une, cherche
+et filtre instantanément, met au panier sans compte.
 
-**Administration** — valide ou rejette les reçus, approuve et remet les
-retraits (avec TVA encaissée depuis le solde ou sur place), gère le
-catalogue, le stock à quatre niveaux (voir `docs/STOCK.md`), les
-conversions, les portefeuilles et la caisse, les membres et leurs
-permissions, les bureaux et formations. Journal d'audit complet.
+**Client** — crée un compte (ou Google) au moment de commander, choisit une
+adresse (carnet d'adresses) et un moyen de paiement, suit sa commande
+(à confirmer → confirmée → expédiée → livrée), peut l'annuler tant
+qu'elle n'est pas expédiée, gère ses adresses et son profil.
 
-**Hors périmètre** (décision client) : analyse de reçu par IA.
+**Administration** — confirme / expédie / livre / annule les commandes,
+marque les paiements Mobile Money reçus, gère le catalogue (produits avec
+photos, promotions, mise à la une ; catégories avec image et ordre), le
+stock (réceptions, retours, pertes, inventaire, historique), les
+utilisateurs (rôles, permissions par module, blocage), la comptabilité
+(ventes livrées, meilleures ventes, exports CSV) et les paramètres (frais
+de livraison, seuil de livraison offerte, numéro Mobile Money). Journal
+d'audit complet.
 
 ## Stack
 
@@ -36,6 +38,7 @@ npm install                      # génère aussi le client Prisma
 cp .env.example .env             # remplissez au moins DATABASE_URL et AUTH_SECRET
 npx prisma migrate deploy        # crée les tables
 SEED_ADMIN_EMAIL=vous@ex.com npm run db:seed   # premier super-admin (mot de passe affiché une fois)
+npm run db:seed:test             # facultatif : comptes, produits, commandes de démonstration
 npm run dev                      # http://localhost:3000
 ```
 
@@ -60,8 +63,7 @@ avec un message clair et les e-mails s'affichent en console.
 | `npm test` / `npm run test:security` | vitest — tests de sécurité |
 | `npm run db:migrate` | applique les migrations (`prisma migrate deploy`) |
 | `npm run db:seed` | modules, paramètres, super-admin |
-| `npm run db:seed:products` | les 7 produits SuperLife (hors vente, prix à saisir) |
-| `npm run db:seed:test` | **jeu de test** : un compte par rôle, bureau, formations, stock, commandes, retraits, soldes — jamais en production |
+| `npm run db:seed:test` | **jeu de test** : un compte par rôle, clients, catégories, produits, commandes à chaque état — jamais en production |
 
 **Avant tout commit** : `npm run typecheck && npm run lint && npm test && npm run build`.
 Ne lancez jamais `next build` pendant que `npm run dev` tourne (même
@@ -71,49 +73,52 @@ dossier `.next`).
 
 ```
 prisma/
-  schema.prisma          23 modèles, enums, tables de sécurité
+  schema.prisma          User, Address, Category, Product, StockMovement, Order, OrderItem, Settings + sécurité
   migrations/            SQL versionné — jamais modifié à la main après application
-  seed.ts
+  seed.ts, seed-test.ts
 src/
   app/
-    (shop)/              boutique, panier, commander, espace membre
+    (shop)/              accueil, produit, panier, commander, compte (commandes, adresses, profil)
     (auth)/              connexion, inscription, mot de passe
-    admin/               back-office (barre latérale filtrée par permissions)
-    api/                 48 routes — toutes passent par withApi + zod + requireAuth
+    admin/               back-office (menu filtré par permissions)
+    api/                 toutes les routes passent par withApi + zod + requireAuth
   lib/
-    auth.ts              Auth.js : verrouillage, limitation, Google = compte existant
-    requireAuth.ts       requireUser / requireStaff / requirePermission / assertOwnerOrStaff
+    auth.ts              Auth.js : verrouillage, limitation, Google
+    requireAuth.ts       requireUser / requireStaff / requirePermission
     pageAuth.ts          mêmes gardes pour les pages (redirection)
     validators.ts        TOUS les schémas d'entrée
-    wallet.ts, stock.ts, orders.ts, deliveries.ts   logique métier, FOR UPDATE
+    catalog.ts           catalogue en cache (tag « catalog »), invalidé à chaque écriture admin
+    orders.ts, stock.ts  logique métier, FOR UPDATE
+    accounting.ts        ventes, mensuel, exports
     rateLimit.ts, audit.ts, password.ts, storage.ts, email.ts
   components/
     ui.tsx               primitives (Button, Field, Money, StatusPill…)
+    ProductCard.tsx      la « vitrine » : scène + socle
     admin.tsx            briques back-office (ActionButton, Table, SearchBox…)
   proxy.ts               redirections optimistes (JWT seul, sans base)
-tests/security/          37 tests
+tests/security/
 docs/
   VPS.md                 héberger Postgres, ouvrir à Vercel proprement, sauvegardes
   SERVICES.md            Google OAuth, ImageKit, Gmail, Vercel
   SECURITE.md            menaces → mesures → fichiers
-  STOCK.md               les quatre stocks
 ```
 
 ## Comptes de test (`npm run db:seed:test`)
 
-Mot de passe commun : `Superlife2026test` (variable `SEED_TEST_PASSWORD`).
+Mot de passe commun : `Dreamshop2026test` (variable `SEED_TEST_PASSWORD`).
 
 | Rôle | E-mail | Ce qu'il voit |
 |---|---|---|
-| ADMIN | admin@test.superlife | tous les modules, en écriture |
-| STOCK_MANAGER | stock@test.superlife | produits, stock, retraits ; commandes en lecture |
-| SUPPORT | support@test.superlife | commandes, retraits, clients, portefeuilles — lecture seule |
-| CLIENT chef d'équipe | chef@test.superlife | responsable du Bureau de Cocody, commande validée, retrait remis |
-| CLIENT indépendante | membre1@test.superlife | commande validée, retrait en attente |
-| CLIENT membre | membre2@test.superlife | commande en attente + une rejetée |
-| CLIENT bloqué | bloque@test.superlife | ne peut pas se connecter |
+| ADMIN | admin@test.dreamshop | tous les modules, en écriture |
+| STOCK_MANAGER | stock@test.dreamshop | produits, catégories, stock ; commandes en lecture |
+| SUPPORT | support@test.dreamshop | commandes (traitement), utilisateurs en lecture |
+| CLIENT | client1@test.dreamshop | commandes à confirmer, Mobile Money en attente, livrée |
+| CLIENT | client2@test.dreamshop | commandes confirmée, expédiée, annulée |
+| CLIENT | client3@test.dreamshop | compte neuf, aucune commande |
+| CLIENT bloqué | bloque@test.dreamshop | ne peut pas se connecter |
 
-Les prix fixés par ce seed sont **fictifs** (tests uniquement).
+Le super-admin vient de `npm run db:seed` (`SEED_ADMIN_EMAIL`). Les prix
+du seed sont **fictifs**.
 
 ## Conventions
 
@@ -128,7 +133,7 @@ Les prix fixés par ce seed sont **fictifs** (tests uniquement).
 - **Interface** : un bouton principal par écran, libellés en verbes,
   montants gros, aucune icône sans mot, chaque statut expliqué en une
   phrase. Base 17 px. Palette pierre + un accent or. Cormorant (titres,
-  montants) + Montserrat.
+  montants) + Montserrat. Mode sombre par `data-theme`.
 - **Commentaires `///`** en tête de chaque module : le *pourquoi*, pas le *quoi*.
 - Commits en français, sujet ≤ 72 caractères, corps expliquant la décision.
 

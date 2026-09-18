@@ -25,7 +25,7 @@ const DUMMY_HASH = "$2a$12$CwTycUXWue0Thq9StjUM0uJ8ZbC5eQxYhMU8qzYw0oQ0v5vA4z3Ku
 /// de passe les plus courants — c'est ce qui compte vraiment.
 const COMMON = new Set([
   "password", "motdepasse", "12345678", "123456789", "1234567890", "azertyuiop",
-  "qwertyuiop", "abcd1234", "superlife", "superlife1", "bienvenue", "admin123",
+  "qwertyuiop", "abcd1234", "dreamshop", "dreamshop1", "bienvenue", "admin123",
   "00000000", "11111111", "password1", "iloveyou", "football",
 ]);
 

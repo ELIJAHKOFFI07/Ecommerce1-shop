@@ -7,10 +7,9 @@ import { api } from "@/lib/api";
 import { Button, Field, Input, Alert } from "@/components/ui";
 import { PasswordInput } from "@/components/PasswordInput";
 
-/// Inscription en un seul écran : nom, téléphone, e-mail, mot de passe,
-/// parrain. Après succès, connexion automatique — pas de deuxième écran.
+/// Inscription en un seul écran. Après succès, connexion automatique.
 export default function RegisterPage() {
-  const [f, setF] = useState({ name: "", phone: "", email: "", password: "", city: "", sponsorMemberNumber: "" });
+  const [f, setF] = useState({ name: "", phone: "", email: "", password: "" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
@@ -20,9 +19,9 @@ export default function RegisterPage() {
     setBusy(true);
     setError(null);
     try {
-      await api("/api/auth/register", { method: "POST", json: { ...f, city: f.city || undefined, sponsorMemberNumber: f.sponsorMemberNumber || undefined } });
+      await api("/api/auth/register", { method: "POST", json: { ...f, phone: f.phone || undefined } });
       const res = await signIn("credentials", { email: f.email, password: f.password, redirect: false });
-      window.location.assign(res?.error ? "/connexion" : "/espace?bienvenue=1");
+      window.location.assign(res?.error ? "/connexion" : "/compte?bienvenue=1");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue.");
       setBusy(false);
@@ -32,26 +31,20 @@ export default function RegisterPage() {
   return (
     <div>
       <h1 className="font-display text-4xl font-semibold">Créer un compte</h1>
-      <p className="mt-2 text-muted-foreground">Votre numéro de membre vous sera attribué immédiatement.</p>
+      <p className="mt-2 text-muted-foreground">Une minute, et vous pourrez commander.</p>
 
       <form onSubmit={submit} className="mt-8 space-y-5">
         <Field label="Nom complet" htmlFor="name">
           <Input id="name" autoComplete="name" value={f.name} onChange={set("name")} required maxLength={120} />
         </Field>
-        <Field label="Téléphone" htmlFor="phone">
-          <Input id="phone" type="tel" autoComplete="tel" inputMode="tel" value={f.phone} onChange={set("phone")} required placeholder="+225 07 00 00 00 00" />
+        <Field label="Téléphone (facultatif)" htmlFor="phone">
+          <Input id="phone" type="tel" autoComplete="tel" inputMode="tel" value={f.phone} onChange={set("phone")} placeholder="+225 07 00 00 00 00" />
         </Field>
         <Field label="E-mail" htmlFor="email">
           <Input id="email" type="email" autoComplete="email" inputMode="email" value={f.email} onChange={set("email")} required />
         </Field>
         <Field label="Mot de passe" htmlFor="password" hint="10 caractères minimum, avec des lettres et des chiffres.">
           <PasswordInput id="password" autoComplete="new-password" value={f.password} onChange={set("password")} required minLength={10} maxLength={128} />
-        </Field>
-        <Field label="Ville (facultatif)" htmlFor="city">
-          <Input id="city" autoComplete="address-level2" value={f.city} onChange={set("city")} maxLength={120} />
-        </Field>
-        <Field label="Numéro de votre parrain (facultatif)" htmlFor="sponsor" hint="Format SL-000000. Laissez vide si vous n’en avez pas.">
-          <Input id="sponsor" value={f.sponsorMemberNumber} onChange={set("sponsorMemberNumber")} maxLength={30} placeholder="SL-123456" autoCapitalize="characters" />
         </Field>
         {error && <Alert tone="error">{error}</Alert>}
         <Button type="submit" size="lg" full disabled={busy} loading={busy}>

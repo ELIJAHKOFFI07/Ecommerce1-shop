@@ -11,23 +11,19 @@ import { randomBytes } from "node:crypto";
 /// connexion. Relancer le seed ne recrée pas l'admin s'il existe.
 const MODULES = [
   { slug: "products", name: "Produits", description: "Catalogue et fiches produit" },
-  { slug: "categories", name: "Catégories", description: "Arborescence du catalogue" },
-  { slug: "stock", name: "Stock", description: "Niveaux, réapprovisionnement, transferts, ajustements" },
-  { slug: "orders", name: "Commandes", description: "Validation et suivi des reçus" },
-  { slug: "deliveries", name: "Retraits", description: "Approbation et remise des produits" },
-  { slug: "wallet", name: "Portefeuilles", description: "Crédits et historique des membres" },
-  { slug: "users", name: "Membres", description: "Comptes, rôles, blocage" },
-  { slug: "offices", name: "Bureaux", description: "Bureaux régionaux et responsables" },
-  { slug: "formations", name: "Formations", description: "Formations et conférences" },
-  { slug: "conversions", name: "Conversions", description: "Échanges de produits" },
-  { slug: "settings", name: "Paramètres", description: "Réglages généraux" },
+  { slug: "categories", name: "Catégories", description: "Rayons de la boutique" },
+  { slug: "stock", name: "Stock", description: "Niveaux, réceptions, ajustements" },
+  { slug: "orders", name: "Commandes", description: "Confirmation, expédition, livraison, paiements" },
+  { slug: "users", name: "Utilisateurs", description: "Comptes, rôles, blocage" },
+  { slug: "accounting", name: "Comptabilité", description: "Ventes, exports" },
+  { slug: "settings", name: "Paramètres", description: "Livraison, Mobile Money, coordonnées" },
 ];
 
 async function main() {
   for (const m of MODULES) {
     await db.module.upsert({ where: { slug: m.slug }, create: m, update: { name: m.name, description: m.description } });
   }
-  await db.settings.upsert({ where: { id: 1 }, create: { id: 1 }, update: {} });
+  await db.settings.upsert({ where: { id: 1 }, create: { id: 1, siteName: "DreamShop", shippingFee: 1500, freeShippingThreshold: 50000 }, update: {} });
 
   const email = (process.env.SEED_ADMIN_EMAIL ?? "").trim().toLowerCase();
   if (!email) {
@@ -41,19 +37,10 @@ async function main() {
   }
   const password = process.env.SEED_ADMIN_PASSWORD ?? randomBytes(12).toString("base64url");
   const passwordHash = await bcrypt.hash(password, 12);
-  const user = await db.user.create({
-    data: {
-      memberNumber: "SL-000001",
-      name: process.env.SEED_ADMIN_NAME ?? "Super administrateur",
-      email,
-      role: "SUPER_ADMIN",
-      passwordHash,
-      passwordChangedAt: process.env.SEED_ADMIN_PASSWORD ? new Date() : null,
-      wallet: { create: {} },
-    },
-    select: { memberNumber: true },
+  await db.user.create({
+    data: { name: process.env.SEED_ADMIN_NAME ?? "Super administrateur", email, role: "SUPER_ADMIN", passwordHash, passwordChangedAt: process.env.SEED_ADMIN_PASSWORD ? new Date() : null },
   });
-  console.log(`Super-admin créé : ${email} (${user.memberNumber})`);
+  console.log(`Super-admin créé : ${email}`);
   if (!process.env.SEED_ADMIN_PASSWORD) {
     console.log(`Mot de passe temporaire (affiché une seule fois) : ${password}`);
   }

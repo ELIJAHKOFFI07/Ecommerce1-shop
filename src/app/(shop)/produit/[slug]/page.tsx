@@ -1,38 +1,59 @@
 import { notFound } from "next/navigation";
-import { getProductBySlug } from "@/lib/catalog";
+import { getProductBySlug, getCatalog } from "@/lib/catalog";
 import { Money } from "@/components/ui";
+import { ProductCard } from "@/components/ProductCard";
 import { AddToCart } from "./AddToCart";
 
-/// Fiche produit — servie depuis le cache catalogue (pas d'appel base).
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const p = await getProductBySlug(slug);
   if (!p) notFound();
+  const { products } = await getCatalog();
+  const related = products.filter((x) => x.id !== p.id && x.categories.some((c) => p.categories.some((pc) => pc.slug === c.slug))).slice(0, 3);
+  const promo = p.compareAtPrice && p.compareAtPrice > p.price ? Math.round(100 - (p.price / p.compareAtPrice) * 100) : 0;
 
   return (
-    <div className="grid gap-8 lg:grid-cols-2 lg:gap-14">
-      <Gallery images={p.images} title={p.title} />
-      <div className="flex flex-col">
-        {p.categories[0] && <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{p.categories[0].name}</p>}
-        <h1 className="font-display mt-2 text-4xl font-semibold leading-tight lg:text-5xl">{p.title}</h1>
-        {p.description && <p className="mt-5 whitespace-pre-line leading-relaxed text-foreground/85">{p.description}</p>}
-        <div className="socle relative mt-8 rounded-[14px] p-6 text-[#f5f0e8]">
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#f5f0e8]/60">Prix</p>
-          <Money value={p.price} className="mt-1 block text-5xl leading-none text-[#e5b35d]" />
-          <p className="mt-2 text-sm text-[#f5f0e8]/70">TVA {p.tva} % en sus, réglée au retrait.</p>
-          <div className="mt-6">
-            <AddToCart product={{ productId: p.id, slug: p.slug, title: p.title, image: p.images[0], price: p.price, tva: p.tva }} />
+    <div className="space-y-14">
+      <div className="grid gap-8 lg:grid-cols-2 lg:gap-14">
+        <Gallery images={p.images} title={p.title} />
+        <div className="flex flex-col">
+          {p.categories[0] && <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{p.categories[0].name}</p>}
+          <h1 className="font-display mt-2 text-4xl font-semibold leading-tight lg:text-5xl">{p.title}</h1>
+          {p.description && <p className="mt-5 whitespace-pre-line leading-relaxed text-foreground/85">{p.description}</p>}
+          <div className="socle relative mt-8 rounded-[14px] p-6 text-[#f5f0e8]">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#f5f0e8]/60">Prix</p>
+            <div className="mt-1 flex flex-wrap items-baseline gap-3">
+              <Money value={p.price} className="text-5xl leading-none text-[#e5b35d]" />
+              {promo > 0 && (
+                <>
+                  <Money value={p.compareAtPrice!} className="text-lg text-[#f5f0e8]/50 line-through" />
+                  <span className="rounded-full bg-[#e5b35d] px-2.5 py-1 text-xs font-black text-[#1c1917]">−{promo} %</span>
+                </>
+              )}
+            </div>
+            <p className="mt-2 text-sm text-[#f5f0e8]/70">{p.inStock ? "En stock — livraison à domicile, paiement à la réception ou par Mobile Money." : "Momentanément épuisé."}</p>
+            <div className="mt-6">
+              {p.inStock ? <AddToCart product={{ productId: p.id, slug: p.slug, title: p.title, image: p.images[0], price: p.price }} /> : null}
+            </div>
           </div>
         </div>
       </div>
+      {related.length > 0 && (
+        <section>
+          <h2 className="font-display mb-4 text-3xl font-semibold">Vous aimerez aussi</h2>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((r) => (
+              <ProductCard key={r.id} product={r} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
 
 function Gallery({ images, title }: { images: string[]; title: string }) {
-  if (images.length === 0) {
-    return <div className="grid aspect-square place-items-center rounded-lg bg-muted text-muted-foreground">Pas d&apos;image</div>;
-  }
+  if (images.length === 0) return <div className="grid aspect-square place-items-center rounded-lg bg-muted text-muted-foreground">Pas d&apos;image</div>;
   return (
     <div className="space-y-3">
       <div className="scene group relative overflow-hidden rounded-[14px] p-10 sm:p-14">

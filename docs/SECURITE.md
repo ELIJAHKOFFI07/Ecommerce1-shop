@@ -17,8 +17,8 @@ pas dans une liste de bonnes intentions. Les tests de
 | Lien de réinitialisation forgé depuis la base | jeton stocké **haché** (sha256), usage unique, 30 min, un seul actif | `api/auth/*` |
 | Compte bloqué gardant sa session | JWT resynchronisé avec la base toutes les 5 min | callback `jwt` |
 | Vol de cookie | HttpOnly, Secure, SameSite=Lax, 12 h, préfixe `__Secure-` | `lib/auth.config.ts` |
-| Inscription sauvage via Google | Google = connexion d'un compte **existant** uniquement | callback `signIn` |
-| Mot de passe temporaire visible par l'admin | envoyé par e-mail au membre, jamais renvoyé à l'écran | `api/admin/users/[id]/reset-password` |
+| Compte Google usurpant un compte mot de passe | Google ne se lie qu'à un compte existant avec le même e-mail vérifié ; sinon crée un compte CLIENT | callback `signIn` |
+| Mot de passe temporaire visible par l'admin | envoyé par e-mail à l'utilisateur, jamais renvoyé à l'écran | `api/admin/users/[id]/reset-password` |
 
 ## Autorisation
 
@@ -27,7 +27,7 @@ pas dans une liste de bonnes intentions. Les tests de
 | Accès aux données d'autrui (IDOR) | chaque lecture est filtrée par `userId` ; une ressource d'autrui renvoie **404**, pas 403 |
 | Élévation de privilèges | rôle modifiable par le SUPER_ADMIN seul ; personne ne change son propre rôle ni ne se bloque ; un admin ne touche pas aux comptes staff |
 | Permissions trop larges | permissions fines par module (voir / modifier), attribuées par le SUPER_ADMIN seul |
-| Crédit de portefeuille abusif | permission `wallet:edit` déléguée par le SUPER_ADMIN ; le solde général doit couvrir ; journalisé |
+| Paiement marqué reçu sans contrôle | permission `orders:edit` seulement ; référence et auteur journalisés |
 | Proxy contourné | le proxy n'est qu'un confort ; chaque route et chaque page revérifient |
 
 ## Entrées et injections
@@ -35,20 +35,19 @@ pas dans une liste de bonnes intentions. Les tests de
 | Menace | Mesure |
 |---|---|
 | Injection SQL | Prisma paramètre tout ; les rares `$queryRaw` utilisent des paramètres liés |
-| Assignation de masse | tout corps passe par un schéma zod ; les champs non listés sont **rejetés** (un membre ne peut pas envoyer `role`, un panier ne peut pas envoyer `unitPrice`) |
-| Falsification de prix | les montants d'une commande sont **recalculés** depuis le catalogue ; le client n'envoie que des identifiants et des quantités |
+| Assignation de masse | tout corps passe par un schéma zod ; les champs non listés sont **rejetés** (un client ne peut pas envoyer `role`, un panier ne peut pas envoyer `unitPrice` ni `shippingFee`) |
+| Falsification de prix | les montants d'une commande (prix, frais de port, seuil de gratuité) sont **recalculés** depuis le catalogue et les paramètres ; le client n'envoie que des identifiants, des quantités et une adresse |
 | XSS | React échappe ; les e-mails HTML passent par `escapeHtml` ; CSP sans `unsafe-eval`, `object-src 'none'` |
 | Fichier malveillant | type détecté par **signature binaire**, pas par extension ; SVG avec script refusé ; nom régénéré ; taille plafonnée |
 | Corps géant / JSON malformé | 256 Ko max, 413 ; JSON invalide → 400 |
 | Identifiants mal formés | UUID validé avant toute requête |
 
-## Concurrence et intégrité financière
+## Concurrence et intégrité du stock
 
 | Menace | Mesure |
 |---|---|
-| Deux débits qui passent sur un même solde | `SELECT … FOR UPDATE` sur Wallet et Settings dans une transaction |
-| Interblocage A→B / B→A | verrous pris dans l'ordre des identifiants |
-| Double validation d'une commande | verrou sur la commande ; transitions d'état explicites |
+| Deux commandes qui vident le même stock | `SELECT … FOR UPDATE` sur chaque produit pendant la confirmation |
+| Double confirmation d'une commande | verrou sur la commande ; transitions d'état explicites (PENDING → CONFIRMED → SHIPPED → DELIVERED, annulation restituant le stock) |
 | Stock incohérent avec l'historique | **tout** mouvement passe par `stock.move()` qui écrit la ligne StockMovement |
 | Numéro de commande dupliqué | `pg_advisory_xact_lock` pendant la génération |
 
@@ -57,8 +56,7 @@ pas dans une liste de bonnes intentions. Les tests de
 | Menace | Mesure |
 |---|---|
 | Pile d'appels / chaîne de connexion dans une erreur | `withApi` : 500 générique, détail en console serveur seulement |
-| Numéros de membre séquentiels (énumération) | aléatoires : `SL-XXXXXX` |
-| Annuaire parcourable par la recherche de destinataire | égalité exacte uniquement (numéro, e-mail, téléphone) |
+| Commande d'autrui devinée | UUID + filtre `userId` ; 404 |
 | Secrets dans le dépôt | `.env*`, `all_secrets.md`, `*firebase-adminsdk*.json` ignorés ; `env.ts` valide au démarrage |
 | Indexation par les moteurs | `robots: noindex` |
 
@@ -66,16 +64,16 @@ pas dans une liste de bonnes intentions. Les tests de
 
 Journal d'audit (`AuditLog`) sur : connexion, échec, verrouillage,
 inscription, réinitialisation, changement de rôle / blocage /
-permissions, crédit, transfert, ajustement de caisse, création et
-changement de statut de commande et de retrait, mouvements de stock,
-paramètres, envois de fichiers. Chaque entrée porte l'auteur, la cible,
+permissions, suppression de compte, création / statut / paiement /
+suppression de commande, produits, mouvements de stock, paramètres,
+envois de fichiers. Chaque entrée porte l'auteur, la cible,
 l'IP et le navigateur. Lecture : `/admin/journal` (SUPER_ADMIN).
 
 ## Ce qui reste à votre charge
 
 - **Secrets déjà exposés** : le mot de passe de la base `dreamteamshop`,
-  la clé privée ImageKit et le jeton Twilio ont transité en clair dans
-  une conversation. Régénérez-les (voir docs/VPS.md §3, docs/SERVICES.md §2).
+  la clé privée ImageKit, le secret Google et la clé 21st.dev ont transité
+  en clair dans une conversation. Régénérez-les (voir docs/VPS.md §3, docs/SERVICES.md §2).
 - **Postgres ouvert sur internet** : c'est la conséquence du choix
   Vercel + VPS. docs/VPS.md limite la surface (TLS, un seul utilisateur,
   fail2ban) mais un mot de passe faible resterait fatal.
@@ -85,5 +83,5 @@ l'IP et le navigateur. Lecture : `/admin/journal` (SUPER_ADMIN).
 ## Lancer les tests
 
 ```bash
-npm run test:security     # 30 unitaires, +7 d'intégration si DATABASE_URL joignable
+npm run test:security     # unitaires, +6 d'intégration si DATABASE_URL joignable
 ```

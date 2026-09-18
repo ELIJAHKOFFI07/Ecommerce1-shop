@@ -90,21 +90,16 @@ export function Money({ value, className }: { value: DecimalLike | null | undefi
 }
 
 const STATUS: Record<string, { label: string; cls: string }> = {
-  PENDING: { label: "En attente", cls: "bg-amber-50 text-amber-800 border-amber-200" },
-  VALIDATED: { label: "Validée", cls: "bg-green-50 text-green-800 border-green-200" },
-  APPROVED: { label: "Approuvé", cls: "bg-green-50 text-green-800 border-green-200" },
-  DELIVERED: { label: "Remis", cls: "bg-stone-100 text-stone-700 border-stone-200" },
-  RECEIVED: { label: "Reçue", cls: "bg-green-50 text-green-800 border-green-200" },
-  CANCELLED: { label: "Annulée", cls: "bg-stone-100 text-stone-700 border-stone-200" },
+  PENDING: { label: "À confirmer", cls: "bg-amber-50 text-amber-800 border-amber-200" },
+  CONFIRMED: { label: "Confirmée", cls: "bg-green-50 text-green-800 border-green-200" },
+  SHIPPED: { label: "Expédiée", cls: "bg-sky-50 text-sky-800 border-sky-200" },
+  DELIVERED: { label: "Livrée", cls: "bg-stone-100 text-stone-700 border-stone-200" },
+  CANCELLED: { label: "Annulée", cls: "bg-red-50 text-red-800 border-red-200" },
+  UNPAID: { label: "Non payée", cls: "bg-amber-50 text-amber-800 border-amber-200" },
+  PAID: { label: "Payée", cls: "bg-green-50 text-green-800 border-green-200" },
   REFUNDED: { label: "Remboursée", cls: "bg-stone-100 text-stone-700 border-stone-200" },
-  REJECTED: { label: "Rejetée", cls: "bg-red-50 text-red-800 border-red-200" },
-  UPCOMING: { label: "À venir", cls: "bg-amber-50 text-amber-800 border-amber-200" },
-  IN_PROGRESS: { label: "En cours", cls: "bg-green-50 text-green-800 border-green-200" },
-  PAST: { label: "Passée", cls: "bg-stone-100 text-stone-700 border-stone-200" },
-  CREDIT: { label: "Crédit", cls: "bg-green-50 text-green-800 border-green-200" },
-  DEBIT: { label: "Débit", cls: "bg-red-50 text-red-800 border-red-200" },
-  TRANSFER: { label: "Transfert", cls: "bg-stone-100 text-stone-700 border-stone-200" },
-  REFUND: { label: "Remboursement", cls: "bg-green-50 text-green-800 border-green-200" },
+  CASH_ON_DELIVERY: { label: "À la livraison", cls: "bg-muted text-foreground border-border" },
+  MOBILE_MONEY: { label: "Mobile Money", cls: "bg-muted text-foreground border-border" },
 };
 
 export function StatusPill({ status }: { status: string }) {

@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { orderCreateSchema, walletTransferSchema, registerSchema, productSchema, uuid, amount, adminUserUpdateSchema, profileSchema } from "@/lib/validators";
+import { orderCreateSchema, addressSchema, registerSchema, productSchema, uuid, amount, adminUserUpdateSchema, profileSchema } from "@/lib/validators";
+
+const ADDR = { fullName: "Awa", phone: "+2250700000000", city: "Abidjan", details: "Cocody, villa 14" };
 
 const UUID = "3f2b1c4e-8d6a-4b2f-9c1e-7a5d3e2f1b0c";
 
@@ -7,18 +9,21 @@ describe("Validation des entrées (injection, assignation de masse, bornes)", ()
   it("une commande ne peut pas fixer son propre prix (assignation de masse)", () => {
     const r = orderCreateSchema.parse({
       items: [{ productId: UUID, quantity: 2, unitPrice: 1 }],
-      claimReference: "REC-123",
+      paymentMethod: "CASH_ON_DELIVERY",
+      address: ADDR,
       total: 1,
-      status: "VALIDATED",
+      shippingFee: 0,
+      status: "DELIVERED",
     });
     expect(r.items[0]).not.toHaveProperty("unitPrice");
     expect(r).not.toHaveProperty("total");
+    expect(r).not.toHaveProperty("shippingFee");
     expect(r).not.toHaveProperty("status");
   });
 
   it("refuse une quantité nulle, négative ou non entière", () => {
     for (const quantity of [0, -1, 1.5, "2; DROP TABLE", 1e9]) {
-      expect(() => orderCreateSchema.parse({ items: [{ productId: UUID, quantity }], claimReference: "REC-1" })).toThrow();
+      expect(() => orderCreateSchema.parse({ items: [{ productId: UUID, quantity }], paymentMethod: "CASH_ON_DELIVERY", address: ADDR })).toThrow();
     }
   });
 
@@ -28,9 +33,10 @@ describe("Validation des entrées (injection, assignation de masse, bornes)", ()
     }
   });
 
-  it("refuse une référence de reçu avec caractères de contrôle ou HTML", () => {
-    expect(() => orderCreateSchema.parse({ items: [{ productId: UUID, quantity: 1 }], claimReference: "<img src=x onerror=alert(1)>" })).toThrow();
-    expect(() => orderCreateSchema.parse({ items: [{ productId: UUID, quantity: 1 }], claimReference: "REC\n123" })).toThrow();
+  it("refuse un moyen de paiement inconnu ou une adresse incomplète", () => {
+    expect(() => orderCreateSchema.parse({ items: [{ productId: UUID, quantity: 1 }], paymentMethod: "FREE", address: ADDR })).toThrow();
+    expect(() => orderCreateSchema.parse({ items: [{ productId: UUID, quantity: 1 }], paymentMethod: "CASH_ON_DELIVERY", address: { ...ADDR, phone: "07" } })).toThrow();
+    expect(() => orderCreateSchema.parse({ items: [{ productId: UUID, quantity: 1 }], paymentMethod: "CASH_ON_DELIVERY", address: { ...ADDR, details: "x" } })).toThrow();
   });
 
   it("refuse les montants négatifs, nuls, décimaux ou astronomiques", () => {
@@ -40,8 +46,8 @@ describe("Validation des entrées (injection, assignation de masse, bornes)", ()
     expect(amount.parse("15000")).toBe(15000);
   });
 
-  it("un membre ne peut pas modifier son rôle, son solde ni son numéro via le profil", () => {
-    const r = profileSchema.parse({ name: "Awa", role: "SUPER_ADMIN", memberNumber: "SL-1", wallet: { balance: 1e9 }, email: "x@y.z" });
+  it("un client ne peut pas modifier son rôle ni son e-mail via le profil", () => {
+    const r = profileSchema.parse({ name: "Awa", role: "SUPER_ADMIN", blocked: false, email: "x@y.z" });
     expect(r).toEqual({ name: "Awa" });
   });
 
@@ -63,7 +69,7 @@ describe("Validation des entrées (injection, assignation de masse, bornes)", ()
   });
 
   it("borne la taille des chaînes libres", () => {
-    expect(() => walletTransferSchema.parse({ recipientMemberNumber: "x".repeat(31), amount: 100 })).toThrow();
+    expect(() => addressSchema.parse({ ...ADDR, details: "x".repeat(301) })).toThrow();
     expect(() => adminUserUpdateSchema.parse({ name: "x".repeat(121) })).toThrow();
   });
 });

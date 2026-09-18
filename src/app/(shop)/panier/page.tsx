@@ -7,11 +7,9 @@ import { useCart } from "@/lib/cart";
 import { Button, ButtonLink, Empty, Money, PageTitle, Skeleton, Card, Row } from "@/components/ui";
 
 /// Panier : accessible sans compte. La connexion n'est demandée qu'au
-/// moment de valider (« Envoyer mon reçu »). L'aperçu de commande à droite
-/// reprend exactement ce que le serveur calculera : lignes, sous-total,
-/// TVA par produit, total.
+/// moment de commander.
 export default function CartPage() {
-  const { lines, ready, setQty, remove, total, tax, count } = useCart();
+  const { lines, ready, setQty, remove, total, count } = useCart();
   const { status } = useSession();
 
   if (!ready) {
@@ -51,7 +49,7 @@ export default function CartPage() {
                       {l.title}
                     </Link>
                     <p className="text-sm text-muted-foreground">
-                      <Money value={l.price} className="text-sm" /> l’unité · TVA {l.tva} %
+                      <Money value={l.price} className="text-sm" /> l’unité
                     </p>
                   </div>
                   <Money value={l.price * l.quantity} className="shrink-0 text-xl" />
@@ -78,8 +76,8 @@ export default function CartPage() {
         <Card className="vitrine h-fit overflow-hidden border-0 p-0 lg:sticky lg:top-24">
           <div className="socle relative px-6 py-5 text-[#f5f0e8]">
             <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#f5f0e8]/60">Aperçu de la commande</p>
-            <Money value={total + tax} className="mt-1 block text-4xl leading-none text-[#e5b35d]" />
-            <p className="mt-1 text-sm text-[#f5f0e8]/70">{count} article{count > 1 ? "s" : ""}, TVA comprise</p>
+            <Money value={total} className="mt-1 block text-4xl leading-none text-[#e5b35d]" />
+            <p className="mt-1 text-sm text-[#f5f0e8]/70">{count} article{count > 1 ? "s" : ""} — frais de livraison calculés à l’étape suivante</p>
           </div>
           <div className="p-6 pt-4">
           <h2 className="sr-only">Détail</h2>
@@ -94,13 +92,11 @@ export default function CartPage() {
             ))}
           </div>
           <div className="mt-2 border-t border-border pt-2">
-            <Row label="Sous-total HT" value={<Money value={total} />} />
-            <Row label="TVA (réglée au retrait)" value={<Money value={tax} />} />
-            <Row label="Total" value={<Money value={total + tax} className="text-2xl" />} />
+            <Row label="Sous-total" value={<Money value={total} className="text-2xl" />} />
           </div>
           {status === "authenticated" ? (
             <ButtonLink href="/commander" size="lg" full className="mt-5">
-              Envoyer mon reçu
+              Commander
             </ButtonLink>
           ) : (
             <>
@@ -116,8 +112,7 @@ export default function CartPage() {
               </p>
             </>
           )}
-          <p className="mt-3 text-center text-sm text-muted-foreground">Vous avez payé ces produits ? Envoyez le reçu pour les recevoir dans votre stock.</p>
-          <Button variant="ghost" full className="mt-2" onClick={() => history.back()}>
+                    <Button variant="ghost" full className="mt-2" onClick={() => history.back()}>
             Continuer mes achats
           </Button>
           </div>

@@ -6,8 +6,8 @@ import { audit } from "@/lib/audit";
 
 /// Envoi de fichier. Le `kind` décide des droits : un membre envoie des
 /// reçus et son avatar ; produits, preuves et logo sont réservés au staff.
-const MEMBER_KINDS: UploadKind[] = ["receipt", "avatar"];
-const STAFF_KINDS: UploadKind[] = ["product", "proof", "logo"];
+const MEMBER_KINDS: UploadKind[] = ["avatar"];
+const STAFF_KINDS: UploadKind[] = ["product", "category", "logo"];
 
 export const POST = withApi(async (req) => {
   const me = await requireUser();

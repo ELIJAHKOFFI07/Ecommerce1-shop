@@ -5,7 +5,7 @@ d'entraînement. Lisez `node_modules/next/dist/docs/` avant d'écrire du
 code (middleware = `proxy.ts`, `params` sont des Promise, runtime Node
 par défaut dans le proxy).
 
-# SuperlifeShop — règles pour travailler ici
+# DreamShop — règles pour travailler ici
 
 Lisez `README.md` (structure, conventions) et `docs/SECURITE.md` (menaces
 et mesures) avant toute modification. Les règles ci-dessous sont celles
@@ -16,10 +16,11 @@ qu'on ne devine pas en lisant le code.
 - **Aucune route API sans `withApi`, sans schéma zod (`lib/validators.ts`)
   et sans `requireUser` / `requirePermission`.** Une nouvelle route qui
   contourne l'un des trois est une régression de sécurité.
-- **Aucune écriture de stock hors `stock.move()`.** Aucune écriture de
-  solde hors `lib/wallet.ts`. Les deux verrouillent (`FOR UPDATE`) et
-  journalisent.
-- **Les montants d'une commande viennent du catalogue**, jamais du client.
+- **Aucune écriture de stock hors `stock.move()`.** Il verrouille
+  (`FOR UPDATE`) et journalise. Les transitions de commande passent par
+  `orders.transitionOrder()`.
+- **Les montants d'une commande viennent du catalogue et des paramètres**
+  (frais de port), jamais du client.
 - **Aucun secret dans un fichier suivi par git.** `.env.example` ne
   contient que des espaces réservés. Si un secret a transité dans une
   conversation, il est considéré compromis : le dire, proposer la rotation.
@@ -44,6 +45,12 @@ qu'on ne devine pas en lisant le code.
 - `npm run build` = `prisma generate && next build`. **Jamais pendant
   que `npm run dev` tourne** (même `.next`).
 - Avant commit : `npm run typecheck && npm run lint && npm test && npm run build`.
+
+## Catalogue
+
+- `lib/catalog.ts` est en cache (`unstable_cache`, tag `catalog`) : toute
+  écriture admin sur produits / catégories / paramètres appelle
+  `invalidateCatalog()`.
 
 ## Interface
 

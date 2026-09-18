@@ -17,9 +17,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       title: "Quotidien",
       items: [
         item("/admin", "Tableau de bord", true),
-        ...(has("orders") ? [item("/admin/commandes", "Commandes"), item("/admin/recus", "Reçus")] : []),
-        ...(has("deliveries") ? [item("/admin/retraits", "Retraits")] : []),
-        ...(has("users") ? [item("/admin/membres", "Utilisateurs et rôles")] : []),
+        ...(has("orders") ? [item("/admin/commandes", "Commandes")] : []),
+        ...(has("users") ? [item("/admin/utilisateurs", "Utilisateurs et rôles")] : []),
       ],
     },
     {
@@ -27,22 +26,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       items: [
         ...(has("products") ? [item("/admin/produits", "Produits (ajouter, modifier)")] : []),
         ...(has("categories") ? [item("/admin/categories", "Catégories")] : []),
-        ...(has("stock") ? [item("/admin/stock", "Stock (niveaux)"), item("/admin/stock/actions?onglet=ajouter", "Ajouter du stock"), item("/admin/stock/reappro", "Commandes fournisseur"), item("/admin/stock/mouvements", "Historique du stock")] : []),
-        ...(has("conversions") ? [item("/admin/conversions", "Conversions")] : []),
+        ...(has("stock") ? [item("/admin/stock", "Stock (niveaux)"), item("/admin/stock/ajuster", "Ajouter ou retirer du stock"), item("/admin/stock/mouvements", "Historique du stock")] : []),
       ],
     },
     {
       title: "Argent",
-      items: [...(has("wallet") ? [item("/admin/comptabilite", "Comptabilité"), item("/admin/portefeuilles", "Portefeuilles")] : []), ...(user.role === "SUPER_ADMIN" ? [item("/admin/portefeuilles/general", "Caisse")] : [])],
+      items: [...(has("accounting") ? [item("/admin/comptabilite", "Comptabilité")] : [])],
     },
     {
       title: "Organisation",
-      items: [
-        ...(has("offices") ? [item("/admin/bureaux", "Bureaux")] : []),
-        ...(has("formations") ? [item("/admin/formations", "Formations")] : []),
-        ...(has("settings") ? [item("/admin/parametres", "Paramètres")] : []),
-        ...(user.role === "SUPER_ADMIN" ? [item("/admin/journal", "Journal d’audit")] : []),
-      ],
+      items: [...(has("settings") ? [item("/admin/parametres", "Paramètres (livraison, Mobile Money)")] : []), ...(user.role === "SUPER_ADMIN" ? [item("/admin/journal", "Journal d’audit")] : [])],
     },
   ].filter((s) => s.items.length > 0);
 

@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 /// quantités : les prix affichés viennent du catalogue à chaque rendu, et
 /// le serveur recalcule tout à la commande. Modifier le localStorage ne
 /// permet donc pas de changer un prix.
-export type CartLine = { productId: string; slug: string; title: string; image?: string; price: number; tva: number; quantity: number };
+export type CartLine = { productId: string; slug: string; title: string; image?: string; price: number; quantity: number };
 
 type Ctx = {
   lines: CartLine[];
@@ -17,11 +17,10 @@ type Ctx = {
   clear: () => void;
   count: number;
   total: number;
-  tax: number;
 };
 
 const CartContext = createContext<Ctx | null>(null);
-const KEY = "superlifeshop.cart.v1";
+const KEY = "dreamshop.cart.v1";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
@@ -56,13 +55,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Ctx>(() => {
     const count = lines.reduce((n, l) => n + l.quantity, 0);
     const total = lines.reduce((n, l) => n + l.price * l.quantity, 0);
-    const tax = Math.round(lines.reduce((n, l) => n + (l.price * l.quantity * (l.tva ?? 0)) / 100, 0));
     return {
       lines,
       ready,
       count,
       total,
-      tax,
       add: (line, qty = 1) =>
         setLines((ls) => {
           const i = ls.findIndex((l) => l.productId === line.productId);

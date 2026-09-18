@@ -8,10 +8,10 @@ const cormorant = Cormorant({ subsets: ["latin"], weight: ["500", "600", "700"],
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-montserrat", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "SuperlifeShop", template: "%s · SuperlifeShop" },
-  description: "Boutique et espace membre SuperlifeShop.",
+  title: { default: "DreamShop", template: "%s · DreamShop" },
+  description: "DreamShop — votre boutique en ligne.",
   robots: { index: false, follow: false },
-  icons: { icon: "/favicon.ico", apple: "/icon-192.png" },
+  icons: { icon: "/favicon.svg" },
   manifest: "/manifest.webmanifest",
 };
 
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Applique le thème mémorisé AVANT le premier rendu : pas d'éclair blanc. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem("superlifeshop.theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}`,
+            __html: `try{var t=localStorage.getItem("dreamshop.theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}`,
           }}
         />
       </head>

@@ -13,9 +13,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
     "postinstall": "prisma generate",
-    "db:seed:products": "tsx prisma/seed-products.ts",
-    "db:seed:test": "tsx prisma/seed-test.ts",
-    "db:seed:categories": "tsx prisma/seed-categories.ts"
+    "db:seed:test": "tsx prisma/seed-test.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

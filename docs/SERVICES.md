@@ -20,19 +20,19 @@ correspond. Un inconnu voit : « Aucun compte n'est associé à cette adresse »
    - `http://localhost:3000/api/auth/callback/google`
 4. Copiez *Client ID* → `GOOGLE_CLIENT_ID`, *Client secret* → `GOOGLE_CLIENT_SECRET`.
 5. **OAuth consent screen** : type *External*, ajoutez le logo et le nom
-   « SuperlifeShop », publiez (sinon seuls les testeurs déclarés peuvent
+   « DreamShop », publiez (sinon seuls les testeurs déclarés peuvent
    se connecter).
 
 Sans ces deux variables, le bouton Google n'apparaît pas — rien ne casse.
 
 ## 2. ImageKit — photos, reçus, preuves
 
-Dossier de stockage : `SuperlifeShop/` (sous-dossiers `product`, `receipt`,
+Dossier de stockage : `DreamShop/` (sous-dossiers `product`, `receipt`,
 `proof`, `avatar`, `logo` créés automatiquement).
 
 1. <https://imagekit.io/dashboard> → **Developer options**.
 2. `IMAGEKIT_PUBLIC_KEY` = *Public key*, `IMAGEKIT_PRIVATE_KEY` = *Private key*.
-3. `IMAGEKIT_FOLDER=SuperlifeShop`.
+3. `IMAGEKIT_FOLDER=DreamShop`.
 
 Les fichiers sont publics par URL (les URL sont imprévisibles). Si vous
 voulez des reçus **privés**, activez *Restrict unsigned URLs* dans
@@ -48,7 +48,7 @@ mot de passe Google).
 
 1. Le compte Gmail doit avoir la **validation en deux étapes** activée.
 2. <https://myaccount.google.com/apppasswords> → créer une application
-   « SuperlifeShop » → copiez les 16 caractères.
+   « DreamShop » → copiez les 16 caractères.
 3. `GMAIL_USER=votre.adresse@gmail.com`, `GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx`
    (les espaces sont acceptés).
 
@@ -57,7 +57,7 @@ Limites : ~500 e-mails/jour sur un compte Gmail gratuit ; au-delà, passez
 
 E-mails envoyés : bienvenue (+ mot de passe temporaire si créé par
 l'admin), réinitialisation de mot de passe, changement de statut de
-commande, de retrait, crédit du solde.
+commande (au client), nouvelle commande (à l'adresse de la boutique).
 
 ## 4. Vercel
 
@@ -69,7 +69,7 @@ commande, de retrait, crédit du solde.
 4. Déployez. Puis, depuis votre PC : `npx prisma migrate deploy` et
    `npm run db:seed` (voir docs/VPS.md §6).
 
-## Ce qui n'est PAS repris de Superlife-management
+## Ce qui n'est PAS repris de DreamShop
 
 - **Analyse de reçu par IA (Gemini)** — exclue à la demande du client.
 - **SMS / WhatsApp (Twilio)** — aucune fonctionnalité ne l'exige ; les

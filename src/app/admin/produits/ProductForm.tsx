@@ -13,15 +13,15 @@ export type ProductInput = {
   title: string;
   description: string;
   price: number | string;
-  tva: number | string;
-  commission: number | string;
+  compareAtPrice: number | string;
   images: string[];
   active: boolean;
+  featured: boolean;
   lowStockAlert: number | string;
   categoryIds: string[];
 };
 
-const EMPTY: ProductInput = { sku: "", title: "", description: "", price: "", tva: 20, commission: 0, images: [], active: true, lowStockAlert: 5, categoryIds: [] };
+const EMPTY: ProductInput = { sku: "", title: "", description: "", price: "", compareAtPrice: "", images: [], active: true, featured: false, lowStockAlert: 5, categoryIds: [] };
 
 export function ProductForm({ initial, categories }: { initial?: ProductInput; categories: Category[] }) {
   const router = useRouter();
@@ -50,7 +50,7 @@ export function ProductForm({ initial, categories }: { initial?: ProductInput; c
     e.preventDefault();
     setBusy(true);
     setError(null);
-    const body = { ...f, price: Number(f.price), tva: Number(f.tva), commission: Number(f.commission), lowStockAlert: Number(f.lowStockAlert), description: f.description || undefined };
+    const body = { ...f, price: Number(f.price), compareAtPrice: f.compareAtPrice === "" ? null : Number(f.compareAtPrice), lowStockAlert: Number(f.lowStockAlert), description: f.description || undefined };
     try {
       if (f.id) {
         await api(`/api/admin/products/${f.id}`, { method: "PATCH", json: body });
@@ -80,12 +80,9 @@ export function ProductForm({ initial, categories }: { initial?: ProductInput; c
             <Input id="price" type="number" inputMode="numeric" min={1} step={1} value={f.price} onChange={(e) => set("price", e.target.value)} required />
           </Field>
         </div>
-        <div className="grid gap-5 sm:grid-cols-3">
-          <Field label="TVA (%)" htmlFor="tva">
-            <Input id="tva" type="number" inputMode="decimal" min={0} max={100} step={0.5} value={f.tva} onChange={(e) => set("tva", e.target.value)} required />
-          </Field>
-          <Field label="Commission (F)" htmlFor="commission">
-            <Input id="commission" type="number" inputMode="numeric" min={0} step={1} value={f.commission} onChange={(e) => set("commission", e.target.value)} />
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label="Ancien prix (F, facultatif)" htmlFor="cmp" hint="S’il est renseigné, il s’affiche barré : promotion.">
+            <Input id="cmp" type="number" inputMode="numeric" min={0} step={1} value={f.compareAtPrice} onChange={(e) => set("compareAtPrice", e.target.value)} />
           </Field>
           <Field label="Alerte stock bas" htmlFor="low" hint="Sous ce seuil, le produit remonte au tableau de bord.">
             <Input id="low" type="number" inputMode="numeric" min={0} step={1} value={f.lowStockAlert} onChange={(e) => set("lowStockAlert", e.target.value)} />
@@ -143,6 +140,10 @@ export function ProductForm({ initial, categories }: { initial?: ProductInput; c
         <label className="flex cursor-pointer items-center gap-3 pt-2">
           <input type="checkbox" checked={f.active} onChange={(e) => set("active", e.target.checked)} className="h-5 w-5 accent-primary" />
           <span className="font-medium">En vente dans la boutique</span>
+        </label>
+        <label className="flex cursor-pointer items-center gap-3">
+          <input type="checkbox" checked={f.featured} onChange={(e) => set("featured", e.target.checked)} className="h-5 w-5 accent-primary" />
+          <span className="font-medium">Mettre à la une (page d’accueil)</span>
         </label>
       </Card>
 

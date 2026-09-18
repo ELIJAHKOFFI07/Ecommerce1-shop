@@ -10,16 +10,10 @@ export const GET = withApi(async (req) => {
   const where = {
     ...(q.status ? { status: q.status } : {}),
     ...(q.userId ? { userId: q.userId } : {}),
-    ...(q.from || q.to ? { createdAt: { ...(q.from ? { gte: q.from } : {}), ...(q.to ? { lte: q.to } : {}) } } : {}),
+    ...(q.q ? { OR: [{ orderNumber: { contains: q.q.toUpperCase() } }, { shipFullName: { contains: q.q, mode: "insensitive" as const } }, { shipPhone: { contains: q.q } }, { user: { email: { contains: q.q.toLowerCase() } } }] } : {}),
   };
   const [items, total] = await Promise.all([
-    db.order.findMany({
-      where,
-      select: { ...orderSelect, user: { select: { id: true, name: true, memberNumber: true, phone: true } } },
-      orderBy: { createdAt: "desc" },
-      skip: (q.page - 1) * q.limit,
-      take: q.limit,
-    }),
+    db.order.findMany({ where, select: { ...orderSelect, user: { select: { id: true, name: true, email: true } } }, orderBy: { createdAt: "desc" }, skip: (q.page - 1) * q.limit, take: q.limit }),
     db.order.count({ where }),
   ]);
   return ok({ items, total, page: q.page, pages: Math.ceil(total / q.limit) });
