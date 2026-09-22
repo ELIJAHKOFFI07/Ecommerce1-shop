@@ -22,7 +22,7 @@ export default async function AccountHome({ searchParams }: { searchParams: Prom
         <h1 className="font-display text-4xl font-semibold lg:text-5xl">Bonjour, {firstName}</h1>
         <p className="mt-1 text-muted-foreground">{count} commande{count > 1 ? "s" : ""}</p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="stagger grid gap-4 sm:grid-cols-3">
         <Tile href="/compte/commandes" label="Mes commandes" />
         <Tile href="/compte/adresses" label="Mes adresses" />
         <Tile href="/compte/profil" label="Mon profil" />

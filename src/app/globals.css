@@ -249,3 +249,73 @@ html, body { overflow-x: hidden; }
   .vitrine, .vitrine:hover, .product-img, .floor-shadow { transition: none; transform: none; }
   .spinner { animation-duration: 1.5s; }
 }
+
+/* ---------------------------------------------------------------------------
+   Relief 3D (adapté de « Optimized Tilt Card », 21st.dev) : la carte
+   s'incline vers le pointeur, un reflet or suit la souris. Variables
+   posées par Tilt.tsx, tout le rendu est CSS (transform/opacity seulement).
+   --------------------------------------------------------------------------- */
+.tilt {
+  --px: 50%; --py: 50%; --rx: 0deg; --ry: 0deg; --ts: 1;
+  transform: perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--ts));
+  transition: transform 380ms cubic-bezier(0.23, 1, 0.32, 1);
+  transform-style: preserve-3d;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+.tilt .sheen {
+  position: absolute; inset: 0; z-index: 30; pointer-events: none; opacity: 0;
+  transition: opacity 300ms ease;
+  background: radial-gradient(circle at var(--px) var(--py), rgba(229, 179, 93, 0.28) 0%, rgba(229, 179, 93, 0.06) 35%, transparent 70%);
+  mix-blend-mode: overlay;
+}
+.tilt:hover .sheen, .tilt[data-touch="1"] .sheen { opacity: 1; }
+.tilt .lift { transition: transform 380ms cubic-bezier(0.23, 1, 0.32, 1); }
+.tilt:hover .lift, .tilt[data-touch="1"] .lift { transform: translateZ(40px); }
+
+/* ---------------------------------------------------------------------------
+   Vedette (adapté de « Spatial Product Showcase », 21st.dev) : le produit
+   flotte sur un disque, anneau pointillé qui tourne, halo or qui respire,
+   fond qui réagit. Changement de produit : fondu + rotation d'entrée.
+   --------------------------------------------------------------------------- */
+.showcase {
+  background:
+    radial-gradient(60% 70% at var(--glow-x, 20%) 50%, rgba(229, 179, 93, 0.22) 0%, transparent 60%),
+    linear-gradient(180deg, #24201d 0%, #16130f 100%);
+  transition: background 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.disc {
+  background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015) 60%, transparent 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 40px 80px -30px rgba(0, 0, 0, 0.7);
+}
+@keyframes ring-spin { to { transform: rotate(360deg); } }
+.ring-spin { animation: ring-spin 28s linear infinite; }
+@keyframes halo { 0%, 100% { transform: scale(1); opacity: 0.45; } 50% { transform: scale(1.08); opacity: 0.6; } }
+.halo { animation: halo 5s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(-8px); } 50% { transform: translateY(8px); } }
+.float { animation: float 6s ease-in-out infinite; }
+@keyframes enter-spin {
+  from { opacity: 0; transform: scale(1.35) rotate(-18deg) translateX(-40px); filter: blur(12px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+.enter-spin { animation: enter-spin 700ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes enter-up { from { opacity: 0; transform: translateY(18px); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+.enter-up { animation: enter-up 520ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.enter-up:nth-child(2) { animation-delay: 80ms; }
+.enter-up:nth-child(3) { animation-delay: 160ms; }
+.enter-up:nth-child(4) { animation-delay: 240ms; }
+.stagger > * { animation: rise 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.stagger > *:nth-child(1) { animation-delay: 0ms; }  .stagger > *:nth-child(2) { animation-delay: 50ms; }
+.stagger > *:nth-child(3) { animation-delay: 100ms; } .stagger > *:nth-child(4) { animation-delay: 150ms; }
+.stagger > *:nth-child(5) { animation-delay: 200ms; } .stagger > *:nth-child(6) { animation-delay: 250ms; }
+.stagger > *:nth-child(n+7) { animation-delay: 300ms; }
+
+/* Galerie produit : zoom qui suit le pointeur. */
+.zoom-img { transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1); transform-origin: var(--px, 50%) var(--py, 50%); }
+.group:hover .zoom-img { transform: scale(1.35); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt, .tilt .lift, .tilt .sheen { transition: none; transform: none; }
+  .ring-spin, .halo, .float, .enter-spin, .enter-up, .stagger > * { animation: none; }
+  .group:hover .zoom-img { transform: none; }
+}

@@ -35,17 +35,18 @@ export default function CartPage() {
     <>
       <PageTitle title="Panier" subtitle={`${count} article${count > 1 ? "s" : ""}`} />
       <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
-        <ul className="divide-y divide-border">
+        <ul className="stagger space-y-4">
           {lines.map((l) => (
-            <li key={l.productId} className="flex gap-4 py-5">
-              <Link href={`/produit/${l.slug}`} className="scene relative h-24 w-24 shrink-0 overflow-hidden rounded-[10px] p-2">
+            <li key={l.productId} className="vitrine flex gap-4 overflow-hidden rounded-[16px] bg-card p-4 sm:gap-5">
+              <Link href={`/produit/${l.slug}`} className="scene group relative h-28 w-28 shrink-0 overflow-hidden rounded-[12px] p-3 sm:h-32 sm:w-32">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                {l.image ? <img src={l.image} alt="" className="relative z-10 h-full w-full object-contain drop-shadow-md" /> : null}
+                {l.image ? <img src={l.image} alt="" className="product-img relative z-10 h-full w-full object-contain" /> : null}
+                <span aria-hidden className="floor-shadow" />
               </Link>
-              <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 flex-1 flex-col">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <Link href={`/produit/${l.slug}`} className="font-medium leading-snug hover:underline">
+                    <Link href={`/produit/${l.slug}`} className="font-display text-2xl font-semibold leading-none hover:underline underline-offset-4">
                       {l.title}
                     </Link>
                     <p className="text-sm text-muted-foreground">
@@ -54,7 +55,7 @@ export default function CartPage() {
                   </div>
                   <Money value={l.price * l.quantity} className="shrink-0 text-xl" />
                 </div>
-                <div className="mt-3 flex items-center justify-between">
+                <div className="mt-auto flex items-center justify-between pt-3">
                   <div className="inline-flex h-11 items-center rounded-md border border-border-strong bg-card">
                     <button type="button" aria-label="Diminuer" onClick={() => setQty(l.productId, l.quantity - 1)} className="grid h-full w-11 cursor-pointer place-items-center hover:bg-muted">
                       <Minus className="h-4 w-4" aria-hidden />
@@ -104,7 +105,7 @@ export default function CartPage() {
                 Se connecter pour valider
               </ButtonLink>
               <p className="mt-2 text-center text-sm text-muted-foreground">
-                Pas encore membre ?{" "}
+                Pas encore de compte ?{" "}
                 <Link href="/inscription" className="font-semibold text-foreground underline underline-offset-4">
                   Créer un compte
                 </Link>

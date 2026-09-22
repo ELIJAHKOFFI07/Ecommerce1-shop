@@ -60,7 +60,7 @@ export function Catalog({ products, categories, initialQuery, initialCategory }:
       {list.length === 0 ? (
         <Empty title="Aucun produit trouvé" hint={q ? "Essayez un autre mot." : "Le catalogue est vide pour le moment."} />
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div key={`${cat}|${q}`} className="stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

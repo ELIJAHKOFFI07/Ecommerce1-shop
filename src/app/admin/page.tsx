@@ -40,7 +40,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
       </div>
 
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">À traiter</h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Tile href="/admin/commandes?status=PENDING" label="Commandes à confirmer" value={pending} urgent={pending > 0} />
         <Tile href="/admin/commandes?status=CONFIRMED" label="À expédier" value={toShip} urgent={toShip > 0} />
         <Tile href="/admin/commandes?status=SHIPPED" label="En livraison" value={shipped} />
@@ -48,7 +48,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
       </div>
 
       <h2 className="mb-3 mt-10 text-sm font-semibold uppercase tracking-wider text-muted-foreground">30 derniers jours</h2>
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="stagger grid gap-4 sm:grid-cols-3">
         <Card className="p-5">
           <p className="text-sm font-semibold text-muted-foreground">Commandes livrées</p>
           <p className="font-display mt-1 text-4xl font-semibold tabular">{delivered30._count}</p>

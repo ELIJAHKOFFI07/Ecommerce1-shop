@@ -44,11 +44,11 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
       {items.length === 0 ? (
         <Empty title="Aucun résultat" hint={q ? "Essayez avec l’e-mail ou le téléphone." : undefined} />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((u) => {
             const spent = u.orders.reduce((n, o) => n + Number(o.total), 0);
             return (
-              <Link key={u.id} href={`/admin/utilisateurs/${u.id}`} className={`press rise rounded-lg border border-border bg-card p-5 transition-colors hover:bg-muted ${u.blocked ? "opacity-60" : ""}`}>
+              <Link key={u.id} href={`/admin/utilisateurs/${u.id}`} className={`press rounded-lg border border-border bg-card p-5 transition-colors hover:bg-muted ${u.blocked ? "opacity-60" : ""}`}>
                 <div className="flex items-start gap-3">
                   <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full bg-primary text-lg font-bold text-primary-foreground">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
